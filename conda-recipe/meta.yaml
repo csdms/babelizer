@@ -1,0 +1,33 @@
+{% set name = "bmi_wrap" %}
+{% set data = load_setup_py_data() %}
+
+package:
+  name: {{ name }}
+  version: {{ data.get('version') }}
+
+source:
+  path: ..
+
+requirements:
+  build:
+    - setuptools
+    - python
+
+  run:
+    - {{ compiler("c") }}
+    - {{ compiler("cxx") }}
+    - python
+    - cython
+    - numpy >=1.11,<1.14
+    - pyyaml
+    - jinja2
+    - cookiecutter
+    - six
+
+test:
+  imports:
+    - bmi_wrap
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record record.txt
