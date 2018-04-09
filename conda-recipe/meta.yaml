@@ -18,7 +18,7 @@ requirements:
     - {{ compiler("cxx") }}
     - python
     - cython
-    - numpy >=1.11,<1.14
+    - numpy 1.11.*
     - pyyaml
     - jinja2
     - cookiecutter
@@ -27,6 +27,8 @@ requirements:
 test:
   imports:
     - bmi_wrap
+  commands:
+    - bmi-wrap -h
 
 build:
   number: 0
