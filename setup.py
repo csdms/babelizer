@@ -4,12 +4,11 @@ import versioneer
 
 
 install_requires = [
-    "cython",
-    "numpy",
     "pyyaml",
     "jinja2",
     "cookiecutter",
-    "six"
+    "six",
+    "scripting",
 ]
 
 
