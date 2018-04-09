@@ -11,13 +11,9 @@ source:
 requirements:
   build:
     - setuptools
-
-  host:
     - python
 
   run:
-    - {{ compiler("c") }}
-    - {{ compiler("cxx") }}
     - python
     - cython
     - numpy 1.11.*
