@@ -314,6 +314,9 @@ cdef class {{cookiecutter.class_name}}:
     def update(self):
         self._bmi.Update()
 
+    def update_until(self, time):
+        self._bmi.UpdateUntil(time)
+
     def finalize(self):
         self._bmi.Finalize()
 
