@@ -20,6 +20,7 @@ cdef extern from "{{cookiecutter.bmi_include}}" namespace "bmi":
 
         void Initialize (const char * config_file) except +
         void Update() except +
+        void UpdateUntil(double time) except +
         void Finalize() except +
 
         int GetVarGrid (const char * var_name) except +

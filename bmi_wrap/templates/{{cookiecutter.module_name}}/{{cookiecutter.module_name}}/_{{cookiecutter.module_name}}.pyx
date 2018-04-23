@@ -111,18 +111,18 @@ cdef class {{cookiecutter.class_name}}:
         ok_or_raise(<int>bmi_finalize(self._bmi))
         return <int>bmi_finalize(self._bmi), None
 
-    cpdef tuple get_component_name(self):
+    cpdef bytes get_component_name(self):
         ok_or_raise(<int>bmi_get_component_name(self._bmi, self.STR_BUFFER))
         return <bytes>self.STR_BUFFER
         # return <int>bmi_get_component_name(self._bmi, self.STR_BUFFER), <bytes>self.STR_BUFFER
 
-    cpdef tuple get_input_var_name_count(self):
+    cpdef int get_input_var_name_count(self):
         cdef int count = 0
         ok_or_raise(<int>bmi_get_input_var_name_count(self._bmi, &count))
         return count
         # return <int>bmi_get_input_var_name_count(self._bmi, &count), count
 
-    cpdef tuple get_output_var_name_count(self):
+    cpdef int get_output_var_name_count(self):
         cdef int count = 0
         ok_or_raise(<int>bmi_get_output_var_name_count(self._bmi, &count))
         return count
@@ -183,69 +183,69 @@ cdef class {{cookiecutter.class_name}}:
 
         return tuple(py_names)
 
-    cpdef tuple get_var_grid(self, name):
+    cpdef int get_var_grid(self, name):
         cdef int gid
         ok_or_raise(<int>bmi_get_var_grid(self._bmi, name, &gid))
         return gid
         # return <int>bmi_get_var_grid(self._bmi, name, &gid), gid
 
-    cpdef tuple get_var_type(self, name):
+    cpdef bytes get_var_type(self, name):
         ok_or_raise(<int>bmi_get_var_type(self._bmi, name, self.STR_BUFFER))
         return DTYPE_C_TO_PY[<bytes>self.STR_BUFFER]
         # return <int>bmi_get_var_type(self._bmi, name, self.STR_BUFFER), DTYPE_C_TO_PY[<bytes>self.STR_BUFFER]
 
-    cpdef tuple get_var_units(self, name):
+    cpdef bytes get_var_units(self, name):
         ok_or_raise(<int>bmi_get_var_units(self._bmi, name, self.STR_BUFFER))
         return <bytes>self.STR_BUFFER
         # return <int>bmi_get_var_units(self._bmi, name, self.STR_BUFFER), <bytes>self.STR_BUFFER
 
-    cpdef tuple get_var_itemsize(self, name):
+    cpdef int get_var_itemsize(self, name):
         cdef int itemsize
         ok_or_raise(<int>bmi_get_var_itemsize(self._bmi, name, &itemsize))
         return itemsize
         # return <int>bmi_get_var_itemsize(self._bmi, name, &itemsize), itemsize
 
-    cpdef tuple get_var_location(self, name):
+    cpdef bytes get_var_location(self, name):
         ok_or_raise(<int>bmi_get_var_location(self._bmi, name, self.STR_BUFFER))
         return <bytes>self.STR_BUFFER
         # return <int>bmi_get_var_location(self._bmi, name, self.STR_BUFFER), <bytes>self.STR_BUFFER
 
-    cpdef tuple get_var_nbytes(self, name):
+    cpdef int get_var_nbytes(self, name):
         cdef int nbytes
         ok_or_raise(<int>bmi_get_var_nbytes(self._bmi, name, &nbytes))
         return nbytes
         # return <int>bmi_get_var_nbytes(self._bmi, name, &nbytes), nbytes
 
-    cpdef tuple get_current_time(self):
+    cpdef double get_current_time(self):
         cdef double time
         ok_or_raise(<int>bmi_get_current_time(self._bmi, &time))
         return time
         # return <int>bmi_get_current_time(self._bmi, &time), time
 
-    cpdef tuple get_start_time(self):
+    cpdef double get_start_time(self):
         cdef double time
         ok_or_raise(<int>bmi_get_start_time(self._bmi, &time))
         return time
         # return <int>bmi_get_start_time(self._bmi, &time), time
 
-    cpdef tuple get_end_time(self):
+    cpdef double get_end_time(self):
         cdef double time
         ok_or_raise(<int>bmi_get_end_time(self._bmi, &time))
         return time
         # return <int>bmi_get_end_time(self._bmi, &time), time
 
-    cpdef tuple get_time_units(self):
+    cpdef bytes get_time_units(self):
         ok_or_raise(<int>bmi_get_time_units(self._bmi, self.STR_BUFFER))
         return <bytes>self.STR_BUFFER
         # return <int>bmi_get_time_units(self._bmi, self.STR_BUFFER), <bytes>self.STR_BUFFER
 
-    cpdef tuple get_time_step(self):
+    cpdef double get_time_step(self):
         cdef double time
         ok_or_raise(<int>bmi_get_time_step(self._bmi, &time))
         return time
         # return <int>bmi_get_time_step(self._bmi, &time), time
 
-    cpdef tuple get_value(self, name, np.ndarray buff):
+    cpdef get_value(self, name, np.ndarray buff):
         # return <int>bmi_get_value(self._bmi, <char*>name, &buff.data[0]), buff
         ok_or_raise(<int>bmi_get_value(self._bmi, <char*>name, buff.data))
         return buff
@@ -259,39 +259,39 @@ cdef class {{cookiecutter.class_name}}:
         ok_or_raise(bmi_get_value_ptr(self._bmi, name, &ptr))
         return np.asarray(<np.float_t[:size]>ptr)
 
-    cpdef tuple set_value(self, name, np.ndarray buff):
+    cpdef set_value(self, name, np.ndarray buff):
         ok_or_raise(<int>bmi_set_value(self._bmi, name, buff.data))
         return buff
         # return <int>bmi_set_value(self._bmi, name, buff.data), buff
 
-    cpdef tuple get_grid_rank(self, gid):
+    cpdef int get_grid_rank(self, gid):
         cdef int rank
         ok_or_raise(<int>bmi_get_grid_rank(self._bmi, gid, &rank))
         return rank
         # return <int>bmi_get_grid_rank(self._bmi, gid, &rank), rank
 
-    cpdef tuple get_grid_size(self, gid):
+    cpdef int get_grid_size(self, gid):
         cdef int size
         ok_or_raise(<int>bmi_get_grid_size(self._bmi, gid, &size))
         return size
         # return <int>bmi_get_grid_size(self._bmi, gid, &size), size
 
-    cpdef tuple get_grid_type(self, gid):
+    cpdef bytes get_grid_type(self, gid):
         ok_or_raise(bmi_get_grid_type(self._bmi, gid, self.STR_BUFFER))
         # cdef int status = bmi_get_grid_type(self._bmi, gid, self.STR_BUFFER)
         return <bytes>self.STR_BUFFER
 
-    cpdef tuple get_grid_shape(self, int gid, np.ndarray[int, ndim=1] shape):
+    cpdef get_grid_shape(self, int gid, np.ndarray[int, ndim=1] shape):
         ok_or_raise(<int>bmi_get_grid_shape(self._bmi, gid, &shape[0]))
         return shape
         # return <int>bmi_get_grid_shape(self._bmi, gid, &shape[0]), shape
 
-    cpdef tuple  get_grid_spacing(self, int gid, np.ndarray[double, ndim=1] spacing):
+    cpdef get_grid_spacing(self, int gid, np.ndarray[double, ndim=1] spacing):
         ok_or_raise(<int>bmi_get_grid_spacing(self._bmi, gid, &spacing[0]))
         return spacing
         # return <int>bmi_get_grid_spacing(self._bmi, gid, &spacing[0]), spacing
 
-    cpdef tuple get_grid_origin(self, int gid, np.ndarray[double, ndim=1] origin):
+    cpdef get_grid_origin(self, int gid, np.ndarray[double, ndim=1] origin):
         ok_or_raise(<int>bmi_get_grid_origin(self._bmi, gid, &origin[0]))
         return origin
         # return <int>bmi_get_grid_origin(self._bmi, gid, &origin[0]), origin
@@ -313,6 +313,9 @@ cdef class {{cookiecutter.class_name}}:
 
     def update(self):
         self._bmi.Update()
+
+    def update_until(self, time):
+        self._bmi.UpdateUntil(time)
 
     def finalize(self):
         self._bmi.Finalize()
