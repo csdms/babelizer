@@ -1,7 +1,7 @@
 {
   "full_name": "Eric Hutton",
   "github_username": "mcflugen",
-  "module_name": "Cython Boilerplate",
+  "module_name": "cython_boilerplate",
   "bmi_include": "{{ cookiecutter.module_name }}/bmi_{{ cookiecutter.module_name }}.h",
   "bmi_register": "register_bmi_{{ cookiecutter.module_name }}",
   "class_name": "{{ cookiecutter.module_name|title }}",
