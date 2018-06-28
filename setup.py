@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+import os
 from setuptools import setup, find_packages
 import versioneer
 
@@ -12,6 +13,14 @@ install_requires = [
 ]
 
 
+def data_files(directory):
+    paths = []
+    for (path, _, filenames) in os.walk(directory):
+        for filename in filenames:
+            paths.append(os.path.join(path, filename))
+    return paths
+
+
 setup(
     name='bmi_wrap',
     version=versioneer.get_version(),
@@ -22,6 +31,7 @@ setup(
     url='https://github.com/csdms',
     install_requires=install_requires,
     packages=find_packages(),
+    package_data={'bmi_wrap': data_files('bmi_wrap/templates')},
     entry_points={
         'console_scripts': [
             'bmi-wrap=bmi_wrap.cli.main_wrap:main',
