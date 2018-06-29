@@ -31,7 +31,7 @@ setup(
     url='https://github.com/csdms',
     install_requires=install_requires,
     packages=find_packages(),
-    package_data={'bmi_wrap': data_files('bmi_wrap/templates', base='bmi_wrap')},
+    # package_data={'bmi_wrap': data_files('bmi_wrap/templates', base='bmi_wrap')},
     entry_points={
         'console_scripts': [
             'bmi-wrap=bmi_wrap.cli.main_wrap:main',
