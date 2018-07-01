@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include {{cookiecutter.bmi_include}}
+#include "{{cookiecutter.bmi_include}}"
 
 
 static BMI_Model* bmi_new() {
