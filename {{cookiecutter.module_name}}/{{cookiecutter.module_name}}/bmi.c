@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <sedflux3d/bmi.h>
+#include {{cookiecutter.bmi_include}}
 
 
 static BMI_Model* bmi_new() {
