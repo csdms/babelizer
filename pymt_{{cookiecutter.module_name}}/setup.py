@@ -6,6 +6,7 @@ from setuptools import setup, find_packages
 # from Cython.Build import cythonize
 from distutils.extension import Extension
 import numpy as np
+import versioneer
 
 from model_metadata.utils import get_cmdclass, get_entry_points
 
@@ -87,9 +88,10 @@ setup(
     name="{{cookiecutter.module_name}}",
     author="Eric Hutton",
     description="Python interface to {{cookiecutter.module_name}}",
+    version=versioneer.get_version(),
     setup_requires=["cython"],
     ext_modules=ext_modules,
     packages=packages,
-    cmdclass=get_cmdclass(pymt_components),
+    cmdclass=get_cmdclass(pymt_components, cmdclass=versioneer.get_cmdclass()),
     entry_points=get_entry_points(pymt_components),
 )
