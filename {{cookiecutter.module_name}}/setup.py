@@ -79,7 +79,7 @@ packages = find_packages(include=["{{cookiecutter.module_name}}"])
 pymt_components = [
     (
         "{{cookiecutter.class_name}}={{cookiecutter.module_name}}:{{cookiecutter.class_name}}",
-        ".bmi",
+        "meta",
     )
 ]
 
