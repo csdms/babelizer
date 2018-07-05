@@ -1,4 +1,5 @@
 # cython: c_string_type=str, c_string_encoding=ascii
+
 import ctypes
 from libc.stdlib cimport malloc, free
 
@@ -86,7 +87,7 @@ cdef class {{cookiecutter.class_name}}:
             {{cookiecutter.bmi_register}}(self._bmi)
 
     def initialize(self, config_file):
-        status = <int>bmi_initialize(self._bmi, config_file, <void**>&(self._bmi))
+        status = <int>bmi_initialize(self._bmi, <char*>config_file, <void**>&(self._bmi))
         ok_or_raise(status)
 
     def update(self):
@@ -108,9 +109,9 @@ cdef class {{cookiecutter.class_name}}:
         ok_or_raise(<int>bmi_finalize(self._bmi))
         return <int>bmi_finalize(self._bmi), None
 
-    cpdef bytes get_component_name(self):
+    cpdef object get_component_name(self):
         ok_or_raise(<int>bmi_get_component_name(self._bmi, self.STR_BUFFER))
-        return <bytes>self.STR_BUFFER
+        return self.STR_BUFFER
 
     cpdef int get_input_var_name_count(self):
         cdef int count = 0
@@ -140,7 +141,7 @@ cdef class {{cookiecutter.class_name}}:
             ok_or_raise(<int>bmi_get_input_var_names(self._bmi, names))
 
             for i in range(count):
-                py_names.append(<bytes>(names[i]))
+                py_names.append(names[i])
         except Exception:
             raise
         finally:
@@ -167,7 +168,7 @@ cdef class {{cookiecutter.class_name}}:
             ok_or_raise(<int>bmi_get_output_var_names(self._bmi, names))
 
             for i in range(count):
-                py_names.append(<bytes>(names[i]))
+                py_names.append(names[i])
         except Exception:
             raise
         finally:
@@ -178,29 +179,29 @@ cdef class {{cookiecutter.class_name}}:
 
     cpdef int get_var_grid(self, name):
         cdef int gid
-        ok_or_raise(<int>bmi_get_var_grid(self._bmi, name, &gid))
+        ok_or_raise(<int>bmi_get_var_grid(self._bmi, <char*>name, &gid))
         return gid
 
-    cpdef bytes get_var_type(self, name):
-        ok_or_raise(<int>bmi_get_var_type(self._bmi, name, self.STR_BUFFER))
-        return DTYPE_C_TO_PY[<bytes>self.STR_BUFFER]
+    cpdef object get_var_type(self, name):
+        ok_or_raise(<int>bmi_get_var_type(self._bmi, <char*>name, self.STR_BUFFER))
+        return DTYPE_C_TO_PY[self.STR_BUFFER]
 
-    cpdef bytes get_var_units(self, name):
-        ok_or_raise(<int>bmi_get_var_units(self._bmi, name, self.STR_BUFFER))
-        return <bytes>self.STR_BUFFER
+    cpdef object get_var_units(self, name):
+        ok_or_raise(<int>bmi_get_var_units(self._bmi, <char*>name, self.STR_BUFFER))
+        return self.STR_BUFFER
 
     cpdef int get_var_itemsize(self, name):
         cdef int itemsize
-        ok_or_raise(<int>bmi_get_var_itemsize(self._bmi, name, &itemsize))
+        ok_or_raise(<int>bmi_get_var_itemsize(self._bmi, <char*>name, &itemsize))
         return itemsize
 
-    cpdef bytes get_var_location(self, name):
-        ok_or_raise(<int>bmi_get_var_location(self._bmi, name, self.STR_BUFFER))
-        return <bytes>self.STR_BUFFER
+    cpdef object get_var_location(self, name):
+        ok_or_raise(<int>bmi_get_var_location(self._bmi, <char*>name, self.STR_BUFFER))
+        return self.STR_BUFFER
 
     cpdef int get_var_nbytes(self, name):
         cdef int nbytes
-        ok_or_raise(<int>bmi_get_var_nbytes(self._bmi, name, &nbytes))
+        ok_or_raise(<int>bmi_get_var_nbytes(self._bmi, <char*>name, &nbytes))
         return nbytes
 
     cpdef double get_current_time(self):
@@ -218,9 +219,9 @@ cdef class {{cookiecutter.class_name}}:
         ok_or_raise(<int>bmi_get_end_time(self._bmi, &time))
         return time
 
-    cpdef bytes get_time_units(self):
+    cpdef object get_time_units(self):
         ok_or_raise(<int>bmi_get_time_units(self._bmi, self.STR_BUFFER))
-        return <bytes>self.STR_BUFFER
+        return self.STR_BUFFER
 
     cpdef double get_time_step(self):
         cdef double time
@@ -236,11 +237,11 @@ cdef class {{cookiecutter.class_name}}:
         cdef int gid = self.get_var_grid(name)
         cdef int size = self.get_grid_size(gid)
         cdef void* ptr
-        ok_or_raise(bmi_get_value_ptr(self._bmi, name, &ptr))
+        ok_or_raise(bmi_get_value_ptr(self._bmi, <char*>name, &ptr))
         return np.asarray(<np.float_t[:size]>ptr)
 
     cpdef set_value(self, name, np.ndarray buff):
-        ok_or_raise(<int>bmi_set_value(self._bmi, name, buff.data))
+        ok_or_raise(<int>bmi_set_value(self._bmi, <char*>name, buff.data))
         return buff
 
     cpdef int get_grid_rank(self, gid):
@@ -253,9 +254,9 @@ cdef class {{cookiecutter.class_name}}:
         ok_or_raise(<int>bmi_get_grid_size(self._bmi, gid, &size))
         return size
 
-    cpdef bytes get_grid_type(self, gid):
+    cpdef object get_grid_type(self, gid):
         ok_or_raise(bmi_get_grid_type(self._bmi, gid, self.STR_BUFFER))
-        return <bytes>self.STR_BUFFER
+        return self.STR_BUFFER
 
     cpdef get_grid_shape(self, int gid, np.ndarray[int, ndim=1] shape):
         ok_or_raise(<int>bmi_get_grid_shape(self._bmi, gid, &shape[0]))
@@ -294,29 +295,29 @@ cdef class {{cookiecutter.class_name}}:
         self._bmi.Finalize()
 
     cpdef int get_var_grid(self, name):
-        return self._bmi.GetVarGrid(name)
+        return self._bmi.GetVarGrid(<char*>name)
 
-    cpdef bytes get_var_type(self, name):
-        self._bmi.GetVarType(name, self.STR_BUFFER)
+    cpdef object get_var_type(self, name):
+        self._bmi.GetVarType(<char*>name, self.STR_BUFFER)
         return self.STR_BUFFER
 
-    cpdef bytes get_var_units(self, name):
-        self._bmi.GetVarUnits(name, self.STR_BUFFER)
+    cpdef object get_var_units(self, name):
+        self._bmi.GetVarUnits(<char*>name, self.STR_BUFFER)
         return self.STR_BUFFER
 
     cpdef int get_var_itemsize(self, name):
-        return self._bmi.GetVarItemsize(name)
+        return self._bmi.GetVarItemsize(<char*>name)
 
     cpdef int get_var_nbytes(self, name):
-        return self._bmi.GetVarNbytes(name)
+        return self._bmi.GetVarNbytes(<char*>name)
 
-    cpdef bytes get_var_location(self, name):
-        self._bmi.GetVarLocation(name, self.STR_BUFFER)
+    cpdef object get_var_location(self, name):
+        self._bmi.GetVarLocation(<char*>name, self.STR_BUFFER)
         return self.STR_BUFFER
 
     cpdef get_component_name(self):
         self._bmi.GetComponentName(self.STR_BUFFER)
-        return <bytes>self.STR_BUFFER
+        return self.STR_BUFFER
 
     cpdef int get_input_var_name_count(self):
         return self._bmi.GetInputVarNameCount()
@@ -338,7 +339,7 @@ cdef class {{cookiecutter.class_name}}:
             self._bmi.GetInputVarNames(names)
 
             for i in range(count):
-                py_names.append(<bytes>(names[i]))
+                py_names.append((names[i])
         except Exception:
             raise
         finally:
@@ -361,7 +362,7 @@ cdef class {{cookiecutter.class_name}}:
             self._bmi.GetOutputVarNames(names)
 
             for i in range(count):
-                py_names.append(<bytes>(names[i]))
+                py_names.append(names[i])
         except Exception:
             raise
         finally:
@@ -379,19 +380,19 @@ cdef class {{cookiecutter.class_name}}:
     cpdef double get_end_time(self):
         return self._bmi.GetEndTime()
 
-    cpdef bytes get_time_units(self):
+    cpdef object get_time_units(self):
         self._bmi.GetTimeUnits(self.STR_BUFFER)
-        return <bytes>self.STR_BUFFER
+        return self.STR_BUFFER
 
     cpdef double get_time_step(self):
         return self._bmi.GetTimeStep()
 
     cpdef get_value(self, name, np.ndarray buff):
-        self._bmi.GetValue(name, buff.data)
+        self._bmi.GetValue(<char*>name, buff.data)
         return buff
 
     cpdef set_value(self, name, np.ndarray buff):
-        self._bmi.SetValue(name, buff.data)
+        self._bmi.SetValue(<char*>name, buff.data)
         return buff
 
     cpdef int get_grid_rank(self, gid):
@@ -409,9 +410,9 @@ cdef class {{cookiecutter.class_name}}:
     # cpdef int get_grid_number_of_edges(self, gid):
     #     return self._bmi.GetGridNumberOfEdges(gid)
 
-    cpdef bytes get_grid_type(self, gid):
+    cpdef object get_grid_type(self, gid):
         self._bmi.GetGridType(gid, self.STR_BUFFER)
-        return <bytes>self.STR_BUFFER
+        return self.STR_BUFFER
 
     cpdef get_grid_x(self, gid, np.ndarray[double, ndim=1] buff):
         self._bmi.GetGridX(gid, &buff[0])
