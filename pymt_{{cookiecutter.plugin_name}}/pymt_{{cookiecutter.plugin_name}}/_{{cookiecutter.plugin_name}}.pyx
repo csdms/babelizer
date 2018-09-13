@@ -339,7 +339,7 @@ cdef class {{cookiecutter.class_name}}:
             self._bmi.GetInputVarNames(names)
 
             for i in range(count):
-                py_names.append((names[i])
+                py_names.append((names[i]))
         except Exception:
             raise
         finally:
