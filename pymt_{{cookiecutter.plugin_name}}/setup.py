@@ -3,7 +3,6 @@ import os, sys
 
 from setuptools import setup, find_packages
 
-# from Cython.Build import cythonize
 from distutils.extension import Extension
 import versioneer
 
@@ -74,8 +73,8 @@ extra_compile_args = [
 
 ext_modules = [
     Extension(
-        "pymt_{{cookiecutter.plugin_name}}._{{cookiecutter.plugin_name}}",
-        ["pymt_{{cookiecutter.plugin_name}}/_{{cookiecutter.plugin_name}}.pyx"],
+        "pymt_{{cookiecutter.plugin_name}}.lib.{{cookiecutter.plugin_name}}._{{cookiecutter.plugin_name}}",
+        ["pymt_{{cookiecutter.plugin_name}}/lib/{{cookiecutter.plugin_name}}/_{{cookiecutter.plugin_name}}.pyx"],
         language="{{cookiecutter.language}}",
         include_dirs=include_dirs,
         libraries=libraries,
@@ -101,7 +100,7 @@ setup(
     author="Eric Hutton",
     description="PyMT plugin {{cookiecutter.plugin_name}}",
     version=versioneer.get_version(),
-{% if cookiecutter.language == 'c' or cookiecutter.language == 'c++' -%}
+{%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' -%}
     setup_requires=["cython"],
     ext_modules=ext_modules,
 {%- endif %}
