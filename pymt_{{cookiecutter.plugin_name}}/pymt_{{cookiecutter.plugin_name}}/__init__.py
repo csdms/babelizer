@@ -1,4 +1,6 @@
 #! /usr/bin/env python
 
+from .bmi import {{ cookiecutter.plugin_class }}
 
-from ._{{cookiecutter.module_name}} import {{cookiecutter.class_name}}
+
+__all__ = ["{{ cookiecutter.plugin_class }}"]

@@ -5,8 +5,8 @@ os:
 env:
   matrix:
   - TRAVIS_PYTHON_VERSION="2.7"
-  - TRAVIS_PYTHON_VERSION="3.5"
   - TRAVIS_PYTHON_VERSION="3.6"
+  - TRAVIS_PYTHON_VERSION="3.7"
   global:
   - CONDA_PREFIX=$HOME/miniconda
   - MINICONDA_URL_BASE="https://repo.continuum.io/miniconda/Miniconda3-latest"
@@ -30,11 +30,12 @@ install:
 - export PATH="$CONDA_PREFIX/bin:$PATH"
 - hash -r
 - conda config --set always_yes yes --set changeps1 no
-- conda create -n buildit python=$TRAVIS_PYTHON_VERSION
-- source activate buildit
-- conda install -q conda-build anaconda-client coverage sphinx pytest
+- conda config --add channels conda-forge
+- conda create -n _testing python=$TRAVIS_PYTHON_VERSION
+- source activate _testing
+- conda install -q conda-build anaconda-client
 script:
-- conda build ./recipe -c landlab -c csdms-stack -c conda-forge --old-build-string
+- conda build ./recipe --old-build-string
 after_success:
 - curl https://raw.githubusercontent.com/csdms/ci-tools/master/anaconda_upload.py
   > $HOME/anaconda_upload.py

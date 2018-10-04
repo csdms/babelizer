@@ -1,10 +1,12 @@
 #! /usr/bin/env python
-import os, sys
+import os
+import sys
 
-from setuptools import setup, find_packages
+import numpy as np
+import versioneer
+from setuptools import find_packages, setup
 
 from distutils.extension import Extension
-import versioneer
 
 try:
     import model_metadata
@@ -73,8 +75,8 @@ extra_compile_args = [
 
 ext_modules = [
     Extension(
-        "pymt_{{cookiecutter.plugin_name}}.lib.{{cookiecutter.plugin_name}}._{{cookiecutter.plugin_name}}",
-        ["pymt_{{cookiecutter.plugin_name}}/lib/{{cookiecutter.plugin_name}}/_{{cookiecutter.plugin_name}}.pyx"],
+        "pymt_{{cookiecutter.plugin_name}}.lib._bmi",
+        ["pymt_{{cookiecutter.plugin_name}}/lib/_bmi.pyx"],
         language="{{cookiecutter.language}}",
         include_dirs=include_dirs,
         libraries=libraries,
@@ -87,10 +89,14 @@ ext_modules = [
 
 {%- endif %}
 
-packages = find_packages(include=["pymt_{{cookiecutter.plugin_name}}"])
+packages = find_packages()
 pymt_components = [
     (
+{% if cookiecutter.language == 'c' or cookiecutter.language == 'c++' -%}
+        "{{cookiecutter.pymt_class}}=pymt_{{cookiecutter.plugin_name}}.lib:{{cookiecutter.plugin_class}}",
+{% else %}
         "{{cookiecutter.pymt_class}}={{cookiecutter.plugin_module}}:{{cookiecutter.plugin_class}}",
+{%- endif %}
         "meta",
     )
 ]

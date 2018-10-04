@@ -1,46 +1,53 @@
-{{"{"}}% set name = "pymt_{{cookiecutter.module_name}}" %{{"}"}}
-{{"{"}}% set version = "0.1" %{{"}"}}
-{{"{"}}% set build = "0" %{{"}"}}
+{{"{%"}} set data = load_setup_py_data() {{"%}"}}
 
 package:
-  name: {{"{{"}} name {{"}}"}}
-  version: {{"{{"}} version {{"}}"}}
+  name: "pymt_{{cookiecutter.plugin_name}}"
+  version: {{"{{"}} data.get('version') {{"}}"}}
 
 source:
   path: ..
 
 build:
-  number: {{"{{"}} build {{"}}"}}
-  script: python -m pip install --no-deps --ignore-installed .
+  number: 0
+  script: "{{"{{"}} PYTHON {{"}}"}} -m pip install . --no-deps --ignore-installed --no-cache-dir -vvv"
 
 requirements:
+  build:
+    - {{"{{"}} compiler('c') {{"}}"}}
   host:
     - python
-    - setuptools
-    - numpy 1.11.*
+    - pip
     - cython
+    - numpy 1.11.*
     - model_metadata
-    - {{cookiecutter.module_name}}
+    {%- if cookiecutter.plugin_requirements -%}
+    {%- for requirement in cookiecutter.plugin_requirements.split(',') %}
+    - {{ requirement|trim }} {% endfor %}
+    {%- endif %}
 
   run:
     - python
-    - setuptools
+    - {{"{{"}} pin_compatible('numpy') {{"}}"}}
     - pymt
-    - {{cookiecutter.module_name}}
+    {%- if cookiecutter.plugin_requirements -%}
+    {%- for requirement in cookiecutter.plugin_requirements.split(',') %}
+    - {{ requirement|trim }} {% endfor %}
+    {%- endif %}
 
 test:
   requires:
     - bmi-tester
+    - model_metadata
   imports:
     - pymt
-    - {{cookiecutter.module_name}}
+    - pymt_{{cookiecutter.plugin_name}}
   commands:
-    - mmd-stage {{cookiecutter.class_name}} .
-    - bmi-test {{cookiecutter.module_name}}:{{cookiecutter.class_name}} --infile={{cookiecutter.module_name}}.txt
+    - config_file=$(mmd-stage {{ cookiecutter.plugin_class }} . > MANIFEST && mmd-query {{ cookiecutter.plugin_class }} --var=run.config_file.path)
+    - bmi-test pymt_{{ cookiecutter.plugin_name }}.bmi:{{ cookiecutter.plugin_class }} --infile=$config_file --manifest=MANIFEST -v
 
 about:
-  summary: Python package that wraps the {{cookiecutter.module_name}} BMI.
-  home: https://github.com/mcflugen/pymt_{{cookiecutter.module_name}}
+  summary: Python package that wraps the {{cookiecutter.plugin_name}} BMI.
+  home: https://github.com/mcflugen/pymt_{{cookiecutter.plugin_name}}
   license: {{cookiecutter.open_source_license}}
   license_file: LICENSE
-  dev_url: https://github.com/mcflugen/pymt_{{cookiecutter.module_name}}
+  dev_url: https://github.com/mcflugen/pymt_{{cookiecutter.plugin_name}}
