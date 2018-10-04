@@ -68,11 +68,8 @@ be installed with:
 
 {%- endif %}
 
-Until `pymt_{{ cookiecutter.plugin_name }}` is available on `conda-forge`, it must
-by installed from source,
+To install `pymt_{{ cookiecutter.plugin_name }}`,
 
 .. code::
 
-  git clone https://github.com/mcflugen/pymt_{{ cookiecutter.plugin_name }}
-  cd pymt_{{ cookiecutter.plugin_name }}
-  python setup.py install
+  conda install pymt_{{ cookiecutter.plugin_name }}
