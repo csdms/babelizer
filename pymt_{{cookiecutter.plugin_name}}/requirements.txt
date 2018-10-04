@@ -1,2 +1,6 @@
-cython==0.27.3
-numpy==1.14.2
+cython
+numpy
+pymt
+model_metadata
+{% for requirement in cookiecutter.plugin_requirements.split(',') -%}
+{{ requirement|trim }} {% endfor %}
