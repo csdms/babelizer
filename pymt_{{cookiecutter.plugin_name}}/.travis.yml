@@ -34,10 +34,11 @@ install:
 - conda create -n _testing python=$TRAVIS_PYTHON_VERSION
 - source activate _testing
 - conda install -q conda-build anaconda-client
+- conda install -q --file=requirements.txt
+- conda install -q bmi-tester model_metadata
 script:
-- conda build ./recipe --old-build-string
-after_success:
-- curl https://raw.githubusercontent.com/csdms/ci-tools/master/anaconda_upload.py
-  > $HOME/anaconda_upload.py
-- echo $ANACONDA_TOKEN | python $HOME/anaconda_upload.py ./recipe --channel=main --org=csdms-stack --old-build-string
-  --token=-
+- python setup.py develop
+- python -c 'import pymt_{{ cookiecutter.plugin_name }}'
+- python -c 'import pymt'
+- config_file=$(mmd-stage {{ cookiecutter.plugin_class }} . > MANIFEST && mmd-query {{ cookiecutter.plugin_class }} --var=run.config_file.path)
+- bmi-test pymt_{{ cookiecutter.plugin_name }}.bmi:{{ cookiecutter.plugin_class }} --infile=$config_file --manifest=MANIFEST -v
