@@ -1,14 +1,26 @@
 #! /usr/bin/env python
-import os, sys
+import os
+import sys
 
-from setuptools import setup, find_packages
-
-# from Cython.Build import cythonize
-from distutils.extension import Extension
 import numpy as np
 import versioneer
+from setuptools import find_packages, setup
 
-from model_metadata.utils import get_cmdclass, get_entry_points
+from distutils.extension import Extension
+
+try:
+    import model_metadata
+except ImportError:
+    def get_cmdclass(*args, **kwds):
+        return kwds.get("cmdclass", None)
+    def get_entry_points(*args):
+        return None
+else:
+    from model_metadata.utils import get_cmdclass, get_entry_points
+
+
+{% if cookiecutter.language == 'c' or cookiecutter.language == 'c++' -%}
+import numpy as np
 
 
 include_dirs = [
@@ -63,8 +75,8 @@ extra_compile_args = [
 
 ext_modules = [
     Extension(
-        "{{cookiecutter.module_name}}._{{cookiecutter.module_name}}",
-        ["{{cookiecutter.module_name}}/_{{cookiecutter.module_name}}.pyx"],
+        "pymt_{{cookiecutter.plugin_name}}.lib._bmi",
+        ["pymt_{{cookiecutter.plugin_name}}/lib/_bmi.pyx"],
         language="{{cookiecutter.language}}",
         include_dirs=include_dirs,
         libraries=libraries,
@@ -75,22 +87,29 @@ ext_modules = [
     )
 ]
 
+{%- endif %}
 
-packages = find_packages(include=["{{cookiecutter.module_name}}"])
+packages = find_packages()
 pymt_components = [
     (
-        "{{cookiecutter.class_name}}={{cookiecutter.module_name}}:{{cookiecutter.class_name}}",
+{% if cookiecutter.language == 'c' or cookiecutter.language == 'c++' -%}
+        "{{cookiecutter.pymt_class}}=pymt_{{cookiecutter.plugin_name}}.lib:{{cookiecutter.plugin_class}}",
+{% else %}
+        "{{cookiecutter.pymt_class}}={{cookiecutter.plugin_module}}:{{cookiecutter.plugin_class}}",
+{%- endif %}
         "meta",
     )
 ]
 
 setup(
-    name="{{cookiecutter.module_name}}",
+    name="pymt_{{cookiecutter.plugin_name}}",
     author="Eric Hutton",
-    description="Python interface to {{cookiecutter.module_name}}",
+    description="PyMT plugin {{cookiecutter.plugin_name}}",
     version=versioneer.get_version(),
+{%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' -%}
     setup_requires=["cython"],
     ext_modules=ext_modules,
+{%- endif %}
     packages=packages,
     cmdclass=get_cmdclass(pymt_components, cmdclass=versioneer.get_cmdclass()),
     entry_points=get_entry_points(pymt_components),

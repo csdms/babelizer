@@ -1,7 +1,7 @@
 
 {% if cookiecutter.language == 'c' %}
 
-cdef extern from "{{cookiecutter.bmi_include}}":
+cdef extern from "bmi.h":
     ctypedef struct BMI_Model:
         pass
 
@@ -9,7 +9,7 @@ cdef extern from "{{cookiecutter.bmi_include}}":
 
 {% elif cookiecutter.language == 'c++' %}
 
-cdef extern from "{{cookiecutter.bmi_include}}" namespace "bmi":
+cdef extern from "bmi.hxx" namespace "bmi":
     cdef cppclass Model:
         Model() except +
         void GetComponentName(char * name) except +

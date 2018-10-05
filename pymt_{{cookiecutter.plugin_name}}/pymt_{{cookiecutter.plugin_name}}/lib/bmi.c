@@ -1,6 +1,5 @@
 #include <stdlib.h>
-#include "{{cookiecutter.bmi_include}}"
-
+#include "bmi.h"
 
 static BMI_Model* bmi_new() {
   return (BMI_Model*) calloc(1, sizeof(BMI_Model));

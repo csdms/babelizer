@@ -1,11 +1,11 @@
 {
-  "full_name": "Eric Hutton",
-  "github_username": "mcflugen",
-  "module_name": "cython_boilerplate",
-  "bmi_include": "{{ cookiecutter.module_name }}/bmi_{{ cookiecutter.module_name }}.h",
-  "bmi_register": "register_bmi_{{ cookiecutter.module_name }}",
-  "class_name": "{{ cookiecutter.module_name|title }}",
-  "language": ["c", "c++"],
+  "plugin_name": "plugin",
+  "plugin_requirements": "",
+  "plugin_module": "plugin",
+  "plugin_class": "{{ cookiecutter.plugin_name|title }}",
+  "language": ["c", "c++", "python"],
+  "pymt_class": "{{ cookiecutter.plugin_class }}",
+  "bmi_register": "bmi_register_{{ cookiecutter.plugin_name }}",
   "undef_macros": "",
   "define_macros": "",
   "libraries": "",
@@ -13,5 +13,7 @@
   "include_dirs": "",
   "extra_compile_args": "",
   "open_source_license": ["MIT license", "BSD license", "ISC license", "Apache Software License 2.0", "GNU General Public License v3", "Not open source"],
-  "project_short_description": "Python BMI for {{cookiecutter.module_name}}"
+  "project_short_description": "PyMT plugin for {{cookiecutter.plugin_name}}",
+  "full_name": "Eric Hutton",
+  "github_username": "mcflugen"
 }

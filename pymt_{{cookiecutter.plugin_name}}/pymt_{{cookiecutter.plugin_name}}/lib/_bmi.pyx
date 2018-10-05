@@ -6,7 +6,7 @@ from libc.stdlib cimport malloc, free
 cimport numpy as np
 import numpy as np
 
-cimport _{{cookiecutter.module_name}}
+cimport _bmi
 
 
 {% if cookiecutter.language == 'c' %}
@@ -74,8 +74,8 @@ def ok_or_raise(status):
         raise RuntimeError('error code {status}'.format(status=status))
 
 
-cdef class {{cookiecutter.class_name}}:
-    cdef _{{cookiecutter.module_name}}.BMI_Model* _bmi
+cdef class {{ cookiecutter.plugin_class }}:
+    cdef _bmi.BMI_Model* _bmi
     cdef char[2048] STR_BUFFER
 
     def __cinit__(self):
@@ -272,8 +272,8 @@ cdef class {{cookiecutter.class_name}}:
 
 {% elif cookiecutter.language == 'c++' %}
 
-cdef class {{cookiecutter.class_name}}:
-    cdef _{{cookiecutter.module_name}}.Model _bmi
+cdef class {{ cookiecutter.plugin_class }}:
+    cdef _bmi.Model _bmi
     cdef char[2048] STR_BUFFER
 
     def __cinit__(self):
@@ -339,7 +339,7 @@ cdef class {{cookiecutter.class_name}}:
             self._bmi.GetInputVarNames(names)
 
             for i in range(count):
-                py_names.append((names[i])
+                py_names.append((names[i]))
         except Exception:
             raise
         finally:
