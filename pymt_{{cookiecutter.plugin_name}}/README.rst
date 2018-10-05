@@ -1,7 +1,8 @@
+====={{ '=' * cookiecutter.plugin_name | length }}
+pymt_{{ cookiecutter.plugin_name }}
+====={{ '=' * cookiecutter.plugin_name | length }}
+
 {% set is_open_source = cookiecutter.open_source_license != 'Not open source' -%}
-{% for _ in cookiecutter.plugin_name %}={% endfor %}
-{{ cookiecutter.plugin_name }}
-{% for _ in cookiecutter.plugin_name %}={% endfor %}
 
 {% if is_open_source %}
 .. image:: https://img.shields.io/pypi/v/pymt_{{ cookiecutter.plugin_name }}.svg
