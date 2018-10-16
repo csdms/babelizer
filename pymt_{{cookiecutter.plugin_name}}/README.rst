@@ -1,11 +1,16 @@
+====={{ '=' * cookiecutter.plugin_name | length }}
+pymt_{{ cookiecutter.plugin_name }}
+====={{ '=' * cookiecutter.plugin_name | length }}
+
 {% set is_open_source = cookiecutter.open_source_license != 'Not open source' -%}
-{% for _ in cookiecutter.plugin_name %}={% endfor %}
-{{ cookiecutter.plugin_name }}
-{% for _ in cookiecutter.plugin_name %}={% endfor %}
 
 {% if is_open_source %}
-.. image:: https://img.shields.io/pypi/v/pymt_{{ cookiecutter.plugin_name }}.svg
-        :target: https://pypi.python.org/pypi/pymt_{{ cookiecutter.plugin_name }}
+.. image:: https://img.shields.io/badge/CSDMS-Basic%20Model%20Interface-green.svg
+        :target: https://bmi-forum.readthedocs.io/
+        :alt: Basic Model Interface
+
+.. image:: https://img.shields.io/badge/recipe-pymt_{{ cookiecutter.plugin_name }}-green.svg
+        :target: https://anaconda.org/conda-forge/pymt_{{ cookiecutter.plugin_name }}
 
 .. image:: https://img.shields.io/travis/{{ cookiecutter.github_username }}/pymt_{{ cookiecutter.plugin_name }}.svg
         :target: https://travis-ci.org/{{ cookiecutter.github_username }}/pymt_{{ cookiecutter.plugin_name }}
@@ -13,6 +18,10 @@
 .. image:: https://readthedocs.org/projects/pymt_{{ cookiecutter.plugin_name | replace("_", "-") }}/badge/?version=latest
         :target: https://pymt_{{ cookiecutter.plugin_name | replace("_", "-") }}.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+        :target: https://github.com/csdms/pymt
+        :alt: Code style: black
 {%- endif %}
 
 
