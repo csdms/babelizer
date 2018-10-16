@@ -15,6 +15,27 @@ def remove_folder(folderpath):
     os.rmdir(os.path.join(PROJECT_DIRECTORY, folderpath))
 
 
+def make_folder(folderpath):
+    try:
+        os.mkdir(os.path.join(PROJECT_DIRECTORY, folderpath))
+    except OSError:
+        pass
+
+
+def write_api_yaml(folderpath, **kwds):
+    api_yaml = os.path.join(PROJECT_DIRECTORY, folderpath, "api.yaml")
+    contents = """
+name: {plugin_name}
+language: {language}
+package: {plugin_name}
+class: {plugin_class}
+""".format(**kwds).strip()
+    with open(api_yaml, "w") as fp:
+        fp.write(contents)
+
+    return api_yaml
+
+
 if __name__ == "__main__":
     {%- if cookiecutter.language == 'c' %}
 
@@ -39,3 +60,15 @@ if __name__ == "__main__":
 
     if "Not open source" == "{{ cookiecutter.open_source_license }}":
         remove_file("LICENSE")
+
+{% for entry_point in cookiecutter.entry_points.split(',') %}
+    {%- set pymt_class = entry_point.split('=')[0] %}
+    make_folder(os.path.join("meta", "{{ pymt_class }}"))
+
+    write_api_yaml(
+        os.path.join("meta", "{{ pymt_class }}"),
+        language="{{ cookiecutter.language }}",
+        plugin_class="{{ pymt_class }}",
+        plugin_name="{{ cookiecutter.plugin_name }}",
+    )
+{% endfor %}

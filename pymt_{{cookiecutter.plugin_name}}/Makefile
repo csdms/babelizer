@@ -58,8 +58,14 @@ pretty:
 	black setup.py pymt_{{ cookiecutter.plugin_name }}
 
 test: ## run tests quickly with the default Python
-	config_file=$(mmd-stage {{ cookiecutter.plugin_class }} . > MANIFEST && mmd-query {{ cookiecutter.plugin_class }} --var=run.config_file.path)
-	bmi-test pymt_{{ cookiecutter.plugin_name }}._{{ cookiecutter.plugin_name }}:{{ cookiecutter.plugin_class }} --infile=$config_file --manifest=MANIFEST -v
+{%- for entry_point in cookiecutter.entry_points.split(',') %}
+    {%- set plugin_module, plugin_class = entry_point.split('=')[1].split(':') -%}
+    {%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' %}
+        {%- set plugin_class = entry_point.split('=')[0] -%}
+    {%- endif %}
+	config_file=$(mmd-stage {{ plugin_class }} . > MANIFEST && mmd-query {{ plugin_class }} --var=run.config_file.path)
+	bmi-test pymt_{{ cookiecutter.plugin_name }}.bmi:{{ plugin_class }} --infile=$config_file --manifest=MANIFEST -v
+{%- endfor %}
 
 test-all: ## run tests on every Python version with tox
 	tox

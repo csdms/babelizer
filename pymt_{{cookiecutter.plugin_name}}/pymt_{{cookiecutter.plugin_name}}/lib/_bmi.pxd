@@ -4,9 +4,10 @@
 cdef extern from "bmi.h":
     ctypedef struct BMI_Model:
         pass
-
-    BMI_Model* {{cookiecutter.bmi_register}}(BMI_Model *model)
-
+{% for entry_point in cookiecutter.entry_points.split(',') %}
+    {%- set plugin_module, bmi_register = entry_point.split('=')[1].split(':') %}
+    BMI_Model* {{ bmi_register }}(BMI_Model *model)
+{%- endfor %}
 {% elif cookiecutter.language == 'c++' %}
 
 cdef extern from "bmi.hxx" namespace "bmi":
