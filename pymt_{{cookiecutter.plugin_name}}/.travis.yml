@@ -39,7 +39,6 @@ install:
 script:
 - python setup.py develop
 - python -c 'import pymt_{{ cookiecutter.plugin_name }}'
-- python -c 'import pymt'
 {%- for entry_point in cookiecutter.entry_points.split(',') %}
     {%- set plugin_module, plugin_class = entry_point.split('=')[1].split(':') -%}
     {%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' %}
