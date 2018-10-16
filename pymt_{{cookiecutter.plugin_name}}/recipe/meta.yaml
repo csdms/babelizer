@@ -28,7 +28,6 @@ requirements:
   run:
     - python
     - {{"{{"}} pin_compatible('numpy') {{"}}"}}
-    - pymt
     {%- if cookiecutter.plugin_requirements -%}
     {%- for requirement in cookiecutter.plugin_requirements.split(',') %}
     - {{ requirement|trim }} {% endfor %}
@@ -39,7 +38,6 @@ test:
     - bmi-tester
     - model_metadata
   imports:
-    - pymt
     - pymt_{{cookiecutter.plugin_name}}
   commands:
 {%- for entry_point in cookiecutter.entry_points.split(',') %}
