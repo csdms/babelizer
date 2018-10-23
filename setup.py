@@ -9,7 +9,7 @@ install_requires = [
     "jinja2",
     "cookiecutter",
     "six",
-    "scripting",
+    # "scripting",
 ]
 
 
@@ -35,6 +35,7 @@ setup(
     entry_points={
         'console_scripts': [
             'bmi-wrap=bmi_wrap.cli.main_wrap:main',
+            'bmi-render=bmi_wrap.cli.main_render:main',
         ],
         'bmi.plugins': [
             'bmi_wrap=bmi_wrap.cli.main:configure_parser_wrap',

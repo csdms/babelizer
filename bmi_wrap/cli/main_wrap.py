@@ -1,18 +1,16 @@
 #! /usr/bin/env python
-from __future__ import print_function
-
 import os
 
-from scripting.prompting import status
 from scripting.contexts import cd
 from scripting.unix import system
 
+from .. import __version__
 from ..wrap import render
 
 
 def get_library_name(path):
     fname, _ = os.path.splitext(os.path.basename(path))
-    if fname.startswith('lib'):
+    if fname.startswith("lib"):
         fname = fname[3:]
 
     return fname
@@ -32,11 +30,11 @@ def pop_if_none(context):
     return context
 
 
-def join_lists(context, delim=' '):
+def join_lists(context, delim=" "):
     for arg, value in context.items():
         if isinstance(value, list):
             try:
-                context[arg] = ','.join(value)
+                context[arg] = ",".join(value)
             except TypeError:
                 pass
     return context
@@ -45,17 +43,22 @@ def join_lists(context, delim=' '):
 def execute(args):
     context = args.__dict__
 
-    context['libraries'] = append_if_missing(get_library_name(args.lib),
-                                             items=args.libraries)
+    context["libraries"] = append_if_missing(
+        get_library_name(args.lib), items=args.libraries
+    )
 
     pop_if_none(context)
-    join_lists(context, delim=',')
+    join_lists(context, delim=",")
 
-    path = render(args.language, context, output_dir=args.output_dir,
-                 overwrite_if_exists=args.clobber)
+    path = render(
+        args.language,
+        context,
+        output_dir=args.output_dir,
+        overwrite_if_exists=args.clobber,
+    )
     if args.compile:
         with cd(path):
-            system(['python', 'setup.py', 'develop'])
+            system(["python", "setup.py", "develop"])
 
 
 def main():
