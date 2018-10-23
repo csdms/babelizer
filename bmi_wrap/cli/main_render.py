@@ -125,8 +125,8 @@ def validate_meta(meta):
 
 class PluginMetadata(object):
     REQUIRED = {
-        "library": ("name", "language", "entry_point"),
-        "plugin": ("name", "module", "class", "conda_package"),
+        "library": ("language", "entry_point"),
+        "plugin": ("name", "requirements"),
         "info": ("plugin_author", "github_username", "plugin_license", "summary"),
     }
 
@@ -139,12 +139,13 @@ class PluginMetadata(object):
 
     @staticmethod
     def norm(config):
+        if "build" not in config:
+            config["build"] = {}
         return {
             "library": {
-                "name": config["library"]["name"],
                 "language": config["library"]["language"],
-                "bmi_include": config["library"]["bmi_include"],
                 "entry_point": config["library"]["entry_point"],
+                "register": config["library"].get("register", ""),
             },
             "build": {
                 "undef_macros": config["build"].get("undef_macros", []),
@@ -156,9 +157,7 @@ class PluginMetadata(object):
             },
             "plugin": {
                 "name": config["plugin"]["name"],
-                "module": config["plugin"]["module"],
-                "class": config["plugin"]["class"],
-                "conda_package": config["plugin"]["conda_package"],
+                "requirements": config["plugin"]["requirements"],
             },
             "info": {
                 "plugin_author": config["info"]["plugin_author"],
@@ -171,18 +170,35 @@ class PluginMetadata(object):
     def dump(self, fp):
         yaml.safe_dump(self._meta, fp, default_flow_style=False)
 
+    @staticmethod
+    def parse_entry_point(specifier):
+        name, value = specifier.split("=")
+        module, obj = value.split(":")
+
+        return name.strip(), module.strip(), obj.strip()
+
     def as_cookiecutter_context(self):
+        language = self._meta["library"]["language"]
+        plugin_module = ""
+        plugin_class = ""
+        entry_point = ""
+
+        entry_points = self._meta["library"]["entry_point"]
+        if isinstance(entry_points, six.string_types):
+            entry_points = [entry_points]
+        entry_points = ",".join(entry_points)
+
         return {
+            "entry_points": entry_points,
             "full_name": self._meta["info"]["plugin_author"],
             "github_username": self._meta["info"]["github_username"],
             "plugin_name": self._meta["plugin"]["name"],
-            "plugin_name": self._meta["plugin"]["module"],
-            "plugin_class": self._meta["plugin"]["class"],
-            "plugin_conda_package": self._meta["plugin"]["conda_package"],
-            "bmi_include": self._meta["library"]["bmi_include"],
-            "bmi_register": self._meta["library"]["entry_point"],
-            # "class_name": self._meta["pymt"]["class_name"],
-            "language": self._meta["library"]["language"],
+            "plugin_module": plugin_module,
+            "plugin_class": plugin_class,
+            "pymt_class": entry_point,
+            "plugin_requirements": ",".join(self._meta["plugin"]["requirements"]),
+            "bmi_register": "",
+            "language": language,
             "undef_macros": ",".join(self._meta["build"]["undef_macros"]),
             "define_macros": ",".join(self._meta["build"]["define_macros"]),
             "libraries": ",".join(self._meta["build"]["libraries"]),
@@ -240,15 +256,27 @@ def main(meta, output, compile, clobber, template, quiet, verbose):
     if not quiet:
         click.secho("Your pymt plugin can be found at {}".format(path), fg="green")
 
+    click.secho("Checklist of things to do:", fg="white")
+    checklist = OrderedDict(
+        [
+            ("versioneer install", " "),
+            ("make install", " "),
+            ("make pretty", " "),
+            ("make lint", " "),
+            ("make docs", " "),
+        ]
+    )
     if compile:
         with cd(path):
             system(["versioneer", "install"])
             system(["python", "setup.py", "develop"])
-    elif not quiet:
-        click.secho("Skipping compile step. You can do this later with:", fg="white")
-        click.secho("    $ cd {0}".format(path), fg="white")
-        click.secho("    $ versioneer install", fg="white")
-        click.secho("    $ python setup.py develop", fg="white")
+        checklist["version"] = "x"
+        checklist["install"] = "x"
+    if not quiet:
+        for item, status in checklist.items():
+            click.secho(
+                "[{status}] {item}".format(item=item, status=status), fg="white"
+            )
 
     if not quiet:
         click.secho(
@@ -260,6 +288,24 @@ def main(meta, output, compile, clobber, template, quiet, verbose):
 
 
 def render_plugin_repo(context, output_dir=".", clobber=False, template=None):
+    """Render a repository for a pymt plugin.
+
+    Parameters
+    ----------
+    context: dict
+        Context for the new repository.
+    output_dir : str, optional
+        Name of the folder that will be the new repository.
+    clobber: bool, optional
+        If a like-named repository already exists, overwrite it.
+    template: bool, optional
+        Path (or URL) to the cookiecutter template to use.
+
+    Returns
+    -------
+    path
+        Absolute path to the newly-created repository.
+    """
     template = template or _TEMPLATE_URI
 
     cookiecutter(
