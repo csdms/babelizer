@@ -2,7 +2,9 @@
 import os
 import sys
 
+{%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' %}
 import numpy as np
+{% endif %}
 import versioneer
 from setuptools import find_packages, setup
 
@@ -91,14 +93,18 @@ ext_modules = [
 
 packages = find_packages()
 pymt_components = [
+{%- for entry_point in cookiecutter.entry_points.split(',') %}
+    {%- set pymt_class = entry_point.split('=')[0] -%}
+    {%- set plugin_module, plugin_class = entry_point.split('=')[1].split(':') %}
     (
-{% if cookiecutter.language == 'c' or cookiecutter.language == 'c++' -%}
-        "{{cookiecutter.pymt_class}}=pymt_{{cookiecutter.plugin_name}}.lib:{{cookiecutter.plugin_class}}",
-{% else %}
-        "{{cookiecutter.pymt_class}}={{cookiecutter.plugin_module}}:{{cookiecutter.plugin_class}}",
-{%- endif %}
-        "meta",
-    )
+    {%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' %}
+        "{{ pymt_class }}=pymt_{{cookiecutter.plugin_name}}.lib:{{ pymt_class }}",
+    {%- else %}
+        "{{ pymt_class }}=pymt_{{cookiecutter.plugin_name}}.bmi:{{ pymt_class }}",
+    {%- endif %}
+        "meta/{{ pymt_class }}",
+    ),
+{%- endfor %}
 ]
 
 setup(

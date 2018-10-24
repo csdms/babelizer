@@ -15,5 +15,6 @@
   "open_source_license": ["MIT license", "BSD license", "ISC license", "Apache Software License 2.0", "GNU General Public License v3", "Not open source"],
   "project_short_description": "PyMT plugin for {{cookiecutter.plugin_name}}",
   "full_name": "Eric Hutton",
-  "github_username": "mcflugen"
+  "github_username": "mcflugen",
+  "entry_points": "Foo=bar:Baz"
 }

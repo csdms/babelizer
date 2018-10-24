@@ -73,8 +73,10 @@ def ok_or_raise(status):
     if status != 0:
         raise RuntimeError('error code {status}'.format(status=status))
 
-
-cdef class {{ cookiecutter.plugin_class }}:
+    {%- for entry_point in cookiecutter.entry_points.split(',') %}
+        {% set pymt_class = entry_point.split('=')[0] %}
+        {% set plugin_module, register_bmi = entry_point.split('=')[1].split(':') %}
+cdef class {{ pymt_class }}:
     cdef _bmi.BMI_Model* _bmi
     cdef char[2048] STR_BUFFER
 
@@ -84,7 +86,7 @@ cdef class {{ cookiecutter.plugin_class }}:
         if self._bmi is NULL:
             raise MemoryError()
         else:
-            {{cookiecutter.bmi_register}}(self._bmi)
+            {{ register_bmi }}(self._bmi)
 
     def initialize(self, config_file):
         status = <int>bmi_initialize(self._bmi, <char*>config_file, <void**>&(self._bmi))
@@ -270,9 +272,12 @@ cdef class {{ cookiecutter.plugin_class }}:
         ok_or_raise(<int>bmi_get_grid_origin(self._bmi, gid, &origin[0]))
         return origin
 
-{% elif cookiecutter.language == 'c++' %}
+    {% endfor %}
 
-cdef class {{ cookiecutter.plugin_class }}:
+{% elif cookiecutter.language == 'c++' %}
+    {%- for entry_point in cookiecutter.entry_points.split(',') %}
+        {% set pymt_class = entry_point.split('=')[0] %}
+cdef class {{ pymt_class }}:
     cdef _bmi.Model _bmi
     cdef char[2048] STR_BUFFER
 
@@ -429,5 +434,5 @@ cdef class {{ cookiecutter.plugin_class }}:
     cpdef get_grid_nodes_per_face(self, gid, np.ndarray[int, ndim=1] buff):
         self._bmi.GetGridNodesPerFace(gid, &buff[0])
         return buff
-
+    {% endfor %}
 {% endif %}
