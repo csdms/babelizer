@@ -6,6 +6,7 @@ from __future__ import absolute_import
     {%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' %}
 from .lib import {{ pymt_class }}
     {%- else %}
-from {{ plugin_module }} import {{ plugin_class }}
+from {{ plugin_module }} import {{ plugin_class }} as {{ pymt_class }}
+{{ pymt_class }}.__name__ = "{{ pymt_class }}"
     {%- endif %}
 {%- endfor %}

@@ -2,7 +2,9 @@
 import os
 import sys
 
+{%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' %}
 import numpy as np
+{% endif %}
 import versioneer
 from setuptools import find_packages, setup
 
@@ -98,7 +100,7 @@ pymt_components = [
     {%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' %}
         "{{ pymt_class }}=pymt_{{cookiecutter.plugin_name}}.lib:{{ pymt_class }}",
     {%- else %}
-        "{{ entry_point }}",
+        "{{ pymt_class }}=pymt_{{cookiecutter.plugin_name}}.bmi:{{ pymt_class }}",
     {%- endif %}
         "meta/{{ pymt_class }}",
     ),
