@@ -82,7 +82,7 @@ ext_modules = [
     Extension(
         "pymt_{{cookiecutter.plugin_name}}.lib.{{ pymt_class|lower }}",
         ["pymt_{{cookiecutter.plugin_name}}/lib/{{ pymt_class|lower }}.pyx"],
-        language="{{cookiecutter.language}}",
+        language="{{ cookiecutter.language }}",
         include_dirs=include_dirs,
         libraries=libraries + ["{{ bmi_lib }}"],
         library_dirs=library_dirs,
@@ -99,13 +99,8 @@ packages = find_packages()
 pymt_components = [
 {%- for entry_point in cookiecutter.entry_points.split(',') %}
     {%- set pymt_class = entry_point.split('=')[0] -%}
-    {%- set plugin_module, plugin_class = entry_point.split('=')[1].split(':') %}
     (
-    {%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' %}
-        "{{ pymt_class }}=pymt_{{cookiecutter.plugin_name}}.lib:{{ pymt_class }}",
-    {%- else %}
-        "{{ pymt_class }}=pymt_{{cookiecutter.plugin_name}}.bmi:{{ pymt_class }}",
-    {%- endif %}
+        "{{ pymt_class }}=pymt_{{ cookiecutter.plugin_name }}.bmi:{{ pymt_class }}",
         "meta/{{ pymt_class }}",
     ),
 {%- endfor %}
