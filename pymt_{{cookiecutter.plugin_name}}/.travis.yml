@@ -41,7 +41,5 @@ script:
 - python -c 'import pymt_{{ cookiecutter.plugin_name }}'
 {%- for entry_point in cookiecutter.entry_points.split(',') %}
     {%- set pymt_class = entry_point.split('=')[0] %}
-- |
-  config_file=$(mmd-stage {{ pymt_class }} . > MANIFEST && mmd-query {{ pymt_class }} --var=run.config_file.path)
-  bmi-test pymt_{{ cookiecutter.plugin_name }}.bmi:{{ pymt_class }} --infile=$config_file --manifest=MANIFEST -v
+- bmi-test pymt_{{ cookiecutter.plugin_name }}.bmi:{{ pymt_class }} -vvv
 {%- endfor %}

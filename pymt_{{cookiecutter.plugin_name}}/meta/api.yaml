@@ -1,4 +1,0 @@
-name: {{ cookiecutter.plugin_name }}
-language: {{ cookiecutter.language }}
-package: {{ cookiecutter.plugin_name }}
-class: {{ cookiecutter.plugin_class }}
