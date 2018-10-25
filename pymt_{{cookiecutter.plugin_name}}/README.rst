@@ -32,6 +32,26 @@ pymt_{{ cookiecutter.plugin_name }}
 * Documentation: https://{{ cookiecutter.plugin_name | replace("_", "-") }}.readthedocs.io.
 {% endif %}
 
+{% set max_width = "Component" | length -%}
+{%- for entry_point in cookiecutter.entry_points.split(',') %}
+    {%- set pymt_class = entry_point.split('=')[0] -%}
+    {%- if pymt_class|length > max_width -%}
+        {%- set max_width = pymt_class|length -%}
+    {%- endif -%}
+{%- endfor %}
+
+{%- set width_col_1 = max_width -%}
+{%- set width_col_2 = max_width + "`from pymt.components import `" | length -%}
+{% set fmt = "%-" + max_width|string + "s" %}
+{{ '=' * max_width }} {{ '=' * width_col_2 }}
+{{ fmt | format("Component",) }} PyMT
+{{ '=' * max_width }} {{ '=' * width_col_2 }}
+{% for entry_point in cookiecutter.entry_points.split(',') %}
+    {%- set pymt_class = entry_point.split('=')[0] -%}
+{{ fmt | format(pymt_class) }} `from pymt.components import {{ pymt_class }}`
+{% endfor -%}
+{{ '=' * max_width }} {{ '=' * width_col_2 }}
+
 ---------------
 Installing pymt
 ---------------
