@@ -1,29 +1,74 @@
 #! /usr/bin/env python
+import re
+from collections import defaultdict
+from pathlib import Path
 
-import os
 
-
-PROJECT_DIRECTORY = os.path.realpath(os.path.curdir)
-LIB_DIRECTORY = os.path.join("pymt_{{cookiecutter.plugin_name}}", "lib")
+PROJECT_DIRECTORY = Path.cwd().resolve()
+LIB_DIRECTORY = Path("pymt_{{cookiecutter.plugin_name}}", "lib")
 
 
 def remove_file(filepath):
-    os.remove(os.path.join(PROJECT_DIRECTORY, filepath))
+    (PROJECT_DIRECTORY / filepath).unlink(filepath)
 
 
 def remove_folder(folderpath):
-    os.rmdir(os.path.join(PROJECT_DIRECTORY, folderpath))
+    shutil.rmtree(PROJECT_DIRECTORY / folderpath)
 
 
 def make_folder(folderpath):
     try:
-        os.mkdir(os.path.join(PROJECT_DIRECTORY, folderpath))
+        (PROJECT_DIRECTORY / folderpath).mkdir(parents=True, exist_ok=True)
     except OSError:
         pass
 
 
+def clean_folder(folderpath, keep=None):
+    if keep:
+        keep = set([str((folderpath / path).resolve()) for path in keep])
+    else:
+        keep = set()
+
+    folderpath = PROJECT_DIRECTORY / folderpath
+    for fname in folderpath.glob("*"):
+        if str(fname.resolve()) not in keep:
+            fname.unlink()
+
+    try:
+        folderpath.rmdir()
+    except OSError as err:
+        if err.errno != 66: # 66 means the folder isn't empty.
+            raise
+
+
+def split_file(filepath, include_preamble=False):
+    filepath = Path(filepath)
+    SPLIT_START_REGEX = re.compile("\s*#\s*start:\s*(?P<fname>\S+)\s*")
+
+    files = defaultdict(list)
+    fname = "preamble"
+    with open(filepath, "r") as fp:
+        for line in fp:
+            m = SPLIT_START_REGEX.match(line)
+            if m:
+                fname = m["fname"]
+            files[fname].append(line)
+
+    preamble = files.pop("preamble")
+    folderpath = filepath.parent
+    for name, contents in files.items():
+        with open(folderpath / name, "w") as fp:
+            if include_preamble:
+                fp.write("".join(preamble))
+            fp.write("".join(contents))
+
+    return set(files)
+
+
 def write_api_yaml(folderpath, **kwds):
-    api_yaml = os.path.join(PROJECT_DIRECTORY, folderpath, "api.yaml")
+    make_folder(folderpath)
+
+    api_yaml = PROJECT_DIRECTORY / folderpath / "api.yaml"
     contents = """
 name: {plugin_name}
 language: {language}
@@ -37,36 +82,29 @@ class: {plugin_class}
 
 
 if __name__ == "__main__":
+    keep = set()
+
     {%- if cookiecutter.language == 'c' %}
 
-    remove_file(os.path.join(LIB_DIRECTORY, "bmi.hxx"))
+    keep |= set(["__init__.py", "bmi.c", "bmi.h"])
+    keep |= split_file(LIB_DIRECTORY / "_c.pyx", include_preamble=True)
 
     {%- elif cookiecutter.language == 'c++' %}
 
-    remove_file(os.path.join(LIB_DIRECTORY, "bmi.c"))
-    remove_file(os.path.join(LIB_DIRECTORY, "bmi.h"))
-
-    {%- elif cookiecutter.language == 'python' %}
-
-    remove_file(os.path.join(LIB_DIRECTORY, "_bmi.pyx"))
-    remove_file(os.path.join(LIB_DIRECTORY, "_bmi.pxd"))
-    remove_file(os.path.join(LIB_DIRECTORY, "bmi.c"))
-    remove_file(os.path.join(LIB_DIRECTORY, "bmi.h"))
-    remove_file(os.path.join(LIB_DIRECTORY, "bmi.hxx"))
-    remove_file(os.path.join(LIB_DIRECTORY, "__init__.py"))
-    remove_folder(LIB_DIRECTORY)
+    keep |= set(["__init__.py", "bmi.hxx"])
+    keep |= split_file(LIB_DIRECTORY / "_cxx.pyx", include_preamble=True)
 
     {%- endif %}
+
+    clean_folder(LIB_DIRECTORY, keep=keep)
 
     if "Not open source" == "{{ cookiecutter.open_source_license }}":
         remove_file("LICENSE")
 
 {% for entry_point in cookiecutter.entry_points.split(',') %}
     {%- set pymt_class = entry_point.split('=')[0] %}
-    make_folder(os.path.join("meta", "{{ pymt_class }}"))
-
     write_api_yaml(
-        os.path.join("meta", "{{ pymt_class }}"),
+        Path("meta", "{{ pymt_class }}"),
         language="{{ cookiecutter.language }}",
         plugin_class="{{ pymt_class }}",
         plugin_name="{{ cookiecutter.plugin_name }}",
