@@ -13,43 +13,46 @@ from model_metadata.utils import get_cmdclass, get_entry_points
 
 
 {% if cookiecutter.language == 'c' or cookiecutter.language == 'c++' -%}
-include_dirs = [
-    np.get_include(),
-    os.path.join(sys.prefix, "include"),
-    {%- if cookiecutter.include_dirs -%}
-    {%- for dir in cookiecutter.include_dirs.split(',') %}
-        "{{ dir|trim }}",{% endfor %}
-    {%- endif %}
-]
+common_flags = {
+    "include_dirs": [
+        np.get_include(),
+        os.path.join(sys.prefix, "include"),
+        {%- if cookiecutter.include_dirs -%}
+        {%- for dir in cookiecutter.include_dirs.split(',') %}
+            "{{ dir|trim }}",{% endfor %}
+        {%- endif %}
+    ],
+    "library_dirs": [
+        {%- if cookiecutter.library_dirs -%}
+        {%- for libdir in cookiecutter.library_dirs.split(',') %}
+            "{{ libdir|trim }}",{% endfor %}
+        {%- endif %}
+    ],
+    "define_macros": [
+        {%- if cookiecutter.define_macros -%}
+        {%- for item in cookiecutter.define_macros.split(',') %}
+        {%- set key_value = item.split('=') %}
+            ("{{ key_value[0]|trim }}", "{{ key_value[1]|trim }}"),{% endfor %}
+        {%- endif %}
+    ],
+    "undef_macros": [
+        {%- if cookiecutter.undef_macros -%}
+        {%- for macro in cookiecutter.undef_macros.split(',') %}
+            "{{ macro|trim }}",{% endfor %}
+        {%- endif %}
+    ],
+    "extra_compile_args": [
+        {%- if cookiecutter.extra_compile_args -%}
+        {%- for arg in cookiecutter.extra_compile_args.split(',') %}
+            "{{ arg|trim }}",{% endfor %}
+        {%- endif %}
+    ],
+    "language": "{{ cookiecutter.language }}",
+}
 libraries = [
     {%- if cookiecutter.libraries -%}
     {%- for lib in cookiecutter.libraries.split(',') %}
         "{{ lib|trim }}",{% endfor %}
-    {%- endif %}
-]
-library_dirs = [
-    {%- if cookiecutter.library_dirs -%}
-    {%- for libdir in cookiecutter.library_dirs.split(',') %}
-        "{{ libdir|trim }}",{% endfor %}
-    {%- endif %}
-]
-define_macros = [
-    {%- if cookiecutter.define_macros -%}
-    {%- for item in cookiecutter.define_macros.split(',') %}
-    {%- set key_value = item.split('=') %}
-        ("{{ key_value[0]|trim }}", "{{ key_value[1]|trim }}"),{% endfor %}
-    {%- endif %}
-]
-undef_macros = [
-    {%- if cookiecutter.undef_macros -%}
-    {%- for macro in cookiecutter.undef_macros.split(',') %}
-        "{{ macro|trim }}",{% endfor %}
-    {%- endif %}
-]
-extra_compile_args = [
-    {%- if cookiecutter.extra_compile_args -%}
-    {%- for arg in cookiecutter.extra_compile_args.split(',') %}
-        "{{ arg|trim }}",{% endfor %}
     {%- endif %}
 ]
 
@@ -60,13 +63,8 @@ ext_modules = [
     Extension(
         "pymt_{{cookiecutter.plugin_name}}.lib.{{ pymt_class|lower }}",
         ["pymt_{{cookiecutter.plugin_name}}/lib/{{ pymt_class|lower }}.pyx"],
-        language="{{ cookiecutter.language }}",
-        include_dirs=include_dirs,
         libraries=libraries + ["{{ bmi_lib }}"],
-        library_dirs=library_dirs,
-        define_macros=define_macros,
-        undef_macros=undef_macros,
-        extra_compile_args=extra_compile_args,
+        **common_flags,
     ),
 {%- endfor %}
 ]
