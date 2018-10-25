@@ -76,17 +76,21 @@ extra_compile_args = [
 
 
 ext_modules = [
+{%- for entry_point in cookiecutter.entry_points.split(',') %}
+    {%- set pymt_class = entry_point.split('=')[0] -%}
+    {%- set bmi_lib, _ = entry_point.split('=')[1].split(":") %}
     Extension(
-        "pymt_{{cookiecutter.plugin_name}}.lib._bmi",
-        ["pymt_{{cookiecutter.plugin_name}}/lib/_bmi.pyx"],
+        "pymt_{{cookiecutter.plugin_name}}.lib.{{ pymt_class|lower }}",
+        ["pymt_{{cookiecutter.plugin_name}}/lib/{{ pymt_class|lower }}.pyx"],
         language="{{cookiecutter.language}}",
         include_dirs=include_dirs,
-        libraries=libraries,
+        libraries=libraries + ["{{ bmi_lib }}"],
         library_dirs=library_dirs,
         define_macros=define_macros,
         undef_macros=undef_macros,
         extra_compile_args=extra_compile_args,
-    )
+    ),
+{%- endfor %}
 ]
 
 {%- endif %}
