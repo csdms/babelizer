@@ -9,22 +9,10 @@ import versioneer
 from setuptools import find_packages, setup
 
 from distutils.extension import Extension
-
-try:
-    import model_metadata
-except ImportError:
-    def get_cmdclass(*args, **kwds):
-        return kwds.get("cmdclass", None)
-    def get_entry_points(*args):
-        return None
-else:
-    from model_metadata.utils import get_cmdclass, get_entry_points
+from model_metadata.utils import get_cmdclass, get_entry_points
 
 
 {% if cookiecutter.language == 'c' or cookiecutter.language == 'c++' -%}
-import numpy as np
-
-
 include_dirs = [
     np.get_include(),
     os.path.join(sys.prefix, "include"),
