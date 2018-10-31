@@ -109,15 +109,15 @@ cdef class {{ pymt_class }}:
         ok_or_raise(status)
 
     def update_frac(self, frac):
-        ok_or_raise(<int>bmi_update_frac(self._bmi, frac))
-        return <int>bmi_update_frac(self._bmi, frac), None
+        status = <int>bmi_update_frac(self._bmi, frac)
+        ok_or_raise(status)
 
     def run_model(self):
         ok_or_raise(<int>bmi_run_model(self._bmi))
 
     def finalize(self):
-        ok_or_raise(<int>bmi_finalize(self._bmi))
-        return <int>bmi_finalize(self._bmi), None
+        status = <int>bmi_finalize(self._bmi)
+        ok_or_raise(status)
 
     cpdef object get_component_name(self):
         ok_or_raise(<int>bmi_get_component_name(self._bmi, self.STR_BUFFER))
