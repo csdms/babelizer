@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+import errno
 import re
 from collections import defaultdict
 from pathlib import Path
@@ -37,7 +38,7 @@ def clean_folder(folderpath, keep=None):
     try:
         folderpath.rmdir()
     except OSError as err:
-        if err.errno != 66: # 66 means the folder isn't empty.
+        if err.errno != errno.ENOTEMPTY:
             raise
 
 
