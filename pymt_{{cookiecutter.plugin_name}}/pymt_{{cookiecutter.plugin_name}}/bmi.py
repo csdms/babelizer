@@ -6,8 +6,7 @@ from __future__ import absolute_import
     {% set _ = classes.append(pymt_class) %}
 {%- endfor -%}
 
-{%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++'
- or cookiecutter.language == 'fortran' %}
+{%- if cookiecutter.language in ['c', 'c++', 'fortran'] %}
 
 from .lib import {{ classes|join(', ') }}
 
