@@ -95,6 +95,12 @@ if __name__ == "__main__":
     keep |= set(["__init__.py", "bmi.hxx"])
     keep |= split_file(LIB_DIRECTORY / "_cxx.pyx", include_preamble=True)
 
+    {%- elif cookiecutter.language == 'fortran' %}
+
+    keep |= set(["__init__.py", "bmi.f90", "bmi_interoperability.f90",
+                 "bmi_interoperability.h"])
+    keep |= split_file(LIB_DIRECTORY / "_fortran.pyx", include_preamble=True)
+
     {%- endif %}
 
     clean_folder(LIB_DIRECTORY, keep=keep)
