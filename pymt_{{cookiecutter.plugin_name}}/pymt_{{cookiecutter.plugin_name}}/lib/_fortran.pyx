@@ -90,6 +90,8 @@ cpdef to_string(bytes):
 {% set pymt_class = entry_point.split('=')[0] %}
 {% set plugin_module, register_bmi = entry_point.split('=')[1].split(':') %}
 
+# start: {{ pymt_class|lower }}.pyx
+
 cdef class {{ pymt_class }}:
 
     cdef int _bmi
