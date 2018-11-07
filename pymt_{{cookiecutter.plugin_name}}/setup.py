@@ -87,7 +87,7 @@ setup(
     author="Eric Hutton",
     description="PyMT plugin {{cookiecutter.plugin_name}}",
     version=versioneer.get_version(),
-{%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' -%}
+{%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' %}
     setup_requires=["cython"],
     ext_modules=ext_modules,
 {%- endif %}
