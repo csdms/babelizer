@@ -86,7 +86,7 @@ cpdef to_bytes(string):
 cpdef to_string(bytes):
     return bytes.decode('utf-8').rstrip()
 
-{% set entry_point = cookiecutter.entry_points.split(',')[0] %}
+{%- set entry_point = cookiecutter.entry_points.split(',')[0] -%}
 {% set pymt_class = entry_point.split('=')[0] %}
 {% set plugin_module, register_bmi = entry_point.split('=')[1].split(':') %}
 
