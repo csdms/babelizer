@@ -2,7 +2,7 @@
 import os
 import sys
 
-{%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' %}
+{%- if cookiecutter.language in ['c', 'c++', 'fortran'] %}
 import numpy as np
 {% endif %}
 import versioneer
@@ -11,8 +11,11 @@ from setuptools import find_packages, setup
 from distutils.extension import Extension
 from model_metadata.utils import get_cmdclass, get_entry_points
 
+{%- if cookiecutter.language == 'fortran' %}
+from numpy.distutils.fcompiler import new_fcompiler
+{% endif %}
 
-{% if cookiecutter.language == 'c' or cookiecutter.language == 'c++' -%}
+{% if cookiecutter.language in ['c', 'c++', 'fortran'] -%}
 common_flags = {
     "include_dirs": [
         np.get_include(),
@@ -47,8 +50,13 @@ common_flags = {
             "{{ arg|trim }}",{% endfor %}
         {%- endif %}
     ],
+{%- if cookiecutter.language == 'fortran' %}
+    "language": "c",
+{% else %}
     "language": "{{ cookiecutter.language }}",
+{% endif -%}
 }
+
 libraries = [
     {%- if cookiecutter.libraries -%}
     {%- for lib in cookiecutter.libraries.split(',') %}
@@ -64,6 +72,9 @@ ext_modules = [
         "pymt_{{cookiecutter.plugin_name}}.lib.{{ pymt_class|lower }}",
         ["pymt_{{cookiecutter.plugin_name}}/lib/{{ pymt_class|lower }}.pyx"],
         libraries=libraries + ["{{ bmi_lib }}"],
+        {%- if cookiecutter.language == 'fortran' %}
+        extra_objects=['bmi_interoperability.o'],
+        {% endif -%}
         **common_flags,
     ),
 {%- endfor %}
@@ -85,9 +96,9 @@ pymt_components = [
 setup(
     name="pymt_{{cookiecutter.plugin_name}}",
     author="Eric Hutton",
-    description="PyMT plugin {{cookiecutter.plugin_name}}",
+    description="PyMT plugin for {{cookiecutter.plugin_name}}",
     version=versioneer.get_version(),
-{%- if cookiecutter.language == 'c' or cookiecutter.language == 'c++' %}
+{%- if cookiecutter.language in ['c', 'c++', 'fortran'] %}
     setup_requires=["cython"],
     ext_modules=ext_modules,
 {%- endif %}
