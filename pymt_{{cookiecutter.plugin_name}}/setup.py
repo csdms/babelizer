@@ -1,6 +1,9 @@
 #! /usr/bin/env python
 import os
 import sys
+{%- if cookiecutter.language == 'fortran' %}
+import subprocess
+{%- endif -%}
 
 {%- if cookiecutter.language in ['c', 'c++', 'fortran'] %}
 import numpy as np
@@ -13,6 +16,7 @@ from model_metadata.utils import get_cmdclass, get_entry_points
 
 {%- if cookiecutter.language == 'fortran' %}
 from numpy.distutils.fcompiler import new_fcompiler
+from scripting.contexts import cd
 {% endif %}
 
 {% if cookiecutter.language in ['c', 'c++', 'fortran'] -%}
@@ -58,10 +62,10 @@ common_flags = {
 }
 
 libraries = [
-    {%- if cookiecutter.libraries -%}
-    {%- for lib in cookiecutter.libraries.split(',') %}
-        "{{ lib|trim }}",{% endfor %}
-    {%- endif %}
+{%- if cookiecutter.libraries -%}
+{%- for lib in cookiecutter.libraries.split(',') %}
+    "{{ lib|trim }}",{% endfor %}
+{%- endif %}
 ]
 
 ext_modules = [
@@ -73,7 +77,7 @@ ext_modules = [
         ["pymt_{{cookiecutter.plugin_name}}/lib/{{ pymt_class|lower }}.pyx"],
         libraries=libraries + ["{{ bmi_lib }}"],
         {%- if cookiecutter.language == 'fortran' %}
-        extra_objects=['bmi_interoperability.o'],
+        extra_objects=['pymt_{{cookiecutter.plugin_name}}/lib/bmi_interoperability.o'],
         {% endif -%}
         **common_flags,
     ),
@@ -92,6 +96,29 @@ pymt_components = [
     ),
 {%- endfor %}
 ]
+
+{% if cookiecutter.language == 'fortran' %}
+def build_interoperability():
+    compiler = new_fcompiler()
+    compiler.customize()
+    compiler.add_include_dir(os.path.join(sys.prefix, 'lib'))
+
+    cmd = compiler.compiler_f90
+    cmd.append(compiler.compile_switch)
+    for include_dir in compiler.include_dirs:
+        cmd.append('-I{}'.format(include_dir))
+    cmd.append('bmi_interoperability.f90')
+
+    try:
+        subprocess.check_call(cmd)
+    except subprocess.CalledProcessError:
+        raise
+
+if 'develop' in sys.argv:
+    with cd('pymt_{{cookiecutter.plugin_name}}/lib'):
+        build_interoperability()
+
+{% endif -%}
 
 setup(
     name="pymt_{{cookiecutter.plugin_name}}",
