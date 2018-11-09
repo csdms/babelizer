@@ -80,11 +80,17 @@ def ok_or_raise(status):
 
 
 cpdef to_bytes(string):
-    return bytes(string.encode('utf-8'))
+    try:
+        return bytes(string.encode('utf-8'))
+    except AttributeError:
+        return string
 
 
 cpdef to_string(bytes):
-    return bytes.decode('utf-8').rstrip()
+    try:
+        return bytes.decode('utf-8').rstrip()
+    except AttributeError:
+        return bytes
 
 {%- set entry_point = cookiecutter.entry_points.split(',')[0] -%}
 {% set pymt_class = entry_point.split('=')[0] %}
