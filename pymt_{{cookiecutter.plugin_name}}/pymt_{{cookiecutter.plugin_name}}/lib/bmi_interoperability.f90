@@ -5,7 +5,7 @@ module bmi_interoperability
 
   use, intrinsic :: iso_c_binding
 
-{%- for lib in cookiecutter.libraries %}
+{%- for lib in cookiecutter.libraries.split(',') %}
   use {{ lib }}
 {% endfor %}
 
