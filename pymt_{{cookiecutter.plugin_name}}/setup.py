@@ -14,7 +14,8 @@ from setuptools import find_packages, setup
 from distutils.extension import Extension
 from model_metadata.utils import get_cmdclass, get_entry_points
 
-{%- if cookiecutter.language == 'fortran' %}
+{% if cookiecutter.language == 'fortran' -%}
+from setuptools.command.build_ext import build_ext as _build_ext
 from numpy.distutils.fcompiler import new_fcompiler
 from scripting.contexts import cd
 {% endif %}
@@ -76,7 +77,7 @@ ext_modules = [
         "pymt_{{cookiecutter.plugin_name}}.lib.{{ pymt_class|lower }}",
         ["pymt_{{cookiecutter.plugin_name}}/lib/{{ pymt_class|lower }}.pyx"],
         libraries=libraries + ["{{ bmi_lib }}"],
-        {%- if cookiecutter.language == 'fortran' %}
+        {% if cookiecutter.language == 'fortran' -%}
         extra_objects=['pymt_{{cookiecutter.plugin_name}}/lib/bmi_interoperability.o'],
         {% endif -%}
         **common_flags,
@@ -97,7 +98,7 @@ pymt_components = [
 {%- endfor %}
 ]
 
-{% if cookiecutter.language == 'fortran' %}
+{% if cookiecutter.language == 'fortran' -%}
 def build_interoperability():
     compiler = new_fcompiler()
     compiler.customize()
@@ -114,11 +115,19 @@ def build_interoperability():
     except subprocess.CalledProcessError:
         raise
 
-if 'develop' in sys.argv:
-    with cd('pymt_{{cookiecutter.plugin_name}}/lib'):
-        build_interoperability()
+class build_ext(_build_ext):
+
+    def run(self):
+        with cd('pymt_{{cookiecutter.plugin_name}}/lib'):
+            build_interoperability()
+        _build_ext.run(self)
 
 {% endif -%}
+
+cmdclass = get_cmdclass(pymt_components, cmdclass=versioneer.get_cmdclass())
+{%- if cookiecutter.language == 'fortran' %}
+cmdclass["build_ext"] = build_ext
+{%- endif %}
 
 setup(
     name="pymt_{{cookiecutter.plugin_name}}",
@@ -130,6 +139,6 @@ setup(
     ext_modules=ext_modules,
 {%- endif %}
     packages=packages,
-    cmdclass=get_cmdclass(pymt_components, cmdclass=versioneer.get_cmdclass()),
+    cmdclass=cmdclass,
     entry_points=get_entry_points(pymt_components),
 )
