@@ -3,19 +3,21 @@
 !
 module bmi_interoperability
 
+{%- set entry_point = cookiecutter.entry_points.split(',')[0] %}
+{%- set pymt_class = entry_point.split('=')[0] %}
+{%- set plugin_module, plugin_class = entry_point.split('=')[1].split(':') %}
+
   use, intrinsic :: iso_c_binding
 
 {%- for lib in cookiecutter.libraries.split(',') %}
   use {{ lib }}
-{% endfor %}
+{%- endfor %}
+  use {{ plugin_module }}
 
   implicit none
 
-{%- set plugin_module =
-  cookiecutter.entry_points.split(',')[0].split('=')[1].split(':')[0] %}
-
   integer, parameter :: N_MODELS = 10
-  type ({{ plugin_module }}) :: model_array(N_MODELS)
+  type ({{ plugin_class }}) :: model_array(N_MODELS)
   logical :: model_avail(N_MODELS) = .true.
 
 contains
