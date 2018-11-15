@@ -1,5 +1,3 @@
-# cython: c_string_type=str, c_string_encoding=ascii
-
 from libc.stdlib cimport malloc, free
 
 cimport numpy as np
