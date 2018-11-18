@@ -1,7 +1,21 @@
+import ctypes
 from libc.stdlib cimport malloc, free
 
 cimport numpy as np
 import numpy as np
+
+
+SIZEOF_FLOAT = 8 * ctypes.sizeof(ctypes.c_float)
+SIZEOF_DOUBLE = 8 * ctypes.sizeof(ctypes.c_double)
+SIZEOF_INT = 8 * ctypes.sizeof(ctypes.c_int)
+
+DTYPE_F_TO_PY = {
+    'real': 'float{bits}'.format(bits=SIZEOF_FLOAT),
+    'real*4': 'float{bits}'.format(bits=SIZEOF_FLOAT),
+    'double precision': 'float{bits}'.format(bits=SIZEOF_DOUBLE),
+    'real*8': 'float{bits}'.format(bits=SIZEOF_DOUBLE),
+    'integer': 'int{bits}'.format(bits=SIZEOF_INT),
+}
 
 
 cdef extern from "bmi_interoperability.h":
@@ -322,7 +336,7 @@ cdef class {{ pymt_class }}:
                                           len(var_name),
                                           self.STR_BUFFER,
                                           MAX_TYPE_NAME))
-        return to_string(self.STR_BUFFER)
+        return DTYPE_F_TO_PY[to_string(self.STR_BUFFER)]
 
     cpdef object get_var_units(self, var_name):
         self.reset_str_buffer()
