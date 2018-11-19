@@ -131,7 +131,7 @@ cmdclass["build_ext"] = build_ext
 
 setup(
     name="pymt_{{cookiecutter.plugin_name}}",
-    author="Eric Hutton",
+    author={{cookiecutter.full_name}},
     description="PyMT plugin for {{cookiecutter.plugin_name}}",
     version=versioneer.get_version(),
 {%- if cookiecutter.language in ['c', 'c++', 'fortran'] %}
