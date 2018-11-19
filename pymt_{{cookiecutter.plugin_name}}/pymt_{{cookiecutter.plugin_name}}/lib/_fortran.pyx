@@ -427,3 +427,4 @@ cdef class {{ pymt_class }}:
                                                  len(var_name),
                                                  buffer.data,
                                                  grid_size))
+        return buffer
