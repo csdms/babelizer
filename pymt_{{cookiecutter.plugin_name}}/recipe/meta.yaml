@@ -14,6 +14,9 @@ build:
 requirements:
   build:
     - {{"{{"}} compiler('c') {{"}}"}}
+    {%- if cookiecutter.language == 'fortran' %}
+    - {{"{{"}} compiler('fortran') {{"}}"}}
+    {%- endif %}
   host:
     - python
     - pip
@@ -24,7 +27,6 @@ requirements:
     {%- for requirement in cookiecutter.plugin_requirements.split(',') %}
     - {{ requirement|trim }} {% endfor %}
     {%- endif %}
-
   run:
     - python
     - {{"{{"}} pin_compatible('numpy') {{"}}"}}
