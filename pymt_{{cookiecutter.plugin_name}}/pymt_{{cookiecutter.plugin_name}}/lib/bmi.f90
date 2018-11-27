@@ -44,9 +44,9 @@ module bmif
        procedure (bmif_get_value_int), deferred :: get_value_int
        procedure (bmif_get_value_float), deferred :: get_value_float
        procedure (bmif_get_value_double), deferred :: get_value_double
-       procedure (bmif_get_value_ref_int), deferred :: get_value_ref_int
-       procedure (bmif_get_value_ref_float), deferred :: get_value_ref_float
-       procedure (bmif_get_value_ref_double), deferred :: get_value_ref_double
+       procedure (bmif_get_value_ptr_int), deferred :: get_value_ptr_int
+       procedure (bmif_get_value_ptr_float), deferred :: get_value_ptr_float
+       procedure (bmif_get_value_ptr_double), deferred :: get_value_ptr_double
        procedure (bmif_get_value_at_indices_int), deferred :: &
             get_value_at_indices_int
        procedure (bmif_get_value_at_indices_float), deferred :: &
@@ -218,7 +218,7 @@ module bmif
        import :: bmi
        class (bmi), intent(in) :: self
        integer, intent(in) :: grid_id
-       real, dimension(:), intent(out) :: grid_spacing
+       double precision, dimension(:), intent(out) :: grid_spacing
        integer :: bmi_status
      end function bmif_get_grid_spacing
 
@@ -227,7 +227,7 @@ module bmif
        import :: bmi
        class (bmi), intent(in) :: self
        integer, intent(in) :: grid_id
-       real, dimension(:), intent(out) :: grid_origin
+       double precision, dimension(:), intent(out) :: grid_origin
        integer :: bmi_status
      end function bmif_get_grid_origin
 
@@ -236,7 +236,7 @@ module bmif
        import :: bmi
        class (bmi), intent(in) :: self
        integer, intent(in) :: grid_id
-       real, dimension(:), intent(out) :: grid_x
+       double precision, dimension(:), intent(out) :: grid_x
        integer :: bmi_status
      end function bmif_get_grid_x
 
@@ -245,7 +245,7 @@ module bmif
        import :: bmi
        class (bmi), intent(in) :: self
        integer, intent(in) :: grid_id
-       real, dimension(:), intent(out) :: grid_y
+       double precision, dimension(:), intent(out) :: grid_y
        integer :: bmi_status
      end function bmif_get_grid_y
 
@@ -254,7 +254,7 @@ module bmif
        import :: bmi
        class (bmi), intent(in) :: self
        integer, intent(in) :: grid_id
-       real, dimension(:), intent(out) :: grid_z
+       double precision, dimension(:), intent(out) :: grid_z
        integer :: bmi_status
      end function bmif_get_grid_z
 
@@ -342,34 +342,34 @@ module bmif
      end function bmif_get_value_double
 
      ! Get a reference to the given integer variable.
-     function bmif_get_value_ref_int(self, var_name, dest) &
+     function bmif_get_value_ptr_int(self, var_name, dest) &
           result(bmi_status)
        import :: bmi
        class (bmi), intent(in) :: self
        character (len=*), intent(in) :: var_name
        integer, pointer, intent(inout) :: dest(:)
        integer :: bmi_status
-     end function bmif_get_value_ref_int
+     end function bmif_get_value_ptr_int
 
      ! Get a reference to the given real variable.
-     function bmif_get_value_ref_float(self, var_name, dest) &
+     function bmif_get_value_ptr_float(self, var_name, dest) &
           result(bmi_status)
        import :: bmi
        class (bmi), intent(in) :: self
        character (len=*), intent(in) :: var_name
        real, pointer, intent(inout) :: dest(:)
        integer :: bmi_status
-     end function bmif_get_value_ref_float
+     end function bmif_get_value_ptr_float
 
      ! Get a reference to the given double variable.
-     function bmif_get_value_ref_double(self, var_name, dest) &
+     function bmif_get_value_ptr_double(self, var_name, dest) &
           result(bmi_status)
        import :: bmi
        class (bmi), intent(in) :: self
        character (len=*), intent(in) :: var_name
        double precision, pointer, intent(inout) :: dest(:)
        integer :: bmi_status
-     end function bmif_get_value_ref_double
+     end function bmif_get_value_ptr_double
 
      ! Get integer values at particular (one-dimensional) indices.
      function bmif_get_value_at_indices_int(self, var_name, dest, indices) &
