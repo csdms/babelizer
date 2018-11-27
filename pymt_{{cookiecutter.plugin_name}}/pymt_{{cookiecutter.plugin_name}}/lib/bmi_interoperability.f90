@@ -620,7 +620,7 @@ contains
   !
   ! Get a reference to a variable's values.
   !
-  function bmi_get_value_ref(model_index, var_name, n, ref) &
+  function bmi_get_value_ptr(model_index, var_name, n, ref) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: n
@@ -642,21 +642,21 @@ contains
 
     select case(var_type)
     case("integer")
-       status = model_array(model_index)%get_value_ref(var_name_, idest)
+       status = model_array(model_index)%get_value_ptr(var_name_, idest)
        ref = c_loc(idest(1))
        status = BMI_SUCCESS
     case("real")
-       status = model_array(model_index)%get_value_ref(var_name_, rdest)
+       status = model_array(model_index)%get_value_ptr(var_name_, rdest)
        ref = c_loc(rdest(1))
        status = BMI_SUCCESS
     case("double precision")
-       status = model_array(model_index)%get_value_ref(var_name_, ddest)
+       status = model_array(model_index)%get_value_ptr(var_name_, ddest)
        ref = c_loc(ddest(1))
        status = BMI_SUCCESS
     case default
        status = BMI_FAILURE
     end select
-  end function bmi_get_value_ref
+  end function bmi_get_value_ptr
 
   !
   ! Set an integer variable's values.

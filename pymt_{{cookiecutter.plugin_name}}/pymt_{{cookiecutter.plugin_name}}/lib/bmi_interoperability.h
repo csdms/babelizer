@@ -60,7 +60,7 @@ int bmi_get_value_float(int model, const char *var_name, int n_chars,
 int bmi_get_value_double(int model, const char *var_name, int n_chars,
 			 void *buffer, int size);
 
-int bmi_get_value_ref(int model, const char *var_name, int n_chars, void **ref);
+int bmi_get_value_ptr(int model, const char *var_name, int n_chars, void **ptr);
 
 int bmi_set_value_int(int model, const char *var_name, int n_chars,
 		      void *buffer, int size);
