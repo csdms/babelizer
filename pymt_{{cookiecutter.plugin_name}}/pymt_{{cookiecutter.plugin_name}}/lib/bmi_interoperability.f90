@@ -358,7 +358,7 @@ contains
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
     integer (c_int), intent(in), value :: n
-    real (c_float), intent(out) :: grid_spacing(n)
+    real (c_double), intent(out) :: grid_spacing(n)
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_spacing(grid_id, grid_spacing)
@@ -372,7 +372,7 @@ contains
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
     integer (c_int), intent(in), value :: n
-    real (c_float), intent(out) :: grid_origin(n)
+    real (c_double), intent(out) :: grid_origin(n)
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_origin(grid_id, grid_origin)
@@ -386,7 +386,7 @@ contains
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
     integer (c_int), intent(in), value :: n
-    real (c_float), intent(out) :: grid_x(n)
+    real (c_double), intent(out) :: grid_x(n)
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_x(grid_id, grid_x)
@@ -400,7 +400,7 @@ contains
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
     integer (c_int), intent(in), value :: n
-    real (c_float), intent(out) :: grid_y(n)
+    real (c_double), intent(out) :: grid_y(n)
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_y(grid_id, grid_y)
@@ -414,7 +414,7 @@ contains
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(in), value :: grid_id
     integer (c_int), intent(in), value :: n
-    real (c_float), intent(out) :: grid_z(n)
+    real (c_double), intent(out) :: grid_z(n)
     integer (c_int) :: status
 
     status = model_array(model_index)%get_grid_z(grid_id, grid_z)

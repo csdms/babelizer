@@ -35,12 +35,12 @@ int bmi_get_grid_type(int model, int grid_id, char *type, int n_chars);
 int bmi_get_grid_rank(int model, int grid_id, int *rank);
 int bmi_get_grid_shape(int model, int grid_id, int *shape, int rank);
 int bmi_get_grid_size(int model, int grid_id, int *size);
-int bmi_get_grid_spacing(int model, int grid_id, float *spacing, int rank);
-int bmi_get_grid_origin(int model, int grid_id, float *origin, int rank);
+int bmi_get_grid_spacing(int model, int grid_id, double *spacing, int rank);
+int bmi_get_grid_origin(int model, int grid_id, double *origin, int rank);
 
-int bmi_get_grid_x(int model, int grid_id, float *x, int size);
-int bmi_get_grid_y(int model, int grid_id, float *y, int size);
-int bmi_get_grid_z(int model, int grid_id, float *z, int size);
+int bmi_get_grid_x(int model, int grid_id, double *x, int size);
+int bmi_get_grid_y(int model, int grid_id, double *y, int size);
+int bmi_get_grid_z(int model, int grid_id, double *z, int size);
 int bmi_get_grid_connectivity(int model, int grid_id, int *conn, int size);
 int bmi_get_grid_offset(int model, int grid_id, int *offset, int size);
 
