@@ -9,9 +9,11 @@ module bmi_interoperability
 
   use, intrinsic :: iso_c_binding
 
+{%- if cookiecutter.libraries %}
 {%- for lib in cookiecutter.libraries.split(',') %}
   use {{ lib }}
 {%- endfor %}
+{%- endif %}
   use {{ plugin_module }}
 
   implicit none
