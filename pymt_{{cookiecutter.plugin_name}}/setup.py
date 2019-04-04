@@ -103,6 +103,7 @@ def build_interoperability():
     compiler = new_fcompiler()
     compiler.customize()
     compiler.add_include_dir(os.path.join(sys.prefix, 'lib'))
+    compiler.add_include_dir(os.path.join(sys.prefix, 'include'))
 
     cmd = []
     cmd.append(compiler.compiler_f90[0])
