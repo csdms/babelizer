@@ -6,7 +6,7 @@ pymt_{{ cookiecutter.plugin_name }}
 
 {% if is_open_source %}
 .. image:: https://img.shields.io/badge/CSDMS-Basic%20Model%20Interface-green.svg
-        :target: https://bmi-forum.readthedocs.io/
+        :target: https://bmi.readthedocs.io/
         :alt: Basic Model Interface
 
 .. image:: https://img.shields.io/badge/recipe-pymt_{{ cookiecutter.plugin_name }}-green.svg
