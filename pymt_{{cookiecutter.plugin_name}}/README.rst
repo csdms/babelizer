@@ -32,13 +32,15 @@ pymt_{{ cookiecutter.plugin_name }}
 * Documentation: https://{{ cookiecutter.plugin_name | replace("_", "-") }}.readthedocs.io.
 {% endif %}
 
-{% set max_width = "Component" | length -%}
+{% set mwidth = ["Component" | length] -%}
 {%- for entry_point in cookiecutter.entry_points.split(',') %}
     {%- set pymt_class = entry_point.split('=')[0] -%}
-    {%- if pymt_class|length > max_width -%}
-        {%- set max_width = pymt_class|length -%}
+    {%- if pymt_class|length > mwidth[0] -%}
+        {% set _ = mwidth.pop() -%}
+        {% set _ = mwidth.append(pymt_class|length) -%}
     {%- endif -%}
 {%- endfor %}
+{% set max_width = mwidth[0] %}
 
 {%- set width_col_1 = max_width -%}
 {%- set width_col_2 = max_width + "`from pymt.models import `" | length -%}
