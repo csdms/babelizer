@@ -6,7 +6,7 @@ pymt_{{ cookiecutter.plugin_name }}
 
 {% if is_open_source %}
 .. image:: https://img.shields.io/badge/CSDMS-Basic%20Model%20Interface-green.svg
-        :target: https://bmi-forum.readthedocs.io/
+        :target: https://bmi.readthedocs.io/
         :alt: Basic Model Interface
 
 .. image:: https://img.shields.io/badge/recipe-pymt_{{ cookiecutter.plugin_name }}-green.svg
@@ -32,23 +32,25 @@ pymt_{{ cookiecutter.plugin_name }}
 * Documentation: https://{{ cookiecutter.plugin_name | replace("_", "-") }}.readthedocs.io.
 {% endif %}
 
-{% set max_width = "Component" | length -%}
+{% set mwidth = ["Component" | length] -%}
 {%- for entry_point in cookiecutter.entry_points.split(',') %}
     {%- set pymt_class = entry_point.split('=')[0] -%}
-    {%- if pymt_class|length > max_width -%}
-        {%- set max_width = pymt_class|length -%}
+    {%- if pymt_class|length > mwidth[0] -%}
+        {% set _ = mwidth.pop() -%}
+        {% set _ = mwidth.append(pymt_class|length) -%}
     {%- endif -%}
 {%- endfor %}
+{% set max_width = mwidth[0] %}
 
 {%- set width_col_1 = max_width -%}
-{%- set width_col_2 = max_width + "`from pymt.components import `" | length -%}
+{%- set width_col_2 = max_width + "`from pymt.models import `" | length -%}
 {% set fmt = "%-" + max_width|string + "s" %}
 {{ '=' * max_width }} {{ '=' * width_col_2 }}
 {{ fmt | format("Component",) }} PyMT
 {{ '=' * max_width }} {{ '=' * width_col_2 }}
 {% for entry_point in cookiecutter.entry_points.split(',') %}
     {%- set pymt_class = entry_point.split('=')[0] -%}
-{{ fmt | format(pymt_class) }} `from pymt.components import {{ pymt_class }}`
+{{ fmt | format(pymt_class) }} `from pymt.models import {{ pymt_class }}`
 {% endfor -%}
 {{ '=' * max_width }} {{ '=' * width_col_2 }}
 
