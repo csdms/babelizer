@@ -108,6 +108,8 @@ def build_interoperability():
     cmd.append(compiler.compile_switch)
     cmd.append('-fPIC')
     for include_dir in common_flags['include_dirs']:
+        if os.path.isabs(include_dir) is False:
+            include_dir = os.path.join(sys.prefix, "include", include_dir)
         cmd.append('-I{}'.format(include_dir))
     cmd.append('bmi_interoperability.f90')
 
