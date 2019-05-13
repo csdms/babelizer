@@ -80,7 +80,7 @@ ext_modules = [
         {% if cookiecutter.language == 'fortran' -%}
         extra_objects=['pymt_{{cookiecutter.plugin_name}}/lib/bmi_interoperability.o'],
         {% endif -%}
-        **common_flags,
+        **common_flags
     ),
 {%- endfor %}
 ]
