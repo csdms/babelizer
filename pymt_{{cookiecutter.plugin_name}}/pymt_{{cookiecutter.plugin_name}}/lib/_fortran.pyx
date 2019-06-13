@@ -17,7 +17,8 @@ DTYPE_F_TO_PY = {
     'real*8': 'float{bits}'.format(bits=SIZEOF_DOUBLE),
     'integer': 'int{bits}'.format(bits=SIZEOF_INT),
 }
-
+for k in list(DTYPE_F_TO_PY.keys()):
+    DTYPE_F_TO_PY[k.upper()] = DTYPE_F_TO_PY[k]
 
 cdef extern from "bmi_interoperability.h":
     int MAX_COMPONENT_NAME
