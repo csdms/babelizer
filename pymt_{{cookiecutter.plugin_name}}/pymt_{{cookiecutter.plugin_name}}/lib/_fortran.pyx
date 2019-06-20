@@ -372,13 +372,13 @@ cdef class {{ pymt_class }}:
         cdef int grid_size = self.get_grid_size(grid_id)
         type = self.get_var_type(var_name)
 
-        if type.startswith('double'):
+        if type == DTYPE_DOUBLE:
             ok_or_raise(<int>bmi_get_value_double(self._bmi,
                                                   to_bytes(var_name),
                                                   len(var_name),
                                                   buffer.data,
                                                   grid_size))
-        elif type.startswith('int'):
+        elif type == DTYPE_INT:
             ok_or_raise(<int>bmi_get_value_int(self._bmi,
                                                to_bytes(var_name),
                                                len(var_name),
@@ -403,9 +403,9 @@ cdef class {{ pymt_class }}:
                                            to_bytes(var_name),
                                            len(var_name), &ptr))
 
-        if type.startswith('double'):
+        if type == DTYPE_DOUBLE:
             return np.asarray(<np.float64_t[:grid_size]>ptr)
-        elif type.startswith('int'):
+        elif type == DTYPE_INT:
             return np.asarray(<np.int32_t[:grid_size]>ptr)
         else:
             return np.asarray(<np.float32_t[:grid_size]>ptr)
@@ -415,13 +415,13 @@ cdef class {{ pymt_class }}:
         cdef int grid_size = self.get_grid_size(grid_id)
         type = self.get_var_type(var_name)
 
-        if type.startswith('double'):
+        if type == DTYPE_DOUBLE:
             ok_or_raise(<int>bmi_set_value_double(self._bmi,
                                                   to_bytes(var_name),
                                                   len(var_name),
                                                   buffer.data,
                                                   grid_size))
-        elif type.startswith('int'):
+        elif type == DTYPE_INT:
             ok_or_raise(<int>bmi_set_value_int(self._bmi,
                                                to_bytes(var_name),
                                                len(var_name),
