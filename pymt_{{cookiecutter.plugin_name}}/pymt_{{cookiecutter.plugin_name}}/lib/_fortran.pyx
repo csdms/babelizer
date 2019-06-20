@@ -24,6 +24,8 @@ DTYPE_F_TO_PY = {
 for k in list(DTYPE_F_TO_PY.keys()):
     DTYPE_F_TO_PY[k.upper()] = DTYPE_F_TO_PY[k]
 
+ENOMSG = 42  # No message of desired type
+
 cdef extern from "bmi_interoperability.h":
     int MAX_COMPONENT_NAME
     int MAX_VAR_NAME
@@ -391,7 +393,7 @@ cdef class {{ pymt_class }}:
                                                  buffer.data,
                                                  grid_size))
         else:
-            ok_or_raise(5)
+            ok_or_raise(ENOMSG)
 
         return buffer
 
@@ -412,7 +414,7 @@ cdef class {{ pymt_class }}:
         elif type == DTYPE_FLOAT:
             return np.asarray(<np.float32_t[:grid_size]>ptr)
         else:
-            return ok_or_raise(6)
+            return ok_or_raise(ENOMSG)
 
     cpdef set_value(self, var_name, np.ndarray buffer):
         cdef int grid_id = self.get_var_grid(var_name)
@@ -438,6 +440,6 @@ cdef class {{ pymt_class }}:
                                                  buffer.data,
                                                  grid_size))
         else:
-            ok_or_raise(7)
+            ok_or_raise(ENOMSG)
 
         return buffer
