@@ -10,12 +10,16 @@ SIZEOF_FLOAT = 8 * ctypes.sizeof(ctypes.c_float)
 SIZEOF_DOUBLE = 8 * ctypes.sizeof(ctypes.c_double)
 SIZEOF_INT = 8 * ctypes.sizeof(ctypes.c_int)
 
+DTYPE_FLOAT = 'float{bits}'.format(bits=SIZEOF_FLOAT)
+DTYPE_DOUBLE = 'float{bits}'.format(bits=SIZEOF_DOUBLE)
+DTYPE_INT = 'float{bits}'.format(bits=SIZEOF_INT)
+
 DTYPE_F_TO_PY = {
-    'real': 'float{bits}'.format(bits=SIZEOF_FLOAT),
-    'real*4': 'float{bits}'.format(bits=SIZEOF_FLOAT),
-    'double precision': 'float{bits}'.format(bits=SIZEOF_DOUBLE),
-    'real*8': 'float{bits}'.format(bits=SIZEOF_DOUBLE),
-    'integer': 'int{bits}'.format(bits=SIZEOF_INT),
+    'real': DTYPE_FLOAT,
+    'real*4': DTYPE_FLOAT,
+    'double precision': DTYPE_DOUBLE,
+    'real*8': DTYPE_DOUBLE,
+    'integer': DTYPE_INT,
 }
 for k in list(DTYPE_F_TO_PY.keys()):
     DTYPE_F_TO_PY[k.upper()] = DTYPE_F_TO_PY[k]
