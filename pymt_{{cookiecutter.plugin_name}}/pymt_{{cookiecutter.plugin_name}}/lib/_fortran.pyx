@@ -384,12 +384,14 @@ cdef class {{ pymt_class }}:
                                                len(var_name),
                                                buffer.data,
                                                grid_size))
-        else:
+        elif type == DTYPE_FLOAT:
             ok_or_raise(<int>bmi_get_value_float(self._bmi,
                                                  to_bytes(var_name),
                                                  len(var_name),
                                                  buffer.data,
                                                  grid_size))
+        else:
+            ok_or_raise(5)
 
         return buffer
 
@@ -407,8 +409,10 @@ cdef class {{ pymt_class }}:
             return np.asarray(<np.float64_t[:grid_size]>ptr)
         elif type == DTYPE_INT:
             return np.asarray(<np.int32_t[:grid_size]>ptr)
-        else:
+        elif type == DTYPE_FLOAT:
             return np.asarray(<np.float32_t[:grid_size]>ptr)
+        else:
+            return ok_or_raise(6)
 
     cpdef set_value(self, var_name, np.ndarray buffer):
         cdef int grid_id = self.get_var_grid(var_name)
@@ -427,10 +431,13 @@ cdef class {{ pymt_class }}:
                                                len(var_name),
                                                buffer.data,
                                                grid_size))
-        else:
+        elif type == DTYPE_FLOAT:
             ok_or_raise(<int>bmi_set_value_float(self._bmi,
                                                  to_bytes(var_name),
                                                  len(var_name),
                                                  buffer.data,
                                                  grid_size))
+        else:
+            ok_or_raise(7)
+
         return buffer
