@@ -10,15 +10,21 @@ SIZEOF_FLOAT = 8 * ctypes.sizeof(ctypes.c_float)
 SIZEOF_DOUBLE = 8 * ctypes.sizeof(ctypes.c_double)
 SIZEOF_INT = 8 * ctypes.sizeof(ctypes.c_int)
 
+DTYPE_FLOAT = 'float{bits}'.format(bits=SIZEOF_FLOAT)
+DTYPE_DOUBLE = 'float{bits}'.format(bits=SIZEOF_DOUBLE)
+DTYPE_INT = 'float{bits}'.format(bits=SIZEOF_INT)
+
 DTYPE_F_TO_PY = {
-    'real': 'float{bits}'.format(bits=SIZEOF_FLOAT),
-    'real*4': 'float{bits}'.format(bits=SIZEOF_FLOAT),
-    'double precision': 'float{bits}'.format(bits=SIZEOF_DOUBLE),
-    'real*8': 'float{bits}'.format(bits=SIZEOF_DOUBLE),
-    'integer': 'int{bits}'.format(bits=SIZEOF_INT),
+    'real': DTYPE_FLOAT,
+    'real*4': DTYPE_FLOAT,
+    'double precision': DTYPE_DOUBLE,
+    'real*8': DTYPE_DOUBLE,
+    'integer': DTYPE_INT,
 }
 for k in list(DTYPE_F_TO_PY.keys()):
     DTYPE_F_TO_PY[k.upper()] = DTYPE_F_TO_PY[k]
+
+ENOMSG = 42  # No message of desired type
 
 cdef extern from "bmi_interoperability.h":
     int MAX_COMPONENT_NAME
@@ -368,24 +374,26 @@ cdef class {{ pymt_class }}:
         cdef int grid_size = self.get_grid_size(grid_id)
         type = self.get_var_type(var_name)
 
-        if type.startswith('double'):
+        if type == DTYPE_DOUBLE:
             ok_or_raise(<int>bmi_get_value_double(self._bmi,
                                                   to_bytes(var_name),
                                                   len(var_name),
                                                   buffer.data,
                                                   grid_size))
-        elif type.startswith('int'):
+        elif type == DTYPE_INT:
             ok_or_raise(<int>bmi_get_value_int(self._bmi,
                                                to_bytes(var_name),
                                                len(var_name),
                                                buffer.data,
                                                grid_size))
-        else:
+        elif type == DTYPE_FLOAT:
             ok_or_raise(<int>bmi_get_value_float(self._bmi,
                                                  to_bytes(var_name),
                                                  len(var_name),
                                                  buffer.data,
                                                  grid_size))
+        else:
+            ok_or_raise(ENOMSG)
 
         return buffer
 
@@ -399,34 +407,39 @@ cdef class {{ pymt_class }}:
                                            to_bytes(var_name),
                                            len(var_name), &ptr))
 
-        if type.startswith('double'):
+        if type == DTYPE_DOUBLE:
             return np.asarray(<np.float64_t[:grid_size]>ptr)
-        elif type.startswith('int'):
+        elif type == DTYPE_INT:
             return np.asarray(<np.int32_t[:grid_size]>ptr)
-        else:
+        elif type == DTYPE_FLOAT:
             return np.asarray(<np.float32_t[:grid_size]>ptr)
+        else:
+            return ok_or_raise(ENOMSG)
 
     cpdef set_value(self, var_name, np.ndarray buffer):
         cdef int grid_id = self.get_var_grid(var_name)
         cdef int grid_size = self.get_grid_size(grid_id)
         type = self.get_var_type(var_name)
 
-        if type.startswith('double'):
+        if type == DTYPE_DOUBLE:
             ok_or_raise(<int>bmi_set_value_double(self._bmi,
                                                   to_bytes(var_name),
                                                   len(var_name),
                                                   buffer.data,
                                                   grid_size))
-        elif type.startswith('int'):
+        elif type == DTYPE_INT:
             ok_or_raise(<int>bmi_set_value_int(self._bmi,
                                                to_bytes(var_name),
                                                len(var_name),
                                                buffer.data,
                                                grid_size))
-        else:
+        elif type == DTYPE_FLOAT:
             ok_or_raise(<int>bmi_set_value_float(self._bmi,
                                                  to_bytes(var_name),
                                                  len(var_name),
                                                  buffer.data,
                                                  grid_size))
+        else:
+            ok_or_raise(ENOMSG)
+
         return buffer
