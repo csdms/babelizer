@@ -644,15 +644,15 @@ contains
     status = model_array(model_index)%get_var_type(var_name_, var_type)
 
     select case(var_type)
-    case("integer")
+    case("integer", "INTEGER")
        status = model_array(model_index)%get_value_ptr(var_name_, idest)
        ref = c_loc(idest(1))
        status = BMI_SUCCESS
-    case("real")
+    case("real", "REAL", "real*4", "REAL*4")
        status = model_array(model_index)%get_value_ptr(var_name_, rdest)
        ref = c_loc(rdest(1))
        status = BMI_SUCCESS
-    case("double precision")
+    case("double precision", "DOUBLE PRECISION", "real*8", "REAL*8")
        status = model_array(model_index)%get_value_ptr(var_name_, ddest)
        ref = c_loc(ddest(1))
        status = BMI_SUCCESS
