@@ -12,7 +12,7 @@ SIZEOF_INT = 8 * ctypes.sizeof(ctypes.c_int)
 
 DTYPE_FLOAT = 'float{bits}'.format(bits=SIZEOF_FLOAT)
 DTYPE_DOUBLE = 'float{bits}'.format(bits=SIZEOF_DOUBLE)
-DTYPE_INT = 'float{bits}'.format(bits=SIZEOF_INT)
+DTYPE_INT = 'int{bits}'.format(bits=SIZEOF_INT)
 
 DTYPE_F_TO_PY = {
     'real': DTYPE_FLOAT,
