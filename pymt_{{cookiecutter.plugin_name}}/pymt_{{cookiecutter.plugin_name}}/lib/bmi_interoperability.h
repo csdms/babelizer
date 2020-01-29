@@ -13,7 +13,6 @@ int bmi_new(void);
 int bmi_initialize(int model, const char *config_file, int n_chars);
 int bmi_update(int model);
 int bmi_update_until(int model, double until);
-int bmi_update_frac(int model, double frac);
 int bmi_finalize(int model);
 
 int bmi_get_component_name(int model, char *name, int n_chars);
@@ -41,8 +40,6 @@ int bmi_get_grid_origin(int model, int grid_id, double *origin, int rank);
 int bmi_get_grid_x(int model, int grid_id, double *x, int size);
 int bmi_get_grid_y(int model, int grid_id, double *y, int size);
 int bmi_get_grid_z(int model, int grid_id, double *z, int size);
-int bmi_get_grid_connectivity(int model, int grid_id, int *conn, int size);
-int bmi_get_grid_offset(int model, int grid_id, int *offset, int size);
 
 int bmi_get_var_type(int model, const char *var_name, int n_chars,
 		     char *type, int m_chars);

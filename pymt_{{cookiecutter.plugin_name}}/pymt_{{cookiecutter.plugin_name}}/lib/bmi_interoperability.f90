@@ -246,17 +246,6 @@ contains
   end function bmi_update
 
   !
-  ! Advance the model by a fraction of a time step.
-  !
-  function bmi_update_frac(model_index, time_frac) bind(c) result(status)
-    integer (c_int), intent(in), value :: model_index
-    real (c_double), intent(in), value :: time_frac
-    integer (c_int) :: status
-
-    status = model_array(model_index)%update_frac(time_frac)
-  end function bmi_update_frac
-
-  !
   ! Advance the model to a time in the future.
   !
   function bmi_update_until(model_index, time_later) bind(c) result(status)
@@ -421,34 +410,6 @@ contains
 
     status = model_array(model_index)%get_grid_z(grid_id, grid_z)
   end function bmi_get_grid_z
-
-  !
-  ! Get the connectivity of a grid's nodes.
-  !
-  function bmi_get_grid_connectivity(model_index, grid_id, grid_conn, n) &
-       bind(c) result(status)
-    integer (c_int), intent(in), value :: model_index
-    integer (c_int), intent(in), value :: grid_id
-    integer (c_int), intent(in), value :: n
-    integer (c_int), intent(out) :: grid_conn(n)
-    integer (c_int) :: status
-
-    status = model_array(model_index)%get_grid_connectivity(grid_id, grid_conn)
-  end function bmi_get_grid_connectivity
-
-  !
-  ! Get the offset of a grid's nodes.
-  !
-  function bmi_get_grid_offset(model_index, grid_id, grid_offset, n) &
-       bind(c) result(status)
-    integer (c_int), intent(in), value :: model_index
-    integer (c_int), intent(in), value :: grid_id
-    integer (c_int), intent(in), value :: n
-    integer (c_int), intent(out) :: grid_offset(n)
-    integer (c_int) :: status
-
-    status = model_array(model_index)%get_grid_offset(grid_id, grid_offset)
-  end function bmi_get_grid_offset
 
   !
   ! Get the type for the specified variable.

@@ -37,7 +37,6 @@ cdef extern from "bmi_interoperability.h":
     int bmi_initialize(int model, const char *config_file, int n_chars)
     int bmi_update(int model)
     int bmi_update_until(int model, double until)
-    int bmi_update_frac(int model, double frac)
     int bmi_finalize(int model)
 
     int bmi_get_component_name(int model, char *name, int n_chars)
@@ -64,8 +63,6 @@ cdef extern from "bmi_interoperability.h":
     int bmi_get_grid_x(int model, int grid_id, double *x, int size)
     int bmi_get_grid_y(int model, int grid_id, double *y, int size)
     int bmi_get_grid_z(int model, int grid_id, double *z, int size)
-    int bmi_get_grid_connectivity(int model, int grid_id, int *conn, int size)
-    int bmi_get_grid_offset(int model, int grid_id, int *offset, int size)
 
     int bmi_get_var_type(int model, const char *var_name, int n_chars,
                          char *type, int m_chars)
@@ -249,10 +246,6 @@ cdef class {{ pymt_class }}:
         status = <int>bmi_update(self._bmi)
         ok_or_raise(status)
 
-    cpdef update_frac(self, time_frac):
-        status = <int>bmi_update_frac(self._bmi, time_frac)
-        ok_or_raise(status)
-
     cpdef update_until(self, time_later):
         status = <int>bmi_update_until(self._bmi, time_later)
         ok_or_raise(status)
@@ -322,20 +315,6 @@ cdef class {{ pymt_class }}:
         ok_or_raise(<int>bmi_get_grid_z(self._bmi, grid_id,
                                         &grid_z[0], size))
         return grid_z
-
-    cpdef np.ndarray get_grid_connectivity(self, grid_id, \
-                                           np.ndarray[int, ndim=1] conn):
-        cdef int size = self.get_grid_size(grid_id)
-        ok_or_raise(<int>bmi_get_grid_connectivity(self._bmi, grid_id,
-                                                   &conn[0], size))
-        return conn
-
-    cpdef np.ndarray get_grid_offset(self, grid_id, 
-                                     np.ndarray[int, ndim=1] offset):
-        cdef int size = self.get_grid_size(grid_id)
-        ok_or_raise(<int>bmi_get_grid_offset(self._bmi, grid_id,
-                                             &offset[0], size))
-        return offset
 
     cpdef object get_var_type(self, var_name):
         self.reset_str_buffer()
