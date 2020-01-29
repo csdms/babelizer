@@ -8,7 +8,6 @@ module bmi_interoperability
 {%- set plugin_module, plugin_class = entry_point.split('=')[1].split(':') %}
 
   use, intrinsic :: iso_c_binding
-  use bmif
 
 {%- if cookiecutter.libraries %}
 {%- for lib in cookiecutter.libraries.split(',') %}
