@@ -63,6 +63,9 @@ cdef extern from "bmi_interoperability.h":
     int bmi_get_grid_x(int model, int grid_id, double *x, int size)
     int bmi_get_grid_y(int model, int grid_id, double *y, int size)
     int bmi_get_grid_z(int model, int grid_id, double *z, int size)
+    int bmi_get_grid_node_count(int model, int grid_id, int *count)
+    int bmi_get_grid_edge_count(int model, int grid_id, int *count)
+    int bmi_get_grid_face_count(int model, int grid_id, int *count)
 
     int bmi_get_var_type(int model, const char *var_name, int n_chars,
                          char *type, int m_chars)
@@ -317,6 +320,24 @@ cdef class {{ pymt_class }}:
         ok_or_raise(<int>bmi_get_grid_z(self._bmi, grid_id,
                                         &grid_z[0], size))
         return grid_z
+
+    cpdef int get_grid_node_count(self, grid_id):
+        cdef int node_count
+        ok_or_raise(<int>bmi_get_grid_node_count(self._bmi, grid_id,
+                                                 &node_count))
+        return node_count
+
+    cpdef int get_grid_edge_count(self, grid_id):
+        cdef int edge_count
+        ok_or_raise(<int>bmi_get_grid_edge_count(self._bmi, grid_id,
+                                                 &edge_count))
+        return edge_count
+
+    cpdef int get_grid_face_count(self, grid_id):
+        cdef int face_count
+        ok_or_raise(<int>bmi_get_grid_face_count(self._bmi, grid_id,
+                                                 &face_count))
+        return face_count
 
     cpdef object get_var_type(self, var_name):
         self.reset_str_buffer()

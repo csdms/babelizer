@@ -413,6 +413,45 @@ contains
   end function bmi_get_grid_z
 
   !
+  ! Get the number of nodes in a grid.
+  !
+  function bmi_get_grid_node_count(model_index, grid_id, node_count) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(out) :: node_count
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_node_count(grid_id, node_count)
+  end function bmi_get_grid_node_count
+
+  !
+  ! Get the number of edges in a grid.
+  !
+  function bmi_get_grid_edge_count(model_index, grid_id, edge_count) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(out) :: edge_count
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_edge_count(grid_id, edge_count)
+  end function bmi_get_grid_edge_count
+
+  !
+  ! Get the number of faces in a grid.
+  !
+  function bmi_get_grid_face_count(model_index, grid_id, face_count) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(out) :: face_count
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_face_count(grid_id, face_count)
+  end function bmi_get_grid_face_count
+
+  !
   ! Get the type for the specified variable.
   !
   function bmi_get_var_type(model_index, var_name, n, var_type, m) &
