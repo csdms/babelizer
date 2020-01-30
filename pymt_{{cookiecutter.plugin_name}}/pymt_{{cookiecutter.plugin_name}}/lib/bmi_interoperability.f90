@@ -513,6 +513,36 @@ contains
   end function bmi_get_var_nbytes
 
   !
+  ! Get the location where the specified variable is defined.
+  !
+  function bmi_get_var_location(model_index, var_name, n, var_location, m) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: n
+    character (len=1, kind=c_char), intent(in) :: var_name(n)
+    integer (c_int), intent(in), value :: m
+    character (len=1, kind=c_char), intent(out) :: var_location(m)
+
+    integer (c_int) :: i, status
+    character (len=n, kind=c_char) :: var_name_
+    character (len=m, kind=c_char) :: var_location_
+
+    do i = 1, n
+       var_name_(i:i) = var_name(i)
+    enddo
+    do i = 1, m
+       var_location_(i:i) = var_location(i)
+    enddo
+
+    status = model_array(model_index)%get_var_location(var_name_, var_location_)
+
+    do i = 1, len(trim(var_location_))
+        var_location(i) = var_location_(i:i)
+    enddo
+    var_location = var_location//C_NULL_CHAR
+  end function bmi_get_var_location
+
+  !
   ! Get a copy of an integer variable's values, flattened.
   !
   function bmi_get_value_int(model_index, var_name, n, buffer, m) &

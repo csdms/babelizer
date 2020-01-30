@@ -72,6 +72,8 @@ cdef extern from "bmi_interoperability.h":
                              int n_chars, int *itemsize)
     int bmi_get_var_nbytes(int model, const char *var_name,
                            int n_chars, int *nbytes)
+    int bmi_get_var_location(int model, const char *var_name, int n_chars,
+                         char *location, int m_chars)
 
     int bmi_get_value_int(int model, const char *var_name, int n_chars,
                           void *buffer, int size)
@@ -347,6 +349,15 @@ cdef class {{ pymt_class }}:
                                             to_bytes(var_name),
                                             len(var_name), &nbytes))
         return nbytes
+
+    cpdef object get_var_location(self, var_name):
+        self.reset_str_buffer()
+        ok_or_raise(<int>bmi_get_var_location(self._bmi,
+                                              to_bytes(var_name),
+                                              len(var_name),
+                                              self.STR_BUFFER,
+                                              MAX_TYPE_NAME))
+        return to_string(self.STR_BUFFER)
 
     cpdef np.ndarray get_value(self, var_name, np.ndarray buffer):
         cdef int grid_id = self.get_var_grid(var_name)

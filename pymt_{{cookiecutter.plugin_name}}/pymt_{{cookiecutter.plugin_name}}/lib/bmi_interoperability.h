@@ -49,6 +49,8 @@ int bmi_get_var_itemsize(int model, const char *var_name, int n_chars,
 			 int *itemsize);
 int bmi_get_var_nbytes(int model, const char *var_name, int n_chars,
 		       int *nbytes);
+int bmi_get_var_location(int model, const char *var_name, int n_chars,
+		     char *location, int m_chars);
 
 int bmi_get_value_int(int model, const char *var_name, int n_chars,
 		      void *buffer, int size);
