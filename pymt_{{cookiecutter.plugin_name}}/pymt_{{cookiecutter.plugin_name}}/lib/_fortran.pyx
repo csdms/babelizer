@@ -66,6 +66,14 @@ cdef extern from "bmi_interoperability.h":
     int bmi_get_grid_node_count(int model, int grid_id, int *count)
     int bmi_get_grid_edge_count(int model, int grid_id, int *count)
     int bmi_get_grid_face_count(int model, int grid_id, int *count)
+    int bmi_get_grid_edge_nodes(int model, int grid_id,
+                                int *edge_nodes, int size)
+    int bmi_get_grid_face_edges(int model, int grid_id,
+                                int *face_edges, int size)
+    int bmi_get_grid_face_nodes(int model, int grid_id,
+                                int *face_nodes, int size)
+    int bmi_get_grid_nodes_per_face(int model, int grid_id,
+                                    int *nodes_per_face, int size)
 
     int bmi_get_var_type(int model, const char *var_name, int n_chars,
                          char *type, int m_chars)
@@ -338,6 +346,38 @@ cdef class {{ pymt_class }}:
         ok_or_raise(<int>bmi_get_grid_face_count(self._bmi, grid_id,
                                                  &face_count))
         return face_count
+
+    cpdef np.ndarray get_grid_edge_nodes(self, grid_id, \
+                                         np.ndarray[int, ndim=1] edge_nodes):
+        cdef int size = len(edge_nodes)
+        if size > 0:
+            ok_or_raise(<int>bmi_get_grid_edge_nodes(self._bmi, grid_id,
+                                                     &edge_nodes[0], size))
+        return edge_nodes
+
+    cpdef np.ndarray get_grid_face_edges(self, grid_id, \
+                                         np.ndarray[int, ndim=1] face_edges):
+        cdef int size = len(face_edges)
+        if size > 0:
+            ok_or_raise(<int>bmi_get_grid_face_edges(self._bmi, grid_id,
+                                                     &face_edges[0], size))
+        return face_edges
+
+    cpdef np.ndarray get_grid_face_nodes(self, grid_id, \
+                                         np.ndarray[int, ndim=1] face_nodes):
+        cdef int size = len(face_nodes)
+        if size > 0:
+            ok_or_raise(<int>bmi_get_grid_face_nodes(self._bmi, grid_id,
+                                                     &face_nodes[0], size))
+        return face_nodes
+
+    cpdef np.ndarray get_grid_nodes_per_face(self, grid_id, \
+                                         np.ndarray[int, ndim=1] nodes_per_face):
+        cdef int size = self.get_grid_face_count(grid_id)
+        if size > 0:
+            ok_or_raise(<int>bmi_get_grid_nodes_per_face(self._bmi, grid_id,
+                                                         &nodes_per_face[0], size))
+        return nodes_per_face
 
     cpdef object get_var_type(self, var_name):
         self.reset_str_buffer()

@@ -452,6 +452,62 @@ contains
   end function bmi_get_grid_face_count
 
   !
+  ! Get the edge-node connectivity of a grid.
+  !
+  function bmi_get_grid_edge_nodes(model_index, grid_id, edge_nodes, n) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(in), value :: n
+    integer (c_int), intent(out) :: edge_nodes(n)
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_edge_nodes(grid_id, edge_nodes)
+  end function bmi_get_grid_edge_nodes
+
+  !
+  ! Get the face-edge connectivity of a grid.
+  !
+  function bmi_get_grid_face_edges(model_index, grid_id, face_edges, n) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(in), value :: n
+    integer (c_int), intent(out) :: face_edges(n)
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_face_edges(grid_id, face_edges)
+  end function bmi_get_grid_face_edges
+
+  !
+  ! Get the face-node connectivity of a grid.
+  !
+  function bmi_get_grid_face_nodes(model_index, grid_id, face_nodes, n) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(in), value :: n
+    integer (c_int), intent(out) :: face_nodes(n)
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_face_nodes(grid_id, face_nodes)
+  end function bmi_get_grid_face_nodes
+
+  !
+  ! Get the number of nodes per face in a grid.
+  !
+  function bmi_get_grid_nodes_per_face(model_index, grid_id, nodes_per_face, n) &
+       bind(c) result(status)
+    integer (c_int), intent(in), value :: model_index
+    integer (c_int), intent(in), value :: grid_id
+    integer (c_int), intent(in), value :: n
+    integer (c_int), intent(out) :: nodes_per_face(n)
+    integer (c_int) :: status
+
+    status = model_array(model_index)%get_grid_nodes_per_face(grid_id, nodes_per_face)
+  end function bmi_get_grid_nodes_per_face
+
+  !
   ! Get the type for the specified variable.
   !
   function bmi_get_var_type(model_index, var_name, n, var_type, m) &

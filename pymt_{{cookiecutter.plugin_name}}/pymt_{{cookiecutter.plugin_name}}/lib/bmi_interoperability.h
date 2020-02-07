@@ -44,6 +44,11 @@ int bmi_get_grid_z(int model, int grid_id, double *z, int size);
 int bmi_get_grid_node_count(int model, int grid_id, int *count);
 int bmi_get_grid_edge_count(int model, int grid_id, int *count);
 int bmi_get_grid_face_count(int model, int grid_id, int *count);
+int bmi_get_grid_edge_nodes(int model, int grid_id, int *edge_nodes, int size);
+int bmi_get_grid_face_edges(int model, int grid_id, int *face_edges, int size);
+int bmi_get_grid_face_nodes(int model, int grid_id, int *face_nodes, int size);
+int bmi_get_grid_nodes_per_face(int model, int grid_id,
+				int *nodes_per_face, int size);
 
 int bmi_get_var_type(int model, const char *var_name, int n_chars,
 		     char *type, int m_chars);
