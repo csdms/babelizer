@@ -16,8 +16,8 @@ int bmi_update_until(int model, double until);
 int bmi_finalize(int model);
 
 int bmi_get_component_name(int model, char *name, int n_chars);
-int bmi_get_input_var_name_count(int model, int *count);
-int bmi_get_output_var_name_count(int model, int *count);
+int bmi_get_input_item_count(int model, int *count);
+int bmi_get_output_item_count(int model, int *count);
 int bmi_get_input_var_names(int model, char **names, int n_names);
 int bmi_get_output_var_names(int model, char **names, int n_names);
 

@@ -40,8 +40,8 @@ cdef extern from "bmi_interoperability.h":
     int bmi_finalize(int model)
 
     int bmi_get_component_name(int model, char *name, int n_chars)
-    int bmi_get_input_var_name_count(int model, int *count)
-    int bmi_get_output_var_name_count(int model, int *count)
+    int bmi_get_input_item_count(int model, int *count)
+    int bmi_get_output_item_count(int model, int *count)
     int bmi_get_input_var_names(int model, char **names, int n_names)
     int bmi_get_output_var_names(int model, char **names, int n_names)
 
@@ -163,9 +163,9 @@ cdef class {{ pymt_class }}:
                                                 MAX_COMPONENT_NAME))
         return to_string(self.STR_BUFFER)
 
-    cpdef int get_input_var_name_count(self):
+    cpdef int get_input_item_count(self):
         cdef int count = 0
-        ok_or_raise(<int>bmi_get_input_var_name_count(self._bmi, &count))
+        ok_or_raise(<int>bmi_get_input_item_count(self._bmi, &count))
         return count
 
     cpdef object get_input_var_names(self):
@@ -175,7 +175,7 @@ cdef class {{ pymt_class }}:
         cdef int count
         cdef int status = 1
 
-        ok_or_raise(<int>bmi_get_input_var_name_count(self._bmi, &count))
+        ok_or_raise(<int>bmi_get_input_item_count(self._bmi, &count))
 
         try:
             names = <char**>malloc(count * sizeof(char*))
@@ -196,9 +196,9 @@ cdef class {{ pymt_class }}:
 
         return tuple(py_names)
 
-    cpdef int get_output_var_name_count(self):
+    cpdef int get_output_item_count(self):
         cdef int count = 0
-        ok_or_raise(<int>bmi_get_output_var_name_count(self._bmi, &count))
+        ok_or_raise(<int>bmi_get_output_item_count(self._bmi, &count))
         return count
 
     cpdef object get_output_var_names(self):
@@ -208,7 +208,7 @@ cdef class {{ pymt_class }}:
         cdef int count
         cdef int status = 1
 
-        ok_or_raise(<int>bmi_get_output_var_name_count(self._bmi, &count))
+        ok_or_raise(<int>bmi_get_output_item_count(self._bmi, &count))
 
         try:
             names = <char**>malloc(count * sizeof(char*))
