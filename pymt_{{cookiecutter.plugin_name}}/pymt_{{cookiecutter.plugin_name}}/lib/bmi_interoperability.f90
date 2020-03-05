@@ -100,7 +100,7 @@ contains
   !
   ! Get the number of input variables.
   !
-  function bmi_get_input_var_name_count(model_index, count) &
+  function bmi_get_input_item_count(model_index, count) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(out) :: count
@@ -110,7 +110,7 @@ contains
     status = model_array(model_index)%get_input_var_names(pnames)
     count = size(pnames)
     status = BMI_SUCCESS
-  end function bmi_get_input_var_name_count
+  end function bmi_get_input_item_count
 
   !
   ! Get the names of the input variables.
@@ -134,7 +134,7 @@ contains
   !
   ! Get the number of output variables.
   !
-  function bmi_get_output_var_name_count(model_index, count) &
+  function bmi_get_output_item_count(model_index, count) &
        bind(c) result(status)
     integer (c_int), intent(in), value :: model_index
     integer (c_int), intent(out) :: count
@@ -144,7 +144,7 @@ contains
     status = model_array(model_index)%get_output_var_names(pnames)
     count = size(pnames)
     status = BMI_SUCCESS
-  end function bmi_get_output_var_name_count
+  end function bmi_get_output_item_count
 
   !
   ! Get the names of the output variables.
