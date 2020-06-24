@@ -1,0 +1,26 @@
+language: generic
+os:
+- linux
+- osx
+env:
+  matrix:
+  - TRAVIS_PYTHON_VERSION="2.7"
+  - TRAVIS_PYTHON_VERSION="3.4"
+  - TRAVIS_PYTHON_VERSION="3.5"
+  - TRAVIS_PYTHON_VERSION="3.6"
+sudo: false
+before_install:
+- |
+  if [[ $TRAVIS_OS_NAME == "osx" ]]; then
+    brew remove --force $(brew list)
+    brew cleanup -s
+    rm -rf $(brew --cache)
+  fi
+install:
+- curl https://raw.githubusercontent.com/csdms/ci-tools/master/install_miniconda.sh | bash -s - $(pwd)/.conda
+- export PATH="$(pwd)/.conda/bin:$PATH"
+- hash -r
+- conda create -n _testing python=$TRAVIS_PYTHON_VERSION && source activate _testing
+- conda install --file=requirements_dev.txt -c conda-forge
+script:
+- pytest

@@ -1,0 +1,20 @@
+{
+  "plugin_name": "plugin",
+  "plugin_requirements": "",
+  "plugin_module": "plugin",
+  "plugin_class": "{{ cookiecutter.plugin_name|title }}",
+  "language": ["c", "c++", "fortran", "python"],
+  "pymt_class": "{{ cookiecutter.plugin_class }}",
+  "bmi_register": "bmi_register_{{ cookiecutter.plugin_name }}",
+  "undef_macros": "",
+  "define_macros": "",
+  "libraries": "",
+  "library_dirs": "",
+  "include_dirs": "",
+  "extra_compile_args": "",
+  "open_source_license": ["MIT license", "BSD license", "ISC license", "Apache Software License 2.0", "GNU General Public License v3", "Not open source"],
+  "project_short_description": "PyMT plugin for {{cookiecutter.plugin_name}}",
+  "full_name": "Eric Hutton",
+  "github_username": "mcflugen",
+  "entry_points": "Foo=bar:Baz"
+}
