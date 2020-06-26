@@ -13,7 +13,7 @@ def data_files(directory):
 
 
 setup(
-    name='bmi_wrap',
+    name='babelize',
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     description='Wrap bmi libraries with Python bindings',
@@ -27,11 +27,12 @@ setup(
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'bmi-wrap=bmi_wrap.cli.main_wrap:main',
-            'bmi-render=bmi_wrap.cli.main_render:main',
+            'bmi-wrap=babelize.cli.main_wrap:main',
+            'bmi-render=babelize.cli.main_babelize:babelize',
+            'babelize=babelize.cli.main_babelize:babelize',
         ],
         'bmi.plugins': [
-            'bmi_wrap=bmi_wrap.cli.main:configure_parser_wrap',
+            'babelize=babelize.cli.main:configure_parser_wrap',
         ],
     },
 )

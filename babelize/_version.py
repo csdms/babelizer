@@ -42,8 +42,8 @@ def get_config():
     cfg.VCS = "git"
     cfg.style = "pep440"
     cfg.tag_prefix = "v"
-    cfg.parentdir_prefix = "bmi_wrap-"
-    cfg.versionfile_source = "bmi_wrap/_version.py"
+    cfg.parentdir_prefix = "babelize-"
+    cfg.versionfile_source = "babelize/_version.py"
     cfg.verbose = False
     return cfg
 

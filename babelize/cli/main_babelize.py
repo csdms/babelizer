@@ -234,11 +234,11 @@ class PluginMetadata(object):
     "output",
     type=click.Path(file_okay=False, dir_okay=True, writable=True, resolve_path=True),
 )
-def main(meta, output, compile, clobber, template, quiet, verbose):
+def babelize(meta, output, compile, clobber, template, quiet, verbose):
 
     config = PluginMetadata(meta)
 
-    template = template or pkg_resources.resource_filename("bmi_wrap", "data")
+    template = template or pkg_resources.resource_filename("babelize", "data")
 
     if not quiet:
         click.secho("reading template from {}".format(template), err=True)
@@ -324,4 +324,4 @@ def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
 
 
 if __name__ == "__main__":
-    main(auto_envvar_prefix="BMI_WRAP")
+    main(auto_envvar_prefix="BABELIZE")
