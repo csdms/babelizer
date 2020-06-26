@@ -1,2 +1,3 @@
 include versioneer.py
 include bmi_wrap/_version.py
+recursive-include bmi_wrap/data/ *

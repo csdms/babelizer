@@ -1,10 +1,10 @@
 #! /usr/bin/env python
 import os
+import pkg_resources
 import re
 from collections import OrderedDict
 
 import click
-import six
 import yaml
 from cookiecutter.main import cookiecutter
 
@@ -12,9 +12,6 @@ from scripting.contexts import cd
 from scripting.unix import system
 
 from .. import __version__
-
-
-_TEMPLATE_URI = "http://github.com/mcflugen/cookiecutter-bmi-wrap"
 
 
 def setup_yaml_with_canonical_dict():
@@ -105,10 +102,10 @@ def validate_meta(meta):
             )
 
     def _is_iterable_of_strings(value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return False
         for item in value:
-            if not isinstance(item, six.string_types):
+            if not isinstance(item, str):
                 return False
         return True
 
@@ -184,7 +181,7 @@ class PluginMetadata(object):
         entry_point = ""
 
         entry_points = self._meta["library"]["entry_point"]
-        if isinstance(entry_points, six.string_types):
+        if isinstance(entry_points, str):
             entry_points = [entry_points]
         entry_points = ",".join(entry_points)
 
@@ -228,7 +225,8 @@ class PluginMetadata(object):
 )
 @click.option(
     "--template",
-    default="http://github.com/mcflugen/cookiecutter-bmi-wrap",
+    default=None,
+    # default="http://github.com/mcflugen/cookiecutter-bmi-wrap",
     help="Location of cookiecutter template",
 )
 @click.argument("meta", type=click.File(mode="r"))
@@ -240,13 +238,15 @@ def main(meta, output, compile, clobber, template, quiet, verbose):
 
     config = PluginMetadata(meta)
 
+    template = template or pkg_resources.resource_filename("bmi_wrap", "data")
+
     if not quiet:
         click.secho("reading template from {}".format(template), err=True)
 
     path = render_plugin_repo(
-        config.as_cookiecutter_context(),
+        template,
+        context=config.as_cookiecutter_context(),
         output_dir=output,
-        template=template,
         clobber=clobber,
     )
 
@@ -287,26 +287,26 @@ def main(meta, output, compile, clobber, template, quiet, verbose):
         )
 
 
-def render_plugin_repo(context, output_dir=".", clobber=False, template=None):
+def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
     """Render a repository for a pymt plugin.
 
     Parameters
     ----------
-    context: dict
+    template: bool
+        Path (or URL) to the cookiecutter template to use.
+    context: dict, optional
         Context for the new repository.
     output_dir : str, optional
         Name of the folder that will be the new repository.
     clobber: bool, optional
         If a like-named repository already exists, overwrite it.
-    template: bool, optional
-        Path (or URL) to the cookiecutter template to use.
 
     Returns
     -------
     path
         Absolute path to the newly-created repository.
     """
-    template = template or _TEMPLATE_URI
+    context = context or {}
 
     cookiecutter(
         template,
