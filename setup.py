@@ -27,12 +27,8 @@ setup(
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'bmi-wrap=babelize.cli.main_wrap:main',
             'bmi-render=babelize.cli.main_babelize:babelize',
             'babelize=babelize.cli.main_babelize:babelize',
-        ],
-        'bmi.plugins': [
-            'babelize=babelize.cli.main:configure_parser_wrap',
         ],
     },
 )
