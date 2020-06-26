@@ -13,6 +13,7 @@ from scripting.contexts import cd
 from scripting.unix import system
 
 from .. import __version__
+from ..errors import RenderError, ValidationError
 
 
 out = partial(click.secho, bold=True, err=True)
@@ -72,24 +73,6 @@ def setup_yaml_with_canonical_dict():
 
 
 setup_yaml_with_canonical_dict()
-
-
-class BmiWrapError(Exception):
-    def __init__(self, message):
-        self._message = message
-
-    def __str__(self):
-        return self._message
-
-
-class ValidationError(BmiWrapError):
-
-    pass
-
-
-class RenderError(BmiWrapError):
-
-    pass
 
 
 def validate_meta(meta):
