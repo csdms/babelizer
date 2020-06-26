@@ -1,18 +1,16 @@
 #! /usr/bin/env python
 import os
-import pkg_resources
 from collections import OrderedDict
 from functools import partial
 
 import click
-
+import pkg_resources
 from scripting.contexts import cd
 from scripting.unix import system
 
 from .. import __version__
 from ..metadata import PluginMetadata
 from ..render import render_plugin_repo
-
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
@@ -35,9 +33,7 @@ err = partial(click.secho, fg="red", err=True)
     "-v", "--verbose", is_flag=True, help="Also emit status messages to stderr."
 )
 @click.option(
-    "--template",
-    default=None,
-    help="Location of cookiecutter template",
+    "--template", default=None, help="Location of cookiecutter template",
 )
 @click.argument("meta", type=click.File(mode="r"))
 @click.argument(
