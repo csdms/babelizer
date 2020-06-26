@@ -3,6 +3,7 @@ import os
 import pkg_resources
 import re
 from collections import OrderedDict
+from functools import partial
 
 import click
 import yaml
@@ -12,6 +13,10 @@ from scripting.contexts import cd
 from scripting.unix import system
 
 from .. import __version__
+
+
+out = partial(click.secho, bold=True, err=True)
+err = partial(click.secho, fg="red", err=True)
 
 
 def setup_yaml_with_canonical_dict():
@@ -128,7 +133,7 @@ class PluginMetadata(object):
     }
 
     def __init__(self, filepath):
-        self._meta = PluginMetadata.norm(yaml.load(filepath))
+        self._meta = PluginMetadata.norm(yaml.safe_load(filepath))
         validate_meta(self._meta)
 
     def get(self, section, value):
@@ -226,7 +231,6 @@ class PluginMetadata(object):
 @click.option(
     "--template",
     default=None,
-    # default="http://github.com/mcflugen/cookiecutter-bmi-wrap",
     help="Location of cookiecutter template",
 )
 @click.argument("meta", type=click.File(mode="r"))
@@ -241,7 +245,7 @@ def babelize(meta, output, compile, clobber, template, quiet, verbose):
     template = template or pkg_resources.resource_filename("babelize", "data")
 
     if not quiet:
-        click.secho("reading template from {}".format(template), err=True)
+        out(f"reading template from {teplate}")
 
     path = render_plugin_repo(
         template,
@@ -254,9 +258,9 @@ def babelize(meta, output, compile, clobber, template, quiet, verbose):
         config.dump(fp)
 
     if not quiet:
-        click.secho("Your pymt plugin can be found at {}".format(path), fg="green")
+        out(f"Your pymt plugin can be found at {path}")
 
-    click.secho("Checklist of things to do:", fg="white")
+    out("Checklist of things to do:")
     checklist = OrderedDict(
         [
             ("versioneer install", " "),
@@ -274,16 +278,13 @@ def babelize(meta, output, compile, clobber, template, quiet, verbose):
         checklist["install"] = "x"
     if not quiet:
         for item, status in checklist.items():
-            click.secho(
-                "[{status}] {item}".format(item=item, status=status), fg="white"
-            )
+            out(f"[{status}] {item}")
 
     if not quiet:
-        click.secho(
+        out(
             "Don't forget to drop model metadata files into {0}".format(
                 os.path.join(path, "meta")
-            ),
-            fg="green",
+            )
         )
 
 
