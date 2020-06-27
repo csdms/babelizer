@@ -63,18 +63,6 @@ def babelize(meta, output, clobber, template, quiet, verbose):
     if not quiet:
         out(f"Your pymt plugin can be found at {path}")
 
-    out("Checklist of things to do:")
-    checklist = OrderedDict(
-        [
-            ("versioneer install", " "),
-            ("make lint", " "),
-            ("make docs", " "),
-        ]
-    )
-    if not quiet:
-        for item, status in checklist.items():
-            out(f"[{status}] {item}")
-
     if not quiet:
         out(
             "Don't forget to drop model metadata files into {0}".format(
