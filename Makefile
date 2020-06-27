@@ -52,17 +52,15 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
-	flake8 babelize
+	flake8 babelizer
 
 pretty: ## reformat files to make them look pretty
-	isort --apply --recursive babelize
-	black setup.py babelize --exclude=babelize/data
-
-#	find babelize -name '*.py' | xargs isort
+	isort --apply --recursive babelizer
+	black setup.py babelizer --exclude=babelizer/data
 
 
 test: ## run tests quickly with the default Python
-	pytest --cov=babelize
+	pytest --cov=babelizer
 
 benchmark: ## run benchmarks only
 	pytest --benchmark-only --benchmark-autosave
@@ -71,15 +69,15 @@ test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source babelize -m pytest
+	coverage run --source babelizer -m pytest
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/source/api/babelize.rst
+	rm -f docs/source/api/babelizer.rst
 	rm -f docs/source/api/modules.rst
-	sphinx-apidoc -o docs/source/api babelize
+	sphinx-apidoc -o docs/source/api babelizer
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/build/html/index.html

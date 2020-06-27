@@ -15,7 +15,7 @@ def data_files(directory):
 
 
 setup(
-    name="babelize",
+    name="babelizer",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     description="Wrap bmi libraries with Python bindings",
@@ -29,8 +29,8 @@ setup(
     include_package_data=True,
     entry_points={
         "console_scripts": [
-            "bmi-render=babelize.cli.main_babelize:babelize",
-            "babelize=babelize.cli.main_babelize:babelize",
+            "bmi-render=babelizer.cli.main_babelize:babelize",
+            "babelize=babelizer.cli.main_babelize:babelize",
         ],
     },
 )
