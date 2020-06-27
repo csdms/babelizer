@@ -10,7 +10,7 @@ from scripting.unix import system
 
 from .. import __version__
 from ..metadata import PluginMetadata
-from ..render import render_plugin_repo
+from ..render import prettify_python, render_plugin_repo
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
@@ -59,6 +59,8 @@ def babelize(meta, output, compile, clobber, template, quiet, verbose):
     with open(os.path.join(path, "plugin.yaml"), "w") as fp:
         config.dump(fp)
 
+    prettify_python(path)
+
     if not quiet:
         out(f"Your pymt plugin can be found at {path}")
 
@@ -66,8 +68,6 @@ def babelize(meta, output, compile, clobber, template, quiet, verbose):
     checklist = OrderedDict(
         [
             ("versioneer install", " "),
-            ("make install", " "),
-            ("make pretty", " "),
             ("make lint", " "),
             ("make docs", " "),
         ]

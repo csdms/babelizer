@@ -1,6 +1,9 @@
 import pathlib
 
+import black as blk
+import yaml
 from cookiecutter.main import cookiecutter
+from isort import SortImports
 
 from .errors import RenderError
 
@@ -44,3 +47,34 @@ def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
         raise RenderError("error creating {0}".format(path))
 
     return path
+
+
+class StyleBlack:
+    def __init__(self, filepath):
+        with open(filepath, "r") as fp:
+            try:
+                new_contents = blk.format_file_contents(
+                        fp.read(), fast=True, mode=blk.FileMode()
+                    )
+            except blk.NothingChanged:
+                new_contents = None
+        if new_contents:
+            with open(filepath, "w") as fp:
+                fp.write(new_contents)
+
+
+def prettify_python(path_to_repo):
+    path_to_repo = pathlib.Path(path_to_repo)
+    with open(path_to_repo / "plugin.yaml") as fp:
+        meta = yaml.safe_load(fp)
+    module_name = "pymt_" + meta["plugin"]["name"]
+
+    files_to_fix = [
+        path_to_repo / "setup.py",
+        path_to_repo / module_name / "bmi.py",
+        path_to_repo / module_name / "__init__.py",
+    ]
+
+    for file_to_fix in files_to_fix:
+        SortImports(file_to_fix)
+        StyleBlack(file_to_fix)
