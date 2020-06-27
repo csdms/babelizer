@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 import os
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
+
 import versioneer
 
 
@@ -13,25 +15,22 @@ def data_files(directory):
 
 
 setup(
-    name='bmi_wrap',
+    name="babelizer",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
-    description='Wrap bmi libraries with Python bindings',
+    description="Wrap bmi libraries with Python bindings",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
-    author='Eric Hutton',
-    author_email='huttone@colorado.edu',
-    url='https://github.com/csdms',
+    author="Eric Hutton",
+    author_email="huttone@colorado.edu",
+    url="https://github.com/csdms",
     install_requires=open("requirements.txt", "r").read().splitlines(),
     packages=find_packages(),
     include_package_data=True,
     entry_points={
-        'console_scripts': [
-            'bmi-wrap=bmi_wrap.cli.main_wrap:main',
-            'bmi-render=bmi_wrap.cli.main_render:main',
-        ],
-        'bmi.plugins': [
-            'bmi_wrap=bmi_wrap.cli.main:configure_parser_wrap',
+        "console_scripts": [
+            "bmi-render=babelizer.cli.main_babelize:babelize",
+            "babelize=babelizer.cli.main_babelize:babelize",
         ],
     },
 )

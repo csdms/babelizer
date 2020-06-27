@@ -35,5 +35,6 @@ before_install:
 install:
 - pip install .
 script:
-- bmi-render --version
-- bmi-render --help
+- babelize --version
+- babelize --help
+- python -c 'import babelizer; print(babelizer.__version__)'

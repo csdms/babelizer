@@ -1,20 +1,12 @@
-#! /usr/bin/env python
-import os
-import pkg_resources
 import re
 from collections import OrderedDict
 
-import click
 import yaml
-from cookiecutter.main import cookiecutter
 
-from scripting.contexts import cd
-from scripting.unix import system
-
-from .. import __version__
+from .errors import ValidationError
 
 
-def setup_yaml_with_canonical_dict():
+def _setup_yaml_with_canonical_dict():
     """ https://stackoverflow.com/a/8661021 """
     yaml.add_representer(
         OrderedDict,
@@ -66,25 +58,7 @@ def setup_yaml_with_canonical_dict():
     )
 
 
-setup_yaml_with_canonical_dict()
-
-
-class BmiWrapError(Exception):
-    def __init__(self, message):
-        self._message = message
-
-    def __str__(self):
-        return self._message
-
-
-class ValidationError(BmiWrapError):
-
-    pass
-
-
-class RenderError(BmiWrapError):
-
-    pass
+_setup_yaml_with_canonical_dict()
 
 
 def validate_meta(meta):
@@ -128,7 +102,7 @@ class PluginMetadata(object):
     }
 
     def __init__(self, filepath):
-        self._meta = PluginMetadata.norm(yaml.load(filepath))
+        self._meta = PluginMetadata.norm(yaml.safe_load(filepath))
         validate_meta(self._meta)
 
     def get(self, section, value):
@@ -205,123 +179,3 @@ class PluginMetadata(object):
             "open_source_license": self._meta["info"]["plugin_license"],
             "project_short_description": self._meta["info"]["summary"],
         }
-
-
-@click.command()
-@click.version_option(version=__version__)
-@click.option("--compile", is_flag=True, help="compile the extension module")
-@click.option("--clobber", is_flag=True, help="clobber folder if it already exists")
-@click.option(
-    "-q",
-    "--quiet",
-    is_flag=True,
-    help=(
-        "Don't emit non-error messages to stderr. Errors are still emitted, "
-        "silence those with 2>/dev/null."
-    ),
-)
-@click.option(
-    "-v", "--verbose", is_flag=True, help="Also emit status messages to stderr."
-)
-@click.option(
-    "--template",
-    default=None,
-    # default="http://github.com/mcflugen/cookiecutter-bmi-wrap",
-    help="Location of cookiecutter template",
-)
-@click.argument("meta", type=click.File(mode="r"))
-@click.argument(
-    "output",
-    type=click.Path(file_okay=False, dir_okay=True, writable=True, resolve_path=True),
-)
-def main(meta, output, compile, clobber, template, quiet, verbose):
-
-    config = PluginMetadata(meta)
-
-    template = template or pkg_resources.resource_filename("bmi_wrap", "data")
-
-    if not quiet:
-        click.secho("reading template from {}".format(template), err=True)
-
-    path = render_plugin_repo(
-        template,
-        context=config.as_cookiecutter_context(),
-        output_dir=output,
-        clobber=clobber,
-    )
-
-    with open(os.path.join(path, "plugin.yaml"), "w") as fp:
-        config.dump(fp)
-
-    if not quiet:
-        click.secho("Your pymt plugin can be found at {}".format(path), fg="green")
-
-    click.secho("Checklist of things to do:", fg="white")
-    checklist = OrderedDict(
-        [
-            ("versioneer install", " "),
-            ("make install", " "),
-            ("make pretty", " "),
-            ("make lint", " "),
-            ("make docs", " "),
-        ]
-    )
-    if compile:
-        with cd(path):
-            system(["versioneer", "install"])
-            system(["python", "setup.py", "develop"])
-        checklist["version"] = "x"
-        checklist["install"] = "x"
-    if not quiet:
-        for item, status in checklist.items():
-            click.secho(
-                "[{status}] {item}".format(item=item, status=status), fg="white"
-            )
-
-    if not quiet:
-        click.secho(
-            "Don't forget to drop model metadata files into {0}".format(
-                os.path.join(path, "meta")
-            ),
-            fg="green",
-        )
-
-
-def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
-    """Render a repository for a pymt plugin.
-
-    Parameters
-    ----------
-    template: bool
-        Path (or URL) to the cookiecutter template to use.
-    context: dict, optional
-        Context for the new repository.
-    output_dir : str, optional
-        Name of the folder that will be the new repository.
-    clobber: bool, optional
-        If a like-named repository already exists, overwrite it.
-
-    Returns
-    -------
-    path
-        Absolute path to the newly-created repository.
-    """
-    context = context or {}
-
-    cookiecutter(
-        template,
-        extra_context=context,
-        output_dir=output_dir,
-        no_input=True,
-        overwrite_if_exists=clobber,
-    )
-
-    path = os.path.join(output_dir, "pymt_{}".format(context["plugin_name"]))
-    if not os.path.isdir(path):
-        raise RenderError("error creating {}".format(path))
-
-    return path
-
-
-if __name__ == "__main__":
-    main(auto_envvar_prefix="BMI_WRAP")
