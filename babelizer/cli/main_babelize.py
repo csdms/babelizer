@@ -44,7 +44,7 @@ def babelize(meta, output, compile, clobber, template, quiet, verbose):
 
     config = PluginMetadata(meta)
 
-    template = template or pkg_resources.resource_filename("babelize", "data")
+    template = template or pkg_resources.resource_filename("babelizer", "data")
 
     if not quiet:
         out(f"reading template from {template}")
