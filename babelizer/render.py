@@ -3,9 +3,10 @@ import pathlib
 import black as blk
 import yaml
 from cookiecutter.main import cookiecutter
+from cookiecutter.exceptions import OutputDirExistsException
 from isort import SortImports
 
-from .errors import RenderError
+from .errors import OutputDirExistsError, RenderError
 
 
 def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
@@ -30,13 +31,16 @@ def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
     output_dir = pathlib.Path(output_dir)
     context = context or {}
 
-    cookiecutter(
-        template,
-        extra_context=context,
-        output_dir=output_dir,
-        no_input=True,
-        overwrite_if_exists=clobber,
-    )
+    try:
+        cookiecutter(
+            template,
+            extra_context=context,
+            output_dir=output_dir,
+            no_input=True,
+            overwrite_if_exists=clobber,
+        )
+    except OutputDirExistsException as err:
+        raise OutputDirExistsError(", ".join(err.args))
 
     name = context["plugin_name"]
 

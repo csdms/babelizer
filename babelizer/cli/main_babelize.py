@@ -9,6 +9,7 @@ from scripting.contexts import cd
 from scripting.unix import system
 
 from .. import __version__
+from ..errors import OutputDirExistsError
 from ..metadata import PluginMetadata
 from ..render import prettify_python, render_plugin_repo
 
@@ -48,12 +49,16 @@ def babelize(meta, output, clobber, template, quiet, verbose):
     if not quiet:
         out(f"reading template from {template}")
 
-    path = render_plugin_repo(
-        template,
-        context=config.as_cookiecutter_context(),
-        output_dir=output,
-        clobber=clobber,
-    )
+    try:
+        path = render_plugin_repo(
+            template,
+            context=config.as_cookiecutter_context(),
+            output_dir=output,
+            clobber=clobber,
+        )
+    except OutputDirExistsError as error:
+        err(str(error))
+        raise click.Abort()
 
     with open(os.path.join(path, "plugin.yaml"), "w") as fp:
         config.dump(fp)
