@@ -66,10 +66,9 @@ def babelize(meta, output, clobber, template, quiet, verbose):
     prettify_python(path)
 
     if not quiet:
-        out(f"Your pymt plugin can be found at {path}")
-
-    if not quiet:
         out("Don't forget to drop model metadata files into {0}".format(path / "meta"))
+
+    print(path.resolve())
 
 
 if __name__ == "__main__":
