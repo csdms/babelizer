@@ -76,5 +76,5 @@ def prettify_python(path_to_repo):
     ]
 
     for file_to_fix in files_to_fix:
-        SortImports(file_to_fix)
+        SortImports(file_to_fix, quiet=True)
         StyleBlack(file_to_fix)
