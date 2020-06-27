@@ -60,7 +60,7 @@ def babelize(meta, output, clobber, template, quiet, verbose):
         err(str(error))
         raise click.Abort()
 
-    with open(os.path.join(path, "plugin.yaml"), "w") as fp:
+    with open(path / "plugin.yaml", "w") as fp:
         config.dump(fp)
 
     prettify_python(path)
@@ -69,11 +69,7 @@ def babelize(meta, output, clobber, template, quiet, verbose):
         out(f"Your pymt plugin can be found at {path}")
 
     if not quiet:
-        out(
-            "Don't forget to drop model metadata files into {0}".format(
-                os.path.join(path, "meta")
-            )
-        )
+        out("Don't forget to drop model metadata files into {0}".format(path / "meta"))
 
 
 if __name__ == "__main__":
