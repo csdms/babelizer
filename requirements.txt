@@ -1,5 +1,7 @@
+black
 click
 pyyaml
+isort
 jinja2
 cookiecutter
 py-scripting
