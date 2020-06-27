@@ -18,7 +18,6 @@ err = partial(click.secho, fg="red", err=True)
 
 @click.command()
 @click.version_option(version=__version__)
-@click.option("--compile", is_flag=True, help="compile the extension module")
 @click.option("--clobber", is_flag=True, help="clobber folder if it already exists")
 @click.option(
     "-q",
@@ -40,7 +39,7 @@ err = partial(click.secho, fg="red", err=True)
     "output",
     type=click.Path(file_okay=False, dir_okay=True, writable=True, resolve_path=True),
 )
-def babelize(meta, output, compile, clobber, template, quiet, verbose):
+def babelize(meta, output, clobber, template, quiet, verbose):
 
     config = PluginMetadata(meta)
 
@@ -72,12 +71,6 @@ def babelize(meta, output, compile, clobber, template, quiet, verbose):
             ("make docs", " "),
         ]
     )
-    if compile:
-        with cd(path):
-            system(["versioneer", "install"])
-            system(["python", "setup.py", "develop"])
-        checklist["version"] = "x"
-        checklist["install"] = "x"
     if not quiet:
         for item, status in checklist.items():
             out(f"[{status}] {item}")
