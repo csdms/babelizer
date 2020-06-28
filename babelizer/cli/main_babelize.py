@@ -19,7 +19,6 @@ err = partial(click.secho, fg="red", err=True)
 
 @click.command()
 @click.version_option(version=__version__)
-@click.option("--clobber", is_flag=True, help="clobber folder if it already exists")
 @click.option(
     "-q",
     "--quiet",
@@ -40,8 +39,7 @@ err = partial(click.secho, fg="red", err=True)
     "output",
     type=click.Path(file_okay=False, dir_okay=True, writable=True, resolve_path=True),
 )
-def babelize(meta, output, clobber, template, quiet, verbose):
-
+def babelize(meta, output, template, quiet, verbose):
     config = PluginMetadata(meta)
 
     template = template or pkg_resources.resource_filename("babelizer", "data")
@@ -54,7 +52,7 @@ def babelize(meta, output, clobber, template, quiet, verbose):
             template,
             context=config.as_cookiecutter_context(),
             output_dir=output,
-            clobber=clobber,
+            clobber=False,
         )
     except OutputDirExistsError as error:
         err(str(error))
