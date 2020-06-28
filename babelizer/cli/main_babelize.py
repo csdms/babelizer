@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import os
+import pathlib
 from collections import OrderedDict
 from functools import partial
 
@@ -11,7 +12,7 @@ from scripting.unix import system
 from .. import __version__
 from ..errors import OutputDirExistsError
 from ..metadata import PluginMetadata
-from ..render import prettify_python, render_plugin_repo
+from ..render import prettify_python, render_plugin_repo, render
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
@@ -40,33 +41,61 @@ err = partial(click.secho, fg="red", err=True)
     type=click.Path(file_okay=False, dir_okay=True, writable=True, resolve_path=True),
 )
 def babelize(meta, output, template, quiet, verbose):
-    config = PluginMetadata(meta)
-
     template = template or pkg_resources.resource_filename("babelizer", "data")
 
     if not quiet:
         out(f"reading template from {template}")
 
     try:
-        path = render_plugin_repo(
-            template,
-            context=config.as_cookiecutter_context(),
-            output_dir=output,
-            clobber=False,
-        )
+        new_folder = render(meta, output, template=template)
     except OutputDirExistsError as error:
         err(str(error))
         raise click.Abort()
 
-    with open(path / "plugin.yaml", "w") as fp:
-        config.dump(fp)
+    if not quiet:
+        out("Don't forget to drop model metadata files into {0}".format(new_folder / "meta"))
 
-    prettify_python(path)
+    print(new_folder)
+
+
+@click.command()
+@click.version_option(version=__version__)
+@click.option(
+    "-q",
+    "--quiet",
+    is_flag=True,
+    help=(
+        "Don't emit non-error messages to stderr. Errors are still emitted, "
+        "silence those with 2>/dev/null."
+    ),
+)
+@click.option(
+    "-v", "--verbose", is_flag=True, help="Also emit status messages to stderr."
+)
+@click.option(
+    "--template", default=None, help="Location of cookiecutter template",
+)
+def rebabelize(template, quiet, verbose):
+    metadata_path = pathlib.Path("plugin.yaml").resolve()
+    package_path = metadata_path.parent
+    output_path = metadata_path.parent
+
+    if not metadata_path.is_file():
+        err("this does not appear to be a babelized folder (missing 'plugin.yaml')")
+        raise click.Abort()
+
+    template = template or pkg_resources.resource_filename("babelizer", "data")
 
     if not quiet:
-        out("Don't forget to drop model metadata files into {0}".format(path / "meta"))
+        out(f"reading template from {template}")
 
-    print(path.resolve())
+    with open(metadata_path, "r") as meta:
+        render(meta, output_path, template=template, clobber=True)
+
+    if not quiet:
+        out("Don't forget to drop model metadata files into {0}".format(package_path / "meta"))
+
+    print(package_path)
 
 
 if __name__ == "__main__":

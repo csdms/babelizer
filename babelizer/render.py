@@ -7,6 +7,32 @@ from cookiecutter.exceptions import OutputDirExistsException
 from isort import SortImports
 
 from .errors import OutputDirExistsError, RenderError
+from .metadata import PluginMetadata
+
+
+def render(meta, output, template=None, clobber=False):
+    config = PluginMetadata(meta)
+
+    if template is None:
+        template = pkg_resources.resource_filename("babelizer", "data")
+
+    try:
+        path = render_plugin_repo(
+            template,
+            context=config.as_cookiecutter_context(),
+            output_dir=output,
+            clobber=True,
+        )
+    except OutputDirExistsError as error:
+        err(str(error))
+        raise click.Abort()
+
+    with open(path / "plugin.yaml", "w") as fp:
+        config.dump(fp)
+
+    prettify_python(path)
+
+    return path.resolve()
 
 
 def render_plugin_repo(template, context=None, output_dir=".", clobber=False):

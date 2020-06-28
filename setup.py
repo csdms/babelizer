@@ -31,6 +31,7 @@ setup(
         "console_scripts": [
             "bmi-render=babelizer.cli.main_babelize:babelize",
             "babelize=babelizer.cli.main_babelize:babelize",
+            "rebabelize=babelizer.cli.main_babelize:rebabelize",
         ],
     },
 )

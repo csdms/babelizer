@@ -37,4 +37,6 @@ install:
 script:
 - babelize --version
 - babelize --help
+- rebabelize --version
+- rebabelize --help
 - python -c 'import babelizer; print(babelizer.__version__)'
