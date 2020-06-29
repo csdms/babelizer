@@ -1,19 +1,14 @@
 #! /usr/bin/env python
-import os
 import pathlib
-from collections import OrderedDict
 from functools import partial
 
 import click
 import pkg_resources
-import yaml
-from scripting.contexts import cd
-from scripting.unix import system
 
 from .. import __version__
 from ..errors import OutputDirExistsError, ValidationError
 from ..metadata import PluginMetadata
-from ..render import prettify_python, render, render_plugin_repo
+from ..render import render
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
