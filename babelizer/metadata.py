@@ -43,9 +43,9 @@ def _setup_yaml_with_canonical_dict():
 
     # loader = yaml.SafeLoader
     yaml.add_implicit_resolver(
-        u"tag:yaml.org,2002:float",
+        "tag:yaml.org,2002:float",
         re.compile(
-            u"""^(?:
+            """^(?:
          [-+]?(?:[0-9][0-9_]*)\\.[0-9_]*(?:[eE][-+]?[0-9]+)?
         |[-+]?(?:[0-9][0-9_]*)(?:[eE][-+]?[0-9]+)
         |\\.[0-9_]+(?:[eE][-+][0-9]+)?
@@ -54,7 +54,7 @@ def _setup_yaml_with_canonical_dict():
         |\\.(?:nan|NaN|NAN))$""",
             re.X,
         ),
-        list(u"-+0123456789."),
+        list("-+0123456789."),
     )
 
 
@@ -119,7 +119,9 @@ class PluginMetadata:
         except TypeError:
             raise ValidationError("metadata file does not contain a mapping object")
         except yaml.scanner.ScannerError as error:
-            raise ValidationError(f"unable to scan yaml-formatted metadata file:\n{error}")
+            raise ValidationError(
+                f"unable to scan yaml-formatted metadata file:\n{error}"
+            )
 
     @classmethod
     def from_path(cls, filepath):

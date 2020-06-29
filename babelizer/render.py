@@ -1,9 +1,10 @@
 import pathlib
 
 import black as blk
+import pkg_resources
 import yaml
-from cookiecutter.main import cookiecutter
 from cookiecutter.exceptions import OutputDirExistsException
+from cookiecutter.main import cookiecutter
 from isort import SortImports
 
 from .errors import OutputDirExistsError, RenderError
@@ -80,8 +81,8 @@ class StyleBlack:
         with open(filepath, "r") as fp:
             try:
                 new_contents = blk.format_file_contents(
-                        fp.read(), fast=True, mode=blk.FileMode()
-                    )
+                    fp.read(), fast=True, mode=blk.FileMode()
+                )
             except blk.NothingChanged:
                 new_contents = None
         if new_contents:

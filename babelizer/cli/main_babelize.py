@@ -13,7 +13,7 @@ from scripting.unix import system
 from .. import __version__
 from ..errors import OutputDirExistsError, ValidationError
 from ..metadata import PluginMetadata
-from ..render import prettify_python, render_plugin_repo, render
+from ..render import prettify_python, render, render_plugin_repo
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
@@ -59,7 +59,11 @@ def babelize(meta, output, template, quiet, verbose):
         raise BabelizerAbort(error)
 
     if not quiet:
-        out("Don't forget to drop model metadata files into {0}".format(new_folder / "meta"))
+        out(
+            "Don't forget to drop model metadata files into {0}".format(
+                new_folder / "meta"
+            )
+        )
 
     print(new_folder)
 
@@ -103,7 +107,11 @@ def rebabelize(template, quiet, verbose):
     render(plugin_metadata, output_path, template=template, clobber=True)
 
     if not quiet:
-        out("Don't forget to drop model metadata files into {0}".format(package_path / "meta"))
+        out(
+            "Don't forget to drop model metadata files into {0}".format(
+                package_path / "meta"
+            )
+        )
 
     print(package_path)
 
