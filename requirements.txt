@@ -4,4 +4,3 @@ pyyaml
 isort
 jinja2
 cookiecutter
-py-scripting
