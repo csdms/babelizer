@@ -94,16 +94,37 @@ def validate_meta(meta):
             )
 
 
-class PluginMetadata(object):
+class PluginMetadata:
     REQUIRED = {
         "library": ("language", "entry_point"),
         "plugin": ("name", "requirements"),
         "info": ("plugin_author", "github_username", "plugin_license", "summary"),
     }
 
-    def __init__(self, filepath):
-        self._meta = PluginMetadata.norm(yaml.safe_load(filepath))
+    def __init__(self, library=None, build=None, plugin=None, info=None):
+        self._meta = PluginMetadata.norm(
+            {
+                "library": library or {},
+                "build": build or {},
+                "plugin": plugin or {},
+                "info": info or {},
+            }
+        )
         validate_meta(self._meta)
+
+    @classmethod
+    def from_stream(cls, stream):
+        try:
+            return cls(**yaml.safe_load(stream))
+        except TypeError:
+            raise ValidationError("metadata file does not contain a mapping object")
+        except yaml.scanner.ScannerError as error:
+            raise ValidationError(f"unable to scan yaml-formatted metadata file:\n{error}")
+
+    @classmethod
+    def from_path(cls, filepath):
+        with open(filepath, "r") as fp:
+            return PluginMetadata.from_stream(fp)
 
     def get(self, section, value):
         return self._meta[section][value]

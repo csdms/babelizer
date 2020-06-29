@@ -6,16 +6,22 @@ from functools import partial
 
 import click
 import pkg_resources
+import yaml
 from scripting.contexts import cd
 from scripting.unix import system
 
 from .. import __version__
-from ..errors import OutputDirExistsError
+from ..errors import OutputDirExistsError, ValidationError
 from ..metadata import PluginMetadata
 from ..render import prettify_python, render_plugin_repo, render
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
+
+
+class BabelizerAbort(click.Abort):
+    def __init__(self, message):
+        err(str(message))
 
 
 @click.command()
@@ -47,10 +53,10 @@ def babelize(meta, output, template, quiet, verbose):
         out(f"reading template from {template}")
 
     try:
-        new_folder = render(meta, output, template=template)
-    except OutputDirExistsError as error:
-        err(str(error))
-        raise click.Abort()
+        plugin_metadata = PluginMetadata.from_stream(meta)
+        new_folder = render(plugin_metadata, output, template=template, clobber=False)
+    except (ValidationError, OutputDirExistsError) as error:
+        raise BabelizerAbort(error)
 
     if not quiet:
         out("Don't forget to drop model metadata files into {0}".format(new_folder / "meta"))
@@ -89,8 +95,12 @@ def rebabelize(template, quiet, verbose):
     if not quiet:
         out(f"reading template from {template}")
 
-    with open(metadata_path, "r") as meta:
-        render(meta, output_path, template=template, clobber=True)
+    try:
+        plugin_metadata = PluginMetadata.from_path(metadata_path)
+    except ValidationError as error:
+        raise BabelizerAbort(error)
+
+    render(plugin_metadata, output_path, template=template, clobber=True)
 
     if not quiet:
         out("Don't forget to drop model metadata files into {0}".format(package_path / "meta"))
