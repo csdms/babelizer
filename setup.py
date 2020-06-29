@@ -1,17 +1,7 @@
 #! /usr/bin/env python
-import os
-
 from setuptools import find_packages, setup
 
 import versioneer
-
-
-def data_files(directory):
-    paths = []
-    for (path, _, filenames) in os.walk(directory):
-        for filename in filenames:
-            paths.append(os.path.join(path, filename))
-    return paths
 
 
 setup(
