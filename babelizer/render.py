@@ -1,11 +1,17 @@
+import contextlib
+import os
 import pathlib
+import sys
 
 import black as blk
 import pkg_resources
+import git
+import versioneer
 import yaml
 from cookiecutter.exceptions import OutputDirExistsException
 from cookiecutter.main import cookiecutter
 from isort import SortImports
+from mock import patch
 
 from .errors import OutputDirExistsError, RenderError
 
@@ -27,6 +33,7 @@ def render(plugin_metadata, output, template=None, clobber=False):
     with open(path / "plugin.yaml", "w") as fp:
         plugin_metadata.dump(fp)
 
+    install_versioneer(path)
     prettify_python(path)
 
     return path.resolve()
@@ -73,7 +80,23 @@ def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
     if not path.is_dir():
         raise RenderError("error creating {0}".format(path))
 
+    git.Repo.init(output_dir)
+
     return path
+
+
+@contextlib.contextmanager
+def as_cwd(path):
+    prev_cwd = os.getcwd()
+    os.chdir(path)
+    yield
+    os.chdir(prev_cwd)
+
+
+def install_versioneer(path_to_package):
+    with as_cwd(path_to_package):
+        with patch.object(sys, "argv", ["versioneer", "install"]):
+            versioneer.main()
 
 
 class StyleBlack:
