@@ -83,7 +83,7 @@ def babelize(meta, output, template, quiet, verbose):
 def rebabelize(template, quiet, verbose):
     metadata_path = pathlib.Path("plugin.yaml").resolve()
     package_path = metadata_path.parent
-    output_path = metadata_path.parent
+    output_path = package_path.parent
 
     if not metadata_path.is_file():
         err("this does not appear to be a babelized folder (missing 'plugin.yaml')")
@@ -99,6 +99,7 @@ def rebabelize(template, quiet, verbose):
     except ValidationError as error:
         raise BabelizerAbort(error)
 
+    out(f"re-rendering {package_path}")
     render(plugin_metadata, output_path, template=template, clobber=True)
 
     if not quiet:
