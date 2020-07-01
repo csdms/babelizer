@@ -1,0 +1,2 @@
+recursive-include pymt_{{ cookiecutter.plugin_name }}/data/ *
+include LICENSE
