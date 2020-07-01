@@ -12,7 +12,6 @@ import versioneer
 from setuptools import find_packages, setup
 
 from distutils.extension import Extension
-from model_metadata.utils import get_cmdclass, get_entry_points
 
 {% if cookiecutter.language == 'fortran' -%}
 from setuptools.command.build_ext import build_ext as _build_ext
@@ -103,6 +102,17 @@ pymt_components = [
 {%- endfor %}
 ]
 
+entry_points = {
+    "pymt.plugins": [
+{%- for entry_point in cookiecutter.entry_points.split(',') %}
+    {%- set pymt_class = entry_point.split('=')[0] -%}
+        "{{ pymt_class }}=pymt_{{ cookiecutter.plugin_name }}.bmi:{{ pymt_class }}",
+{%- endfor %}
+    ]
+}
+
+cmdclass=versioneer.get_cmdclass()
+
 {% if cookiecutter.language == 'fortran' %}
 def build_interoperability():
     compiler = new_fcompiler()
@@ -133,23 +143,22 @@ class build_ext(_build_ext):
         _build_ext.run(self)
 
 
+cmdclass["build_ext"] = build_ext
 {% endif -%}
 
-cmdclass = get_cmdclass(pymt_components, cmdclass=versioneer.get_cmdclass())
-{%- if cookiecutter.language == 'fortran' %}
-cmdclass["build_ext"] = build_ext
-{%- endif %}
 
 setup(
     name="pymt_{{cookiecutter.plugin_name}}",
     author="{{cookiecutter.full_name}}",
     description="PyMT plugin for {{cookiecutter.plugin_name}}",
     version=versioneer.get_version(),
+    install_requires=open("requirements.txt", "r").read().splitlines(),
 {%- if cookiecutter.language in ['c', 'c++', 'fortran'] %}
     setup_requires=["cython"],
     ext_modules=ext_modules,
 {%- endif %}
     packages=packages,
     cmdclass=cmdclass,
-    entry_points=get_entry_points(pymt_components),
+    entry_points=entry_points,
+    include_package_data=True,
 )
