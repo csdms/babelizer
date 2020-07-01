@@ -1,6 +1,7 @@
 import contextlib
 import os
 import pathlib
+import subprocess
 import sys
 
 import black as blk
@@ -11,7 +12,6 @@ import yaml
 from cookiecutter.exceptions import OutputDirExistsException
 from cookiecutter.main import cookiecutter
 from isort import SortImports
-from mock import patch
 
 from .errors import OutputDirExistsError, RenderError
 
@@ -95,8 +95,7 @@ def as_cwd(path):
 
 def install_versioneer(path_to_package):
     with as_cwd(path_to_package):
-        with patch.object(sys, "argv", ["versioneer", "install"]):
-            versioneer.main()
+        subprocess.call(["versioneer", "install"])
 
 
 class StyleBlack:
