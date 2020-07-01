@@ -19,9 +19,7 @@ setup(
     include_package_data=True,
     entry_points={
         "console_scripts": [
-            "bmi-render=babelizer.cli.main_babelize:babelize",
             "babelize=babelizer.cli.main_babelize:babelize",
-            "rebabelize=babelizer.cli.main_babelize:rebabelize",
         ],
     },
 )
