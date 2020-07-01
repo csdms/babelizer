@@ -9,9 +9,7 @@ import subprocess
 import numpy as np
 {% endif %}
 import versioneer
-from setuptools import find_packages, setup
-
-from distutils.extension import Extension
+from setuptools import Extension, find_packages, setup
 
 {% if cookiecutter.language == 'fortran' -%}
 from setuptools.command.build_ext import build_ext as _build_ext
@@ -91,17 +89,6 @@ ext_modules = [
 
 {%- endif %}
 
-packages = find_packages()
-pymt_components = [
-{%- for entry_point in cookiecutter.entry_points.split(',') %}
-    {%- set pymt_class = entry_point.split('=')[0] -%}
-    (
-        "{{ pymt_class }}=pymt_{{ cookiecutter.plugin_name }}.bmi:{{ pymt_class }}",
-        "meta/{{ pymt_class }}",
-    ),
-{%- endfor %}
-]
-
 entry_points = {
     "pymt.plugins": [
 {%- for entry_point in cookiecutter.entry_points.split(',') %}
@@ -157,7 +144,7 @@ setup(
     setup_requires=["cython"],
     ext_modules=ext_modules,
 {%- endif %}
-    packages=packages,
+    packages=find_packages(),
     cmdclass=cmdclass,
     entry_points=entry_points,
     include_package_data=True,
