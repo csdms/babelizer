@@ -30,7 +30,7 @@ def render(plugin_metadata, output, template=None, clobber=False):
     except OutputDirExistsException as err:
         raise OutputDirExistsError(", ".join(err.args))
 
-    with open(path / "plugin.yaml", "w") as fp:
+    with open(path / "babel.yaml", "w") as fp:
         plugin_metadata.dump(fp)
 
     install_versioneer(path)
@@ -115,7 +115,7 @@ class StyleBlack:
 
 def prettify_python(path_to_repo):
     path_to_repo = pathlib.Path(path_to_repo)
-    with open(path_to_repo / "plugin.yaml") as fp:
+    with open(path_to_repo / "babel.yaml") as fp:
         meta = yaml.safe_load(fp)
     module_name = "pymt_" + meta["plugin"]["name"]
 

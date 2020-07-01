@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+import os
 import pathlib
 from functools import partial
 
@@ -19,7 +20,19 @@ class BabelizerAbort(click.Abort):
         err(str(message))
 
 
-@click.command()
+@click.group()
+@click.version_option()
+@click.option(
+    "--cd",
+    default=".",
+    type=click.Path(exists=True, file_okay=False, dir_okay=True, readable=True),
+    help="chage to directory, then execute",
+)
+def babelize(cd):
+    os.chdir(cd)
+
+
+@babelize.command()
 @click.version_option(version=__version__)
 @click.option(
     "-q",
@@ -41,15 +54,15 @@ class BabelizerAbort(click.Abort):
     "output",
     type=click.Path(file_okay=False, dir_okay=True, writable=True, resolve_path=True),
 )
-def babelize(meta, output, template, quiet, verbose):
+def init(meta, output, template, quiet, verbose):
     template = template or pkg_resources.resource_filename("babelizer", "data")
 
     if not quiet:
         out(f"reading template from {template}")
 
     try:
-        plugin_metadata = PluginMetadata.from_stream(meta)
-        new_folder = render(plugin_metadata, output, template=template, clobber=False)
+        babel_metadata = PluginMetadata.from_stream(meta)
+        new_folder = render(babel_metadata, output, template=template, clobber=False)
     except (ValidationError, OutputDirExistsError) as error:
         raise BabelizerAbort(error)
 
@@ -63,7 +76,7 @@ def babelize(meta, output, template, quiet, verbose):
     print(new_folder)
 
 
-@click.command()
+@babelize.command()
 @click.version_option(version=__version__)
 @click.option(
     "-q",
@@ -80,13 +93,18 @@ def babelize(meta, output, template, quiet, verbose):
 @click.option(
     "--template", default=None, help="Location of cookiecutter template",
 )
-def rebabelize(template, quiet, verbose):
-    metadata_path = pathlib.Path("plugin.yaml").resolve()
-    package_path = metadata_path.parent
-    output_path = package_path.parent
+def update(template, quiet, verbose):
+    package_path = pathlib.Path(".").resolve()
 
-    if not metadata_path.is_file():
-        err("this does not appear to be a babelized folder (missing 'plugin.yaml')")
+    for fname in ("babel.yaml", "plugin.yaml"):
+        if (package_path / fname).is_file():
+            metadata_path = package_path / fname
+            break
+    else:
+        metadata_path = None
+
+    if not metadata_path:
+        err("this does not appear to be a babelized folder (missing 'babel.yaml')")
         raise click.Abort()
 
     template = template or pkg_resources.resource_filename("babelizer", "data")
@@ -95,12 +113,12 @@ def rebabelize(template, quiet, verbose):
         out(f"reading template from {template}")
 
     try:
-        plugin_metadata = PluginMetadata.from_path(metadata_path)
+        babel_metadata = PluginMetadata.from_path(metadata_path)
     except ValidationError as error:
         raise BabelizerAbort(error)
 
     out(f"re-rendering {package_path}")
-    render(plugin_metadata, output_path, template=template, clobber=True)
+    render(babel_metadata, package_path.parent, template=template, clobber=True)
 
     if not quiet:
         out(
