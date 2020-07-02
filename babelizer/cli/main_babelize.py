@@ -8,7 +8,7 @@ import pkg_resources
 
 from .. import __version__
 from ..errors import OutputDirExistsError, ValidationError
-from ..metadata import PluginMetadata
+from ..metadata import BabelMetadata
 from ..render import render
 
 out = partial(click.secho, bold=True, err=True)
@@ -61,7 +61,7 @@ def init(meta, output, template, quiet, verbose):
         out(f"reading template from {template}")
 
     try:
-        babel_metadata = PluginMetadata.from_stream(meta)
+        babel_metadata = BabelMetadata.from_stream(meta)
         new_folder = render(babel_metadata, output, template=template, clobber=False)
     except (ValidationError, OutputDirExistsError) as error:
         raise BabelizerAbort(error)
@@ -113,7 +113,7 @@ def update(template, quiet, verbose):
         out(f"reading template from {template}")
 
     try:
-        babel_metadata = PluginMetadata.from_path(metadata_path)
+        babel_metadata = BabelMetadata.from_path(metadata_path)
     except ValidationError as error:
         raise BabelizerAbort(error)
 

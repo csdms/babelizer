@@ -62,13 +62,13 @@ _setup_yaml_with_canonical_dict()
 
 
 def validate_meta(meta):
-    missing_sections = set(PluginMetadata.REQUIRED) - set(meta)
+    missing_sections = set(BabelMetadata.REQUIRED) - set(meta)
     if missing_sections:
         raise ValidationError(
             "missing required sections {0}".format(", ".join(missing_sections))
         )
 
-    for section, values in PluginMetadata.REQUIRED.items():
+    for section, values in BabelMetadata.REQUIRED.items():
         missing_values = set(values) - set(meta[section])
         if missing_values:
             raise ValidationError(
@@ -94,7 +94,7 @@ def validate_meta(meta):
             )
 
 
-class PluginMetadata:
+class BabelMetadata:
     REQUIRED = {
         "library": ("language", "entry_point"),
         "plugin": ("name", "requirements"),
@@ -103,7 +103,7 @@ class PluginMetadata:
     }
 
     def __init__(self, library=None, build=None, plugin=None, info=None):
-        self._meta = PluginMetadata.norm(
+        self._meta = BabelMetadata.norm(
             {
                 "library": library or {},
                 "build": build or {},
@@ -127,7 +127,7 @@ class PluginMetadata:
     @classmethod
     def from_path(cls, filepath):
         with open(filepath, "r") as fp:
-            return PluginMetadata.from_stream(fp)
+            return BabelMetadata.from_stream(fp)
 
     def get(self, section, value):
         return self._meta[section][value]
