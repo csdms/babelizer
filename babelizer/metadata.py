@@ -99,6 +99,7 @@ class PluginMetadata:
         "library": ("language", "entry_point"),
         "plugin": ("name", "requirements"),
         "info": ("plugin_author", "github_username", "plugin_license", "summary"),
+        "info": ("github_username", "plugin_license", "summary"),
     }
 
     def __init__(self, library=None, build=None, plugin=None, info=None):
@@ -139,7 +140,6 @@ class PluginMetadata:
             "library": {
                 "language": config["library"]["language"],
                 "entry_point": config["library"]["entry_point"],
-                "register": config["library"].get("register", ""),
             },
             "build": {
                 "undef_macros": config["build"].get("undef_macros", []),
@@ -191,7 +191,6 @@ class PluginMetadata:
             "plugin_class": plugin_class,
             "pymt_class": entry_point,
             "plugin_requirements": ",".join(self._meta["plugin"]["requirements"]),
-            "bmi_register": "",
             "language": language,
             "undef_macros": ",".join(self._meta["build"]["undef_macros"]),
             "define_macros": ",".join(self._meta["build"]["define_macros"]),
