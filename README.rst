@@ -89,24 +89,32 @@ An example of a blank *babel.yaml* file,
 
 .. code:: yaml
 
-  build:
-    define_macros: []
-    extra_compile_args: []
-    include_dirs: []
-    libraries: []
-    library_dirs: []
-    undef_macros: []
-  info:
-    github_username:
-    plugin_author:
-    plugin_license:
-    summary:
-  library:
-    entry_point: []
-    language:
-  plugin:
-    name:
-    requirements: []
+    build:
+      define_macros: []
+      extra_compile_args: []
+      include_dirs: []
+      libraries: []
+      library_dirs: []
+      undef_macros: []
+    info:
+      github_username: pymt-lab
+      plugin_author: csdms
+      plugin_license: MIT
+      summary: ''
+    library:
+      entry_point: []
+      language: c
+    plugin:
+      name: ''
+      requirements: []
+
+You can generate *babel.yaml* files using the *babelize quickstart* command.
+For example, the above *babel.yaml* was generated with,
+
+.. code:: bash
+
+  $ babelize quickstart --batch
+
 
 Build section
 =============
@@ -232,7 +240,7 @@ called *hydrotrend*.
     undef_macros: []
   info:
     github_username: pymt-lab
-    plugin_author: CSDMS
+    plugin_author: csdms
     plugin_license: MIT
     summary: PyMT plugin for hydrotrend
   library:
@@ -240,10 +248,16 @@ called *hydrotrend*.
     - Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend
     language: c
   plugin:
-    name: hydrotrend
+    name: hydortrend
     requirements:
     - hydrotrend
 
+You can use the *babelize quickstart* command to generate *babel.yaml* files.
+For example the above *babel.yaml* can be generated with the following,
+
+.. code:: bash
+
+  $ babelize quickstart --batch --summary="PyMT plugin for hydrotrend" --entry-point=Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend --name=hydortrend --requirement=hydrotrend
 
 ********
 Examples
