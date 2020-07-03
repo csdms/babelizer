@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 import os
-import sys
 import pathlib
+import sys
 from functools import partial
 
 import click
@@ -157,12 +157,16 @@ def quickstart():
         return answers
 
     library = {
-        "language": ask("Language", default="c", show_choices=["c", "c++", "fortran", "python"]),
+        "language": ask(
+            "Language", default="c", show_choices=["c", "c++", "fortran", "python"]
+        ),
         "entry_point": ask_until_done("Entry point"),
     }
 
     plugin = {
-        "name": ask("Name to use for the babelized package", value_proc=lambda x: x.lower()),
+        "name": ask(
+            "Name to use for the babelized package", value_proc=lambda x: x.lower()
+        ),
         "requirements": ask_until_done("Requirements"),
     }
 

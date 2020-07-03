@@ -166,10 +166,10 @@ class BabelMetadata:
 
     def format(self):
         import io
+
         contents = io.StringIO()
         yaml.safe_dump(self._meta, contents, default_flow_style=False)
         return contents.getvalue()
-
 
     @staticmethod
     def parse_entry_point(specifier):

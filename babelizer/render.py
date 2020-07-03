@@ -5,13 +5,14 @@ import subprocess
 import sys
 
 import black as blk
-import pkg_resources
 import git
-import versioneer
+import pkg_resources
 import yaml
 from cookiecutter.exceptions import OutputDirExistsException
 from cookiecutter.main import cookiecutter
 from isort import SortImports
+
+import versioneer
 
 from .errors import OutputDirExistsError, RenderError
 
