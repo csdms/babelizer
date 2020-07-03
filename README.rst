@@ -85,7 +85,7 @@ Input file
 
 The *babelizer* requires a single, *yaml* formatted, input file that describes
 the library you would like to wrap. This file is typically called, *babel.yaml*.
-An example of a black *babel.yaml* file,
+An example of a blank *babel.yaml* file,
 
 .. code:: yaml
 
