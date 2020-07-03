@@ -130,54 +130,84 @@ def update(template, quiet, verbose):
 
 
 @babelize.command()
-@click.argument("file", type=click.Choice(["babel.yaml"]))
-def make(file):
-    if file == "babel.yaml":
-        meta = BabelMetadata(
-            library={"language": "c", "entry_point": ""},
-            build={},
-            plugin={"name": "", "requirements": []},
-            info={
-                "github_username": "pymt-lab",
-                "plugin_author": "csdms",
-                "plugin_license": "MIT",
-                "summary": "",
-            },
-        )
-        contents = meta.format()
-    print(contents)
-
-
-@babelize.command()
-def quickstart():
+@click.option(
+    "--batch", is_flag=True, help="Run in batch mode using defaults for all values",
+)
+@click.option(
+    "--name", help="Name to use for the babelized package",
+)
+@click.option(
+    "--language",
+    help="Programming language of the library being babelized",
+    type=click.Choice(["c", "c++", "fortran", "python"], case_sensitive=False),
+)
+@click.option("--author", help="Babelizing author")
+@click.option(
+    "--username", help="GitHub username or organization that will host the project",
+)
+@click.option(
+    "--license", help="License to use for the babelized project",
+)
+@click.option(
+    "--summary", help="Brief description of what the library does",
+)
+@click.option(
+    "--entry-point", help="Entry point to the library BMI", multiple=True, default=None
+)
+@click.option("--requirement", help="Requirement", multiple=True, default=None)
+def quickstart(
+    batch, name, language, author, username, license, summary, entry_point, requirement
+):
     def ask_until_done(text):
         answers = []
         while (answer := ask(text, default="done")) != "done":
             answers.append(answer)
         return answers
 
-    library = {
-        "language": ask(
-            "Language", default="c", show_choices=["c", "c++", "fortran", "python"]
-        ),
-        "entry_point": ask_until_done("Entry point"),
-    }
+    if batch:
+        name = name or ""
+        language = language or "c"
+        author = author or "csdms"
+        username = username or "pymt-lab"
+        license = license or "MIT"
+        summary = summary or ""
+        entry_points = entry_point or ()
+        requirements = requirement or ()
+    else:
+        name = name or ask("Name to use for the babelized package", default="")
+        language = language or ask(
+            "Programming language of the library being babelized",
+            show_choices=["c", "c++", "fortran", "python"],
+            default="c",
+        )
+        author = author or ask("Babelizing author", default="csdms")
+        username = username or ask(
+            "GitHub username or organization that will host the project",
+            default="pymt-lab",
+        )
+        license = license or ask(
+            "License to use for the babelized project", default="MIT"
+        )
+        summary = summary or ask(
+            "Brief description of what the library does", default=""
+        )
 
-    plugin = {
-        "name": ask(
-            "Name to use for the babelized package", value_proc=lambda x: x.lower()
-        ),
-        "requirements": ask_until_done("Requirements"),
-    }
+        entry_points = entry_point or ask_until_done("Entry point")
+        requirements = requirement or ask_until_done("Requirement")
 
-    info = {
-        "github_username": ask("GitHub username/organization", default="pymt-lab"),
-        "plugin_author": ask("Babelizing author", default="csdms"),
-        "plugin_license": ask("License", default="MIT"),
-        "summary": "",
-    }
-
-    print(BabelMetadata(build={}, info=info, library=library, plugin=plugin).format())
+    print(
+        BabelMetadata(
+            library={"language": language, "entry_point": entry_points},
+            plugin={"name": name, "requirements": requirements},
+            info={
+                "github_username": username,
+                "plugin_author": author,
+                "plugin_license": license,
+                "summary": summary,
+            },
+            build={},
+        ).format()
+    )
 
 
 if __name__ == "__main__":

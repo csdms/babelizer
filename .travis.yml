@@ -37,6 +37,6 @@ script:
 - babelize --help
 - babelize init --help
 - babelize update --help
-- babelize make babel.yaml
 - babelize quickstart --help
+- babelize quickstart --batch
 - python -c 'import babelizer; print(babelizer.__version__)'
