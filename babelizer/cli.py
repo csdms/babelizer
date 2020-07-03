@@ -7,10 +7,9 @@ from functools import partial
 import click
 import pkg_resources
 
-from .. import __version__
-from ..errors import OutputDirExistsError, ValidationError
-from ..metadata import BabelMetadata
-from ..render import render
+from .errors import OutputDirExistsError, ValidationError
+from .metadata import BabelMetadata
+from .render import render
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
@@ -35,7 +34,6 @@ def babelize(cd):
 
 
 @babelize.command()
-@click.version_option(version=__version__)
 @click.option(
     "-q",
     "--quiet",
@@ -79,7 +77,6 @@ def init(meta, output, template, quiet, verbose):
 
 
 @babelize.command()
-@click.version_option(version=__version__)
 @click.option(
     "-q",
     "--quiet",

@@ -18,7 +18,7 @@ setup(
     include_package_data=True,
     entry_points={
         "console_scripts": [
-            "babelize=babelizer.cli.main_babelize:babelize",
+            "babelize=babelizer.cli:babelize",
         ],
     },
 )
