@@ -98,7 +98,6 @@ class BabelMetadata:
     REQUIRED = {
         "library": ("language", "entry_point"),
         "plugin": ("name", "requirements"),
-        "info": ("plugin_author", "github_username", "plugin_license", "summary"),
         "info": ("github_username", "plugin_license", "summary"),
     }
 
@@ -162,7 +161,15 @@ class BabelMetadata:
         }
 
     def dump(self, fp):
-        yaml.safe_dump(self._meta, fp, default_flow_style=False)
+        print(self.format(), file=fp)
+        # yaml.safe_dump(self._meta, fp, default_flow_style=False)
+
+    def format(self):
+        import io
+        contents = io.StringIO()
+        yaml.safe_dump(self._meta, contents, default_flow_style=False)
+        return contents.getvalue()
+
 
     @staticmethod
     def parse_entry_point(specifier):
