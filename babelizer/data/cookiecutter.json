@@ -5,7 +5,6 @@
   "plugin_class": "{{ cookiecutter.plugin_name|title }}",
   "language": ["c", "c++", "fortran", "python"],
   "pymt_class": "{{ cookiecutter.plugin_class }}",
-  "bmi_register": "bmi_register_{{ cookiecutter.plugin_name }}",
   "undef_macros": "",
   "define_macros": "",
   "libraries": "",

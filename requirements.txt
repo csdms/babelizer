@@ -1,5 +1,9 @@
+black
 click
+gitpython
+mock
 pyyaml
+isort
 jinja2
 cookiecutter
-py-scripting
+versioneer

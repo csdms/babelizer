@@ -43,9 +43,9 @@ def _setup_yaml_with_canonical_dict():
 
     # loader = yaml.SafeLoader
     yaml.add_implicit_resolver(
-        u"tag:yaml.org,2002:float",
+        "tag:yaml.org,2002:float",
         re.compile(
-            u"""^(?:
+            """^(?:
          [-+]?(?:[0-9][0-9_]*)\\.[0-9_]*(?:[eE][-+]?[0-9]+)?
         |[-+]?(?:[0-9][0-9_]*)(?:[eE][-+]?[0-9]+)
         |\\.[0-9_]+(?:[eE][-+][0-9]+)?
@@ -54,7 +54,7 @@ def _setup_yaml_with_canonical_dict():
         |\\.(?:nan|NaN|NAN))$""",
             re.X,
         ),
-        list(u"-+0123456789."),
+        list("-+0123456789."),
     )
 
 
@@ -62,13 +62,13 @@ _setup_yaml_with_canonical_dict()
 
 
 def validate_meta(meta):
-    missing_sections = set(PluginMetadata.REQUIRED) - set(meta)
+    missing_sections = set(BabelMetadata.REQUIRED) - set(meta)
     if missing_sections:
         raise ValidationError(
             "missing required sections {0}".format(", ".join(missing_sections))
         )
 
-    for section, values in PluginMetadata.REQUIRED.items():
+    for section, values in BabelMetadata.REQUIRED.items():
         missing_values = set(values) - set(meta[section])
         if missing_values:
             raise ValidationError(
@@ -94,16 +94,39 @@ def validate_meta(meta):
             )
 
 
-class PluginMetadata(object):
+class BabelMetadata:
     REQUIRED = {
         "library": ("language", "entry_point"),
         "plugin": ("name", "requirements"),
-        "info": ("plugin_author", "github_username", "plugin_license", "summary"),
+        "info": ("github_username", "plugin_license", "summary"),
     }
 
-    def __init__(self, filepath):
-        self._meta = PluginMetadata.norm(yaml.safe_load(filepath))
+    def __init__(self, library=None, build=None, plugin=None, info=None):
+        self._meta = BabelMetadata.norm(
+            {
+                "library": library or {},
+                "build": build or {},
+                "plugin": plugin or {},
+                "info": info or {},
+            }
+        )
         validate_meta(self._meta)
+
+    @classmethod
+    def from_stream(cls, stream):
+        try:
+            return cls(**yaml.safe_load(stream))
+        except TypeError:
+            raise ValidationError("metadata file does not contain a mapping object")
+        except yaml.scanner.ScannerError as error:
+            raise ValidationError(
+                f"unable to scan yaml-formatted metadata file:\n{error}"
+            )
+
+    @classmethod
+    def from_path(cls, filepath):
+        with open(filepath, "r") as fp:
+            return BabelMetadata.from_stream(fp)
 
     def get(self, section, value):
         return self._meta[section][value]
@@ -116,7 +139,6 @@ class PluginMetadata(object):
             "library": {
                 "language": config["library"]["language"],
                 "entry_point": config["library"]["entry_point"],
-                "register": config["library"].get("register", ""),
             },
             "build": {
                 "undef_macros": config["build"].get("undef_macros", []),
@@ -139,7 +161,15 @@ class PluginMetadata(object):
         }
 
     def dump(self, fp):
-        yaml.safe_dump(self._meta, fp, default_flow_style=False)
+        print(self.format(), file=fp)
+        # yaml.safe_dump(self._meta, fp, default_flow_style=False)
+
+    def format(self):
+        import io
+
+        contents = io.StringIO()
+        yaml.safe_dump(self._meta, contents, default_flow_style=False)
+        return contents.getvalue()
 
     @staticmethod
     def parse_entry_point(specifier):
@@ -168,7 +198,6 @@ class PluginMetadata(object):
             "plugin_class": plugin_class,
             "pymt_class": entry_point,
             "plugin_requirements": ",".join(self._meta["plugin"]["requirements"]),
-            "bmi_register": "",
             "language": language,
             "undef_macros": ",".join(self._meta["build"]["undef_macros"]),
             "define_macros": ",".join(self._meta["build"]["define_macros"]),

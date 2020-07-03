@@ -4,8 +4,6 @@ os:
 - osx
 env:
   matrix:
-  - PYTHON="3.6"
-  - PYTHON="3.7"
   - PYTHON="3.8"
   global:
   - CONDA_PREFIX=$HOME/miniconda
@@ -37,4 +35,8 @@ install:
 script:
 - babelize --version
 - babelize --help
+- babelize init --help
+- babelize update --help
+- babelize quickstart --help
+- babelize quickstart --batch
 - python -c 'import babelizer; print(babelizer.__version__)'

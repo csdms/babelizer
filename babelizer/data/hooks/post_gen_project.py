@@ -32,7 +32,7 @@ def clean_folder(folderpath, keep=None):
 
     folderpath = PROJECT_DIRECTORY / folderpath
     for fname in folderpath.glob("*"):
-        if str(fname.resolve()) not in keep:
+        if not fname.is_dir() and str(fname.resolve()) not in keep:
             fname.unlink()
 
     try:
@@ -108,10 +108,15 @@ if __name__ == "__main__":
     if "Not open source" == "{{ cookiecutter.open_source_license }}":
         remove_file("LICENSE")
 
+    datadir = Path("meta")
+    package_datadir = Path("pymt_{{cookiecutter.plugin_name}}") / "data"
+    if not package_datadir.exists():
+        package_datadir.symlink_to(".." / datadir, target_is_directory=True)
+
 {% for entry_point in cookiecutter.entry_points.split(',') %}
     {%- set pymt_class = entry_point.split('=')[0] %}
     write_api_yaml(
-        Path("meta", "{{ pymt_class }}"),
+        datadir / "{{ pymt_class }}",
         language="{{ cookiecutter.language }}",
         plugin_class="{{ pymt_class }}",
         plugin_name="{{ cookiecutter.plugin_name }}",

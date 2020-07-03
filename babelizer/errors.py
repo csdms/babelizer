@@ -14,3 +14,8 @@ class ValidationError(BabelizeError):
 class RenderError(BabelizeError):
 
     pass
+
+
+class OutputDirExistsError(BabelizeError):
+
+    pass
