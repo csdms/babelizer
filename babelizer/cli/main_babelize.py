@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import os
+import sys
 import pathlib
 from functools import partial
 
@@ -13,6 +14,7 @@ from ..render import render
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
+ask = partial(click.prompt, show_default=True, err=True)
 
 
 class BabelizerAbort(click.Abort):
@@ -128,6 +130,53 @@ def update(template, quiet, verbose):
         )
 
     print(package_path)
+
+
+@babelize.command()
+@click.argument("file", type=click.Choice(["babel.yaml"]))
+def make(file):
+    if file == "babel.yaml":
+        meta = BabelMetadata(
+            library={"language": "c", "entry_point": ""},
+            build={},
+            plugin={"name": "", "requirements": []},
+            info={
+                "github_username": "pymt-lab",
+                "plugin_author": "csdms",
+                "plugin_license": "MIT",
+                "summary": "",
+            },
+        )
+        contents = meta.format()
+    print(contents)
+
+
+@babelize.command()
+def quickstart():
+    def ask_until_done(text):
+        answers = []
+        while (answer := ask(text, default="done")) != "done":
+            answers.append(answer)
+        return answers
+
+    library = {
+        "language": ask("Language", default="c", show_choices=["c", "c++", "fortran", "python"]),
+        "entry_point": ask_until_done("Entry point"),
+    }
+
+    plugin = {
+        "name": ask("Name to use for the babelized package", value_proc=lambda x: x.lower()),
+        "requirements": ask_until_done("Requirements"),
+    }
+
+    info = {
+        "github_username": ask("GitHub username/organization", default="pymt-lab"),
+        "plugin_author": ask("Babelizing author", default="csdms"),
+        "plugin_license": ask("License", default="MIT"),
+        "summary": "",
+    }
+
+    print(BabelMetadata(build={}, info=info, library=library, plugin=plugin).format())
 
 
 if __name__ == "__main__":
