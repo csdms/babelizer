@@ -6,11 +6,11 @@ import sys
 
 import black as blk
 import git
+import isort
 import pkg_resources
 import yaml
 from cookiecutter.exceptions import OutputDirExistsException
 from cookiecutter.main import cookiecutter
-from isort import SortImports
 
 import versioneer
 
@@ -99,18 +99,17 @@ def install_versioneer(path_to_package):
         subprocess.call(["versioneer", "install"])
 
 
-class StyleBlack:
-    def __init__(self, filepath):
-        with open(filepath, "r") as fp:
-            try:
-                new_contents = blk.format_file_contents(
-                    fp.read(), fast=True, mode=blk.FileMode()
-                )
-            except blk.NothingChanged:
-                new_contents = None
-        if new_contents:
-            with open(filepath, "w") as fp:
-                fp.write(new_contents)
+def blacken_file(filepath):
+    with open(filepath, "r") as fp:
+        try:
+            new_contents = blk.format_file_contents(
+                fp.read(), fast=True, mode=blk.FileMode()
+            )
+        except blk.NothingChanged:
+            new_contents = None
+    if new_contents:
+        with open(filepath, "w") as fp:
+            fp.write(new_contents)
 
 
 def prettify_python(path_to_repo):
@@ -125,6 +124,7 @@ def prettify_python(path_to_repo):
         path_to_repo / module_name / "__init__.py",
     ]
 
+    config = isort.Config(quiet=True)
     for file_to_fix in files_to_fix:
-        SortImports(file_to_fix, quiet=True)
-        StyleBlack(file_to_fix)
+        isort.api.sort_file(file_to_fix, config=config)
+        blacken_file(file_to_fix)
