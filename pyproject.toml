@@ -1,0 +1,30 @@
+[tool.pytest.ini_options]
+minversion = "5.0"
+testpaths = ["babelizer"]
+norecursedirs = [".*", "*.egg*", "build", "dist"]
+# usefixtures = suppress_resource_warning
+addopts = """
+    --ignore setup.py
+    --ignore versioneer.py
+    --ignore babelizer/_version.py
+    --ignore babelizer/data
+    --tb native
+    --strict
+    --durations 16
+    --doctest-modules
+    -vvv
+"""
+doctest_optionflags = [
+    "NORMALIZE_WHITESPACE",
+    "IGNORE_EXCEPTION_DETAIL",
+    "ALLOW_UNICODE"
+]
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+line_length = 88
+skip = ["babelizer/data"]
+

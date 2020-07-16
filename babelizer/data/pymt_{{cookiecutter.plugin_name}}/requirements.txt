@@ -1,6 +1,3 @@
-cython
-numpy
-model_metadata
 {%- for requirement in cookiecutter.plugin_requirements.split(',') %}
-{{ requirement|trim }}
+# {{ requirement|trim }}
 {%- endfor %}

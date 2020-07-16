@@ -1,9 +1,11 @@
+import pathlib
 import re
 from collections import OrderedDict
 
+import toml
 import yaml
 
-from .errors import ValidationError
+from .errors import ScanError, ValidationError
 
 
 def _setup_yaml_with_canonical_dict():
@@ -101,6 +103,8 @@ class BabelMetadata:
         "info": ("github_username", "plugin_license", "summary"),
     }
 
+    LOADERS = {"yaml": yaml.safe_load, "toml": toml.load}
+
     def __init__(self, library=None, build=None, plugin=None, info=None):
         self._meta = BabelMetadata.norm(
             {
@@ -113,20 +117,31 @@ class BabelMetadata:
         validate_meta(self._meta)
 
     @classmethod
-    def from_stream(cls, stream):
+    def from_stream(cls, stream, fmt="yaml"):
         try:
-            return cls(**yaml.safe_load(stream))
+            loader = BabelMetadata.LOADERS[fmt]
+        except KeyError:
+            raise ValueError(f"unrecognized format ({fmt})")
+
+        try:
+            return cls(**loader(stream))
         except TypeError:
             raise ValidationError("metadata file does not contain a mapping object")
         except yaml.scanner.ScannerError as error:
-            raise ValidationError(
+            raise ScanError(
                 f"unable to scan yaml-formatted metadata file:\n{error}"
+            )
+        except toml.TomlDecodeError as error:
+            raise ScanError(
+                f"unable to scan toml-formatted metadata file:\n{error}"
             )
 
     @classmethod
     def from_path(cls, filepath):
+        path = pathlib.Path(filepath)
+
         with open(filepath, "r") as fp:
-            return BabelMetadata.from_stream(fp)
+            return BabelMetadata.from_stream(fp, fmt=path.suffix[1:])
 
     def get(self, section, value):
         return self._meta[section][value]
@@ -160,16 +175,22 @@ class BabelMetadata:
             },
         }
 
-    def dump(self, fp):
-        print(self.format(), file=fp)
+    def dump(self, fp, fmt="yaml"):
+        print(self.format(fmt=fmt), file=fp)
         # yaml.safe_dump(self._meta, fp, default_flow_style=False)
 
-    def format(self):
+    def format(self, fmt="yaml"):
+        return getattr(self, f"format_{fmt}")()
+
+    def format_yaml(self):
         import io
 
         contents = io.StringIO()
         yaml.safe_dump(self._meta, contents, default_flow_style=False)
         return contents.getvalue()
+
+    def format_toml(self):
+        return toml.dumps(self._meta)
 
     @staticmethod
     def parse_entry_point(specifier):

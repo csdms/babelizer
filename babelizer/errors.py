@@ -16,6 +16,11 @@ class RenderError(BabelizeError):
     pass
 
 
+class ScanError(BabelizeError):
+
+    pass
+
+
 class OutputDirExistsError(BabelizeError):
 
     pass
