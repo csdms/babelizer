@@ -7,7 +7,7 @@ from functools import partial
 import click
 import pkg_resources
 
-from .errors import OutputDirExistsError, ValidationError
+from .errors import OutputDirExistsError, ScanError, ValidationError
 from .metadata import BabelMetadata
 from .render import render
 
@@ -60,8 +60,13 @@ def init(meta, output, template, quiet, verbose):
     if not quiet:
         out(f"reading template from {template}")
 
+    fmt = pathlib.Path(meta.name).suffix[1:] or "toml"
     try:
-        babel_metadata = BabelMetadata.from_stream(meta)
+        babel_metadata = BabelMetadata.from_stream(meta, fmt=fmt)
+    except (ScanError, ValidationError) as error:
+        raise BabelizerAbort(error)
+
+    try:
         new_folder = render(babel_metadata, output, template=template, clobber=False)
     except (ValidationError, OutputDirExistsError) as error:
         raise BabelizerAbort(error)
@@ -95,7 +100,7 @@ def init(meta, output, template, quiet, verbose):
 def update(template, quiet, verbose):
     package_path = pathlib.Path(".").resolve()
 
-    for fname in ("babel.yaml", "plugin.yaml"):
+    for fname in ("babel.toml", "babel.yaml", "plugin.yaml"):
         if (package_path / fname).is_file():
             metadata_path = package_path / fname
             break
