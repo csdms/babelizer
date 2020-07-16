@@ -211,7 +211,7 @@ def quickstart(
                 "summary": summary,
             },
             build={},
-        ).format()
+        ).format(fmt="toml")
     )
 
 
