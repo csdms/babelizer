@@ -8,6 +8,7 @@ import black as blk
 import git
 import isort
 import pkg_resources
+import toml
 import yaml
 from cookiecutter.exceptions import OutputDirExistsException
 from cookiecutter.main import cookiecutter
@@ -31,8 +32,8 @@ def render(plugin_metadata, output, template=None, clobber=False):
     except OutputDirExistsException as err:
         raise OutputDirExistsError(", ".join(err.args))
 
-    with open(path / "babel.yaml", "w") as fp:
-        plugin_metadata.dump(fp)
+    with open(path / "babel.toml", "w") as fp:
+        plugin_metadata.dump(fp, fmt="toml")
 
     install_versioneer(path)
     prettify_python(path)
@@ -114,8 +115,8 @@ def blacken_file(filepath):
 
 def prettify_python(path_to_repo):
     path_to_repo = pathlib.Path(path_to_repo)
-    with open(path_to_repo / "babel.yaml") as fp:
-        meta = yaml.safe_load(fp)
+    with open(path_to_repo / "babel.toml") as fp:
+        meta = toml.load(fp)
     module_name = "pymt_" + meta["plugin"]["name"]
 
     files_to_fix = [
