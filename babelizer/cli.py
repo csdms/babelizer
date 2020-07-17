@@ -160,8 +160,23 @@ def update(template, quiet, verbose):
     "--entry-point", help="Entry point to the library BMI", multiple=True, default=None
 )
 @click.option("--requirement", help="Requirement", multiple=True, default=None)
+@click.option(
+    "--output",
+    default="-",
+    help="Write to file instead of stdout",
+    type=click.File("w"),
+)
 def quickstart(
-    batch, name, language, author, username, license, summary, entry_point, requirement
+    batch,
+    name,
+    language,
+    author,
+    username,
+    license,
+    summary,
+    entry_point,
+    requirement,
+    output,
 ):
     def ask_until_done(text):
         answers = []
@@ -200,7 +215,7 @@ def quickstart(
         entry_points = entry_point or ask_until_done("Entry point")
         requirements = requirement or ask_until_done("Requirement")
 
-    print(
+    output.write(
         BabelMetadata(
             library={"language": language, "entry_point": entry_points},
             plugin={"name": name, "requirements": requirements},
