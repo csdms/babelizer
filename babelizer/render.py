@@ -13,8 +13,6 @@ import yaml
 from cookiecutter.exceptions import OutputDirExistsException
 from cookiecutter.main import cookiecutter
 
-import versioneer
-
 from .errors import OutputDirExistsError, RenderError
 
 
@@ -35,7 +33,6 @@ def render(plugin_metadata, output, template=None, clobber=False):
     with open(path / "babel.toml", "w") as fp:
         plugin_metadata.dump(fp, fmt="toml")
 
-    install_versioneer(path)
     prettify_python(path)
 
     return path.resolve()
@@ -93,11 +90,6 @@ def as_cwd(path):
     os.chdir(path)
     yield
     os.chdir(prev_cwd)
-
-
-def install_versioneer(path_to_package):
-    with as_cwd(path_to_package):
-        subprocess.call(["versioneer", "install"])
 
 
 def blacken_file(filepath):
