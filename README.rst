@@ -258,7 +258,7 @@ For example the above *babel.toml* can be generated with the following,
 
 .. code:: bash
 
-  $ babelize quickstart --batch --summary="PyMT plugin for hydrotrend" --entry-point=Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend --name=hydrotrend --requirement=hydrotrend
+  $ babelize quickstart --batch --summary="PyMT plugin for hydrotrend" --entry-point=Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend --name=hydrotrend --requirement=hydrotrend --output=babel.toml
 
 ********
 Examples
