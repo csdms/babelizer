@@ -82,7 +82,7 @@ def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
     if not path.is_dir():
         raise RenderError("error creating {0}".format(path))
 
-    git.Repo.init(output_dir)
+    git.Repo.init(path)
 
     return path
 
