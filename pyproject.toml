@@ -5,8 +5,6 @@ norecursedirs = [".*", "*.egg*", "build", "dist"]
 # usefixtures = suppress_resource_warning
 addopts = """
     --ignore setup.py
-    --ignore versioneer.py
-    --ignore babelizer/_version.py
     --ignore babelizer/data
     --tb native
     --strict

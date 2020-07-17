@@ -1,3 +1,1 @@
-include versioneer.py
-include babelizer/_version.py
 recursive-include babelizer/data/ *
