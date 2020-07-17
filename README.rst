@@ -265,10 +265,11 @@ Examples
 ********
 
 Generate Python bindings for a C library that implements a BMI,
+sending output to the current directory
 
 .. code:: bash
 
-  $ babelize init babel.toml
+  $ babelize init babel.toml .
 
 Update an existing repository
 
