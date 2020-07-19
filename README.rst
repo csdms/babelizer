@@ -83,37 +83,40 @@ install *babelizer* into the current environment::
 Input file
 **********
 
-The *babelizer* requires a single, *yaml* formatted, input file that describes
-the library you would like to wrap. This file is typically called, *babel.yaml*.
-An example of a blank *babel.yaml* file,
+The *babelizer* requires a single, *toml* formatted, input file that describes
+the library you would like to wrap. This file is typically called, *babel.toml*.
+An example of a blank *babel.toml* file,
 
-.. code:: yaml
+.. code:: toml
 
-    build:
-      define_macros: []
-      extra_compile_args: []
-      include_dirs: []
-      libraries: []
-      library_dirs: []
-      undef_macros: []
-    info:
-      github_username: pymt-lab
-      plugin_author: csdms
-      plugin_license: MIT
-      summary: ''
-    library:
-      entry_point: []
-      language: c
-    plugin:
-      name: ''
-      requirements: []
+    [library]
+    language = "c"
+    entry_point = []
 
-You can generate *babel.yaml* files using the *babelize quickstart* command.
-For example, the above *babel.yaml* was generated with,
+    [build]
+    undef_macros = []
+    define_macros = []
+    libraries = []
+    library_dirs = []
+    include_dirs = []
+    extra_compile_args = []
+
+    [plugin]
+    name = ""
+    requirements = []
+
+    [info]
+    plugin_author = "csdms"
+    github_username = "pymt-lab"
+    plugin_license = "MIT"
+    summary = ""
+
+You can generate *babel.toml* files using the *babelize generate* command.
+For example, the above *babel.toml* was generated with,
 
 .. code:: bash
 
-  $ babelize quickstart --batch
+  $ babelize generate --no-input -
 
 
 Build section
@@ -163,20 +166,18 @@ A list of one or more entry points into the library.
 The following will define a Python class *Hydrotrend* that wraps the function
 *register_bmi_hydrotrend* defined in the library *bmi_hydrotrend*.
 
-.. code:: yaml
+.. code:: toml
 
-  library:
-    entry_point:
-    - Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend
+  [library]
+  entry_point = [ "Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend",]
 
 An example of a C++ library (*bmi_child*), exposing a class *Child* (which
 implemets a BMI) might look like the following,
 
-.. code:: yaml
+.. code:: toml
 
-  library:
-    entry_point:
-    - Child=bmi_child:Child
+  [library]
+  entry_point = [ "Child=bmi_child:Child",]
 
 Library language
 ----------------
@@ -184,10 +185,10 @@ Library language
 The programming language of the library (possible values are "c", "c++",
 "fortran", and "python").
 
-.. code:: yaml
+.. code:: toml
 
-  library:
-    language: c
+  [library]
+  language = "c"
 
 Plugin section
 ==============
@@ -201,10 +202,10 @@ Name to use for the wrapped package. This is used when create the new
 package, *pymt_<plugin_name>*. For example, the following will create
 a new package, *pymt_foo*.
 
-.. code:: yaml
+.. code:: toml
 
-  plugin:
-    name: foo
+  [plugin]
+  name = "foo"
 
 Requirements
 ------------
@@ -213,51 +214,50 @@ List of packages required by the libaray being wrapped. For example, the
 following indicates that the packages *foo* and *bar* are dependencies
 for the package.
 
-.. code:: yaml
+.. code:: toml
 
-  plugin:
-    requirements:
-    - foo
-    - bar
+  [plugin]
+  requirements = [ "foo", "bar",]
 
 
-Example babel.yaml
+Example babel.toml
 ==================
 
-Below is an example of a *babel.yaml* file that describes a shared library,
+Below is an example of a *babel.toml* file that describes a shared library,
 written in C. In this example, the library, *bmi_hydrotrend*, exposes the
 function *register_bmi_hydrotrend* that implements a BMI for a component
 called *hydrotrend*.
 
-.. code:: yaml
+.. code:: toml
 
-  build:
-    define_macros: []
-    extra_compile_args: []
-    include_dirs: []
-    libraries: []
-    library_dirs: []
-    undef_macros: []
-  info:
-    github_username: pymt-lab
-    plugin_author: csdms
-    plugin_license: MIT
-    summary: PyMT plugin for hydrotrend
-  library:
-    entry_point:
-    - Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend
-    language: c
-  plugin:
-    name: hydortrend
-    requirements:
-    - hydrotrend
+    [library]
+    language = "c"
+    entry_point = [ "Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend",]
 
-You can use the *babelize quickstart* command to generate *babel.yaml* files.
-For example the above *babel.yaml* can be generated with the following,
+    [build]
+    undef_macros = []
+    define_macros = []
+    libraries = []
+    library_dirs = []
+    include_dirs = []
+    extra_compile_args = []
+
+    [plugin]
+    name = "hydrotrend"
+    requirements = [ "hydrotrend",]
+
+    [info]
+    plugin_author = "csdms"
+    github_username = "pymt-lab"
+    plugin_license = "MIT"
+    summary = "PyMT plugin for hydrotrend"
+
+You can use the *babelize generate* command to generate *babel.toml* files.
+For example the above *babel.toml* can be generated with the following,
 
 .. code:: bash
 
-  $ babelize quickstart --batch --summary="PyMT plugin for hydrotrend" --entry-point=Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend --name=hydortrend --requirement=hydrotrend
+  $ babelize generate babel.toml --summary="PyMT plugin for hydrotrend" --entry-point=Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend --name=hydortrend --requirement=hydrotrend
 
 ********
 Examples
@@ -267,7 +267,7 @@ Generate Python bindings for a C library that implements a BMI,
 
 .. code:: bash
 
-  $ babelize init babel.yaml
+  $ babelize init babel.toml
 
 Update an existing repository
 
