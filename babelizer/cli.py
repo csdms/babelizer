@@ -136,7 +136,7 @@ def update(template, quiet, verbose):
 
 @babelize.command()
 @click.option(
-    "--batch", is_flag=True, help="Run in batch mode using defaults for all values",
+    "--no-input", is_flag=True, help="Don’t ask questions, just use the default values",
 )
 @click.option(
     "--name", help="Name to use for the babelized package",
@@ -160,16 +160,18 @@ def update(template, quiet, verbose):
     "--entry-point", help="Entry point to the library BMI", multiple=True, default=None
 )
 @click.option("--requirement", help="Requirement", multiple=True, default=None)
-def quickstart(
-    batch, name, language, author, username, license, summary, entry_point, requirement
+@click.argument("file_", metavar="FILENAME", type=click.File(mode="w", lazy=True))
+def generate(
+    no_input, name, language, author, username, license, summary, entry_point, requirement, file_
 ):
+    """Generate babelizer config file, FILENAME."""
     def ask_until_done(text):
         answers = []
         while (answer := ask(text, default="done")) != "done":
             answers.append(answer)
         return answers
 
-    if batch:
+    if no_input:
         name = name or ""
         language = language or "c"
         author = author or "csdms"
@@ -211,7 +213,8 @@ def quickstart(
                 "summary": summary,
             },
             build={},
-        ).format(fmt="toml")
+        ).format(fmt="toml"),
+        file=file_,
     )
 
 

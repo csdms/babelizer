@@ -7,4 +7,3 @@ toml
 isort>=5
 jinja2
 cookiecutter
-versioneer

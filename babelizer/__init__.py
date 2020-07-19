@@ -1,4 +1,4 @@
-from ._version import get_versions
+import pkg_resources
 
-__version__ = get_versions()["version"]
-del get_versions
+
+__version__ = pkg_resources.get_distribution("babelizer").version

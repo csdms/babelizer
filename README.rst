@@ -89,34 +89,34 @@ An example of a blank *babel.toml* file,
 
 .. code:: toml
 
-  [library]
-  language = "c"
-  entry_point = []
+    [library]
+    language = "c"
+    entry_point = []
 
-  [build]
-  undef_macros = []
-  define_macros = []
-  libraries = []
-  library_dirs = []
-  include_dirs = []
-  extra_compile_args = []
+    [build]
+    undef_macros = []
+    define_macros = []
+    libraries = []
+    library_dirs = []
+    include_dirs = []
+    extra_compile_args = []
 
-  [plugin]
-  name = ""
-  requirements = []
+    [plugin]
+    name = ""
+    requirements = []
 
-  [info]
-  plugin_author = "csdms"
-  github_username = "pymt-lab"
-  plugin_license = "MIT"
-  summary = ""
+    [info]
+    plugin_author = "csdms"
+    github_username = "pymt-lab"
+    plugin_license = "MIT"
+    summary = ""
 
-You can generate *babel.toml* files using the *babelize quickstart* command.
+You can generate *babel.toml* files using the *babelize generate* command.
 For example, the above *babel.toml* was generated with,
 
 .. code:: bash
 
-  $ babelize quickstart --batch
+  $ babelize generate --no-input -
 
 
 Build section
@@ -169,7 +169,7 @@ The following will define a Python class *Hydrotrend* that wraps the function
 .. code:: toml
 
   [library]
-  entry_point = [ "Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend" ]
+  entry_point = [ "Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend",]
 
 An example of a C++ library (*bmi_child*), exposing a class *Child* (which
 implemets a BMI) might look like the following,
@@ -177,7 +177,7 @@ implemets a BMI) might look like the following,
 .. code:: toml
 
   [library]
-  entry_point = [ "Child=bmi_child:Child"]
+  entry_point = [ "Child=bmi_child:Child",]
 
 Library language
 ----------------
@@ -217,7 +217,7 @@ for the package.
 .. code:: toml
 
   [plugin]
-  requirements = [ "foo", "bar"]
+  requirements = [ "foo", "bar",]
 
 
 Example babel.toml
@@ -230,35 +230,34 @@ called *hydrotrend*.
 
 .. code:: toml
 
-  [library]
-  language = "c"
-  entry_point = [ "Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend",]
+    [library]
+    language = "c"
+    entry_point = [ "Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend",]
 
-  [build]
-  undef_macros = []
-  define_macros = []
-  libraries = []
-  library_dirs = []
-  include_dirs = []
-  extra_compile_args = []
+    [build]
+    undef_macros = []
+    define_macros = []
+    libraries = []
+    library_dirs = []
+    include_dirs = []
+    extra_compile_args = []
 
-  [plugin]
-  name = "hydortrend"
-  requirements = [ "hydrotrend",]
+    [plugin]
+    name = "hydrotrend"
+    requirements = [ "hydrotrend",]
 
-  [info]
-  plugin_author = "csdms"
-  github_username = "pymt-lab"
-  plugin_license = "MIT"
-  summary = "PyMT plugin for hydrotrend"
+    [info]
+    plugin_author = "csdms"
+    github_username = "pymt-lab"
+    plugin_license = "MIT"
+    summary = "PyMT plugin for hydrotrend"
 
-
-You can use the *babelize quickstart* command to generate *babel.toml* files.
+You can use the *babelize generate* command to generate *babel.toml* files.
 For example the above *babel.toml* can be generated with the following,
 
 .. code:: bash
 
-  $ babelize quickstart --batch --summary="PyMT plugin for hydrotrend" --entry-point=Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend --name=hydortrend --requirement=hydrotrend
+  $ babelize generate babel.toml --summary="PyMT plugin for hydrotrend" --entry-point=Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend --name=hydortrend --requirement=hydrotrend
 
 ********
 Examples
