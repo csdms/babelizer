@@ -2,7 +2,7 @@ import pathlib
 import re
 from collections import OrderedDict
 
-import toml
+import tomlkit as toml
 import yaml
 
 from .errors import ScanError, ValidationError
@@ -103,7 +103,7 @@ class BabelMetadata:
         "info": ("github_username", "plugin_license", "summary"),
     }
 
-    LOADERS = {"yaml": yaml.safe_load, "toml": toml.load}
+    LOADERS = {"yaml": yaml.safe_load, "toml": toml.parse}
 
     def __init__(self, library=None, build=None, plugin=None, info=None):
         self._meta = BabelMetadata.norm(
@@ -131,7 +131,7 @@ class BabelMetadata:
             raise ScanError(
                 f"unable to scan yaml-formatted metadata file:\n{error}"
             )
-        except toml.TomlDecodeError as error:
+        except toml.exceptions.ParseError as error:
             raise ScanError(
                 f"unable to scan toml-formatted metadata file:\n{error}"
             )
@@ -153,7 +153,7 @@ class BabelMetadata:
         return {
             "library": {
                 "language": config["library"]["language"],
-                "entry_point": config["library"]["entry_point"],
+                "entry_point": list(config["library"]["entry_point"]),
             },
             "build": {
                 "undef_macros": config["build"].get("undef_macros", []),
@@ -165,7 +165,7 @@ class BabelMetadata:
             },
             "plugin": {
                 "name": config["plugin"]["name"],
-                "requirements": config["plugin"]["requirements"],
+                "requirements": list(config["plugin"]["requirements"]),
             },
             "info": {
                 "plugin_author": config["info"]["plugin_author"],

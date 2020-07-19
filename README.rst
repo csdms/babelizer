@@ -83,7 +83,7 @@ install *babelizer* into the current environment::
 Input file
 **********
 
-The *babelizer* requires a single, *toml* formatted, input file that describes
+The *babelizer* requires a single, *toml*-formatted, input file that describes
 the library you would like to wrap. This file is typically called, *babel.toml*.
 An example of a blank *babel.toml* file,
 

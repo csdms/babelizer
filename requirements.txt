@@ -3,6 +3,7 @@ click
 gitpython
 mock
 pyyaml
+tomlkit
 isort>=5
 jinja2
 cookiecutter
