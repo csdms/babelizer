@@ -153,7 +153,7 @@ class BabelMetadata:
         return {
             "library": {
                 "language": config["library"]["language"],
-                "entry_point": config["library"]["entry_point"],
+                "entry_point": list(config["library"]["entry_point"]),
             },
             "build": {
                 "undef_macros": config["build"].get("undef_macros", []),
@@ -165,7 +165,7 @@ class BabelMetadata:
             },
             "plugin": {
                 "name": config["plugin"]["name"],
-                "requirements": config["plugin"]["requirements"],
+                "requirements": list(config["plugin"]["requirements"]),
             },
             "info": {
                 "plugin_author": config["info"]["plugin_author"],
