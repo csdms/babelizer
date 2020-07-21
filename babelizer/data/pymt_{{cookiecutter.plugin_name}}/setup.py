@@ -8,7 +8,6 @@ import subprocess
 {%- if cookiecutter.language in ['c', 'c++', 'fortran'] %}
 import numpy as np
 {% endif %}
-import versioneer
 from setuptools import Extension, find_packages, setup
 
 {% if cookiecutter.language == 'fortran' -%}
@@ -98,8 +97,6 @@ entry_points = {
     ]
 }
 
-cmdclass=versioneer.get_cmdclass()
-
 {% if cookiecutter.language == 'fortran' %}
 def build_interoperability():
     compiler = new_fcompiler()
@@ -134,18 +131,40 @@ cmdclass["build_ext"] = build_ext
 {% endif -%}
 
 
+def read(filename):
+    with open(filename, "r", encoding="utf-8") as fp:
+        return fp.read()
+
+
+long_description = u'\n\n'.join(
+    [read('README.rst'), read('CREDITS.rst'), read('CHANGES.rst')]
+)
+
+
 setup(
     name="pymt_{{cookiecutter.plugin_name}}",
     author="{{cookiecutter.full_name}}",
+    author_email="{{cookiecutter.email}}",
     description="PyMT plugin for {{cookiecutter.plugin_name}}",
-    version=versioneer.get_version(),
+    long_description=long_description,
+    version="{{cookiecutter.plugin_version}}",
+    url="https://github.com/{{ cookiecutter.github_username }}/pymt_{{ cookiecutter.plugin_name }}",
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: {{ cookiecutter.open_source_license }}",
+        "Operating System :: MacOS :: MacOS X",
+        "Operating System :: POSIX :: Linux",
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.8",
+    ],
+    keywords=["bmi", "pymt"],
     install_requires=open("requirements.txt", "r").read().splitlines(),
 {%- if cookiecutter.language in ['c', 'c++', 'fortran'] %}
     setup_requires=["cython"],
     ext_modules=ext_modules,
 {%- endif %}
     packages=find_packages(),
-    cmdclass=cmdclass,
     entry_points=entry_points,
     include_package_data=True,
 )
