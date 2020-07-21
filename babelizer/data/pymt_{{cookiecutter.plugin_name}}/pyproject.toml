@@ -7,9 +7,6 @@ testpaths = ["pymt_{{ cookiecutter.plugin_name }}", "tests"]
 norecursedirs = [".*", "*.egg*", "build", "dist"]
 addopts = """
     --ignore setup.py
-    --ignore versioneer.py
-    --ignore babelizer/_version.py
-    --ignore pymt_{{ cookiecutter.plugin_name }}/_version.py
     --tb native
     --strict
     --durations 16
@@ -28,3 +25,9 @@ include_trailing_comma = true
 force_grid_wrap = 0
 combine_as_imports = true
 line_length = 88
+
+[tool.check-manifest]
+ignore = [
+  "pymt_{{ cookiecutter.plugin_name }}/data",
+  "pymt_{{ cookiecutter.plugin_name }}/data/**/*",
+]
