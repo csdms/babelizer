@@ -18,6 +18,9 @@ Changelog for babelizer
 - Fixed a bug where ``git init`` was called from the parent directory
   of the newly-created project, rather than from within the project.
 
+- Removed versioneer from the babelized package. The version is now
+  maintained within setup.py and releases should be made using
+  zest.releaser.
 
 0.1.3 (2018-10-28)
 ------------------
