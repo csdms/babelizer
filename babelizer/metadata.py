@@ -124,7 +124,7 @@ class BabelMetadata:
             raise ValueError(f"unrecognized format ({fmt})")
 
         try:
-            return cls(**loader(stream))
+            return cls(**loader(stream.read()))
         except TypeError:
             raise ValidationError("metadata file does not contain a mapping object")
         except yaml.scanner.ScannerError as error:
@@ -169,6 +169,7 @@ class BabelMetadata:
             },
             "info": {
                 "plugin_author": config["info"]["plugin_author"],
+                "plugin_author_email": config["info"]["plugin_author_email"],
                 "github_username": config["info"]["github_username"],
                 "plugin_license": config["info"]["plugin_license"],
                 "summary": config["info"]["summary"],
@@ -213,6 +214,7 @@ class BabelMetadata:
         return {
             "entry_points": entry_points,
             "full_name": self._meta["info"]["plugin_author"],
+            "email": self._meta["info"]["plugin_author_email"],
             "github_username": self._meta["info"]["github_username"],
             "plugin_name": self._meta["plugin"]["name"],
             "plugin_module": plugin_module,
