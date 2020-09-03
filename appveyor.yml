@@ -35,4 +35,3 @@ test_script:
   - cmd: babelize update --help
   - cmd: babelize generate --help
   - cmd: babelize generate - --no-input
-  - cmd: python -c \"import babelizer; print(babelizer.__version__)\"
