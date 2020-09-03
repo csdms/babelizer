@@ -38,8 +38,8 @@ before_install:
 - source activate _testing
 - conda info -a && conda list
 install:
-- pip install .
 - conda install -q --file=requirements-library.txt
+- pip install .
 script:
 - conda install -q --file=requirements-testing.txt
 - python -c 'import pymt_{{ cookiecutter.plugin_name }}'
