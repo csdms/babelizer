@@ -24,3 +24,8 @@ class ScanError(BabelizeError):
 class OutputDirExistsError(BabelizeError):
 
     pass
+
+
+class SetupPyError(BabelizeError):
+
+    pass
