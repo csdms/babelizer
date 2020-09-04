@@ -1,29 +1,28 @@
 import contextlib
 import os
 import pathlib
-import subprocess
-import sys
 
 import black as blk
 import git
 import isort
 import pkg_resources
 import toml
-import yaml
 from cookiecutter.exceptions import OutputDirExistsException
 from cookiecutter.main import cookiecutter
 
 from .errors import OutputDirExistsError, RenderError
 
 
-def render(plugin_metadata, output, template=None, clobber=False):
+def render(plugin_metadata, output, template=None, clobber=False, version="0.1"):
     if template is None:
         template = pkg_resources.resource_filename("babelizer", "data")
 
     try:
         path = render_plugin_repo(
             template,
-            context=plugin_metadata.as_cookiecutter_context(),
+            context=dict(
+                plugin_metadata.as_cookiecutter_context(), plugin_version=version
+            ),
             output_dir=output,
             clobber=clobber,
         )

@@ -96,6 +96,27 @@ def validate_meta(meta):
             )
 
 
+def validate_dict(meta, required=None, optional=None):
+    actual = set(meta)
+    required = set() if required is None else set(required)
+    optional = required if optional is None else set(optional)
+    valid = required | optional
+
+    if missing := required - actual:
+        raise ValidationError(
+            "missing required key{0}: {1}".format(
+                "s" if len(missing) > 1 else "", ", ".join(missing)
+            )
+        )
+
+    if unknown := actual - valid:
+        raise ValidationError(
+            "unknown key{0}: {1}".format(
+                "s" if len(unknown) > 1 else "", ", ".join(unknown)
+            )
+        )
+
+
 class BabelMetadata:
     REQUIRED = {
         "library": ("language", "entry_point"),
@@ -106,15 +127,16 @@ class BabelMetadata:
     LOADERS = {"yaml": yaml.safe_load, "toml": toml.parse}
 
     def __init__(self, library=None, build=None, plugin=None, info=None):
-        self._meta = BabelMetadata.norm(
-            {
-                "library": library or {},
-                "build": build or {},
-                "plugin": plugin or {},
-                "info": info or {},
-            }
-        )
-        validate_meta(self._meta)
+        config = {
+            "library": library or {},
+            "build": build or {},
+            "plugin": plugin or {},
+            "info": info or {}
+        }
+
+        BabelMetadata.validate(config)
+
+        self._meta = BabelMetadata.norm(config)
 
     @classmethod
     def from_stream(cls, stream, fmt="yaml"):
@@ -124,17 +146,13 @@ class BabelMetadata:
             raise ValueError(f"unrecognized format ({fmt})")
 
         try:
-            return cls(**loader(stream))
+            return cls(**loader(stream.read()))
         except TypeError:
             raise ValidationError("metadata file does not contain a mapping object")
         except yaml.scanner.ScannerError as error:
-            raise ScanError(
-                f"unable to scan yaml-formatted metadata file:\n{error}"
-            )
+            raise ScanError(f"unable to scan yaml-formatted metadata file:\n{error}")
         except toml.exceptions.ParseError as error:
-            raise ScanError(
-                f"unable to scan toml-formatted metadata file:\n{error}"
-            )
+            raise ScanError(f"unable to scan toml-formatted metadata file:\n{error}")
 
     @classmethod
     def from_path(cls, filepath):
@@ -147,13 +165,54 @@ class BabelMetadata:
         return self._meta[section][value]
 
     @staticmethod
+    def validate(config):
+        validate_dict(config["library"], required=("language", "entry_point"), optional={})
+        validate_dict(
+            config["build"],
+            required=None,
+            optional=(
+                "undef_macros",
+                "define_macros",
+                "libraries",
+                "library_dirs",
+                "include_dirs",
+                "extra_compile_args",
+            ),
+        )
+        validate_dict(config["plugin"], required=("name", "requirements"), optional={})
+        validate_dict(
+            config["info"],
+            required=(
+                "plugin_author",
+                "plugin_author_email",
+                "github_username",
+                "plugin_license",
+                "summary",
+            ),
+            optional={},
+        )
+
+        if isinstance(entry_points := config["library"]["entry_point"], str):
+            entry_points = [entry_points]
+
+        for entry_point in entry_points:
+            try:
+                BabelMetadata.parse_entry_point(entry_point)
+            except ValidationError:
+                raise ValidationError(f"poorly-formed entry point ({entry_point})")
+
+    @staticmethod
     def norm(config):
         if "build" not in config:
             config["build"] = {}
+
+        if isinstance(entry_points := config["library"]["entry_point"], str):
+            entry_points = [entry_points]
+
         return {
             "library": {
                 "language": config["library"]["language"],
-                "entry_point": list(config["library"]["entry_point"]),
+                "entry_point": list(entry_points),
             },
             "build": {
                 "undef_macros": config["build"].get("undef_macros", []),
@@ -169,6 +228,7 @@ class BabelMetadata:
             },
             "info": {
                 "plugin_author": config["info"]["plugin_author"],
+                "plugin_author_email": config["info"]["plugin_author_email"],
                 "github_username": config["info"]["github_username"],
                 "plugin_license": config["info"]["plugin_license"],
                 "summary": config["info"]["summary"],
@@ -177,7 +237,6 @@ class BabelMetadata:
 
     def dump(self, fp, fmt="yaml"):
         print(self.format(fmt=fmt), file=fp)
-        # yaml.safe_dump(self._meta, fp, default_flow_style=False)
 
     def format(self, fmt="yaml"):
         return getattr(self, f"format_{fmt}")()
@@ -194,10 +253,43 @@ class BabelMetadata:
 
     @staticmethod
     def parse_entry_point(specifier):
-        name, value = specifier.split("=")
-        module, obj = value.split(":")
+        """Parse an entry point specifier into its parts.
 
-        return name.strip(), module.strip(), obj.strip()
+        Parameters
+        ----------
+        specifier : str
+            An entry-point specifier.
+
+        Returns
+        -------
+        tupe of str
+            The parts of the entry point as (*name*, *module*, *class*).
+
+        Raises
+        ------
+        ValidationError
+            If the entry point cannot be parsed.
+
+        Examples
+        --------
+        >>> from babelizer.metadata import BabelMetadata
+        >>> BabelMetadata.parse_entry_point("Foo=bar:Baz")
+        ('Foo', 'bar', 'Baz')
+
+        >>> BabelMetadata.parse_entry_point("bar:Baz")
+        Traceback (most recent call last):
+        ,,,
+        babelizer.errors.ValidationError: bad entry point specifier (bar:Baz). specifier must be of the form name=module:class
+        """
+        try:
+            name, value = [item.strip() for item in specifier.split("=")]
+            module, obj = [item.strip() for item in value.split(":")]
+        except ValueError:
+            raise ValidationError(
+                f"bad entry point specifier ({specifier}). specifier must be of the form name=module:class"
+            ) from None
+
+        return name, module, obj
 
     def as_cookiecutter_context(self):
         language = self._meta["library"]["language"]
@@ -205,14 +297,14 @@ class BabelMetadata:
         plugin_class = ""
         entry_point = ""
 
-        entry_points = self._meta["library"]["entry_point"]
-        if isinstance(entry_points, str):
+        if isinstance(entry_points := self._meta["library"]["entry_point"], str):
             entry_points = [entry_points]
         entry_points = ",".join(entry_points)
 
         return {
             "entry_points": entry_points,
             "full_name": self._meta["info"]["plugin_author"],
+            "email": self._meta["info"]["plugin_author_email"],
             "github_username": self._meta["info"]["github_username"],
             "plugin_name": self._meta["plugin"]["name"],
             "plugin_module": plugin_module,

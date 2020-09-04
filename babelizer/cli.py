@@ -1,15 +1,16 @@
 #! /usr/bin/env python
 import os
 import pathlib
-import sys
 from functools import partial
 
 import click
+import git
 import pkg_resources
 
-from .errors import OutputDirExistsError, ScanError, ValidationError
+from .errors import OutputDirExistsError, ScanError, SetupPyError, ValidationError
 from .metadata import BabelMetadata
 from .render import render
+from .utils import get_setup_py_version, save_files
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
@@ -49,12 +50,17 @@ def babelize(cd):
 @click.option(
     "--template", default=None, help="Location of cookiecutter template",
 )
+@click.option(
+    "--package-version",
+    default="0.1",
+    help="The initial version of the babelized package",
+)
 @click.argument("meta", type=click.File(mode="r"))
 @click.argument(
     "output",
     type=click.Path(file_okay=False, dir_okay=True, writable=True, resolve_path=True),
 )
-def init(meta, output, template, quiet, verbose):
+def init(meta, output, template, quiet, verbose, package_version):
     template = template or pkg_resources.resource_filename("babelizer", "data")
 
     if not quiet:
@@ -67,7 +73,13 @@ def init(meta, output, template, quiet, verbose):
         raise BabelizerAbort(error)
 
     try:
-        new_folder = render(babel_metadata, output, template=template, clobber=False)
+        new_folder = render(
+            babel_metadata,
+            output,
+            template=template,
+            clobber=False,
+            version=package_version,
+        )
     except (ValidationError, OutputDirExistsError) as error:
         raise BabelizerAbort(error)
 
@@ -77,6 +89,9 @@ def init(meta, output, template, quiet, verbose):
                 new_folder / "meta"
             )
         )
+    repo = git.Repo(new_folder)
+    repo.git.add("--all")
+    repo.index.commit("Initial commit")
 
     print(new_folder)
 
@@ -121,8 +136,16 @@ def update(template, quiet, verbose):
     except ValidationError as error:
         raise BabelizerAbort(error)
 
+    try:
+        version = get_setup_py_version()
+    except SetupPyError as error:
+        raise BabelizerAbort(
+            os.linesep.join(["the setup.py of this package has an error:", f"{error}"])
+        )
+
     out(f"re-rendering {package_path}")
-    render(babel_metadata, package_path.parent, template=template, clobber=True)
+    with save_files(["CHANGES.rst", "CREDITS.rst"]):
+        render(babel_metadata, package_path.parent, template=template, clobber=True, version=version)
 
     if not quiet:
         out(
@@ -140,6 +163,9 @@ def update(template, quiet, verbose):
 )
 @click.option(
     "--name", help="Name to use for the babelized package",
+)
+@click.option(
+    "--email", help="Contact email to use for the babelized package",
 )
 @click.option(
     "--language",
@@ -162,7 +188,7 @@ def update(template, quiet, verbose):
 @click.option("--requirement", help="Requirement", multiple=True, default=None)
 @click.argument("file_", metavar="FILENAME", type=click.File(mode="w", lazy=True))
 def generate(
-    no_input, name, language, author, username, license, summary, entry_point, requirement, file_
+    no_input, name, email, language, author, username, license, summary, entry_point, requirement, file_
 ):
     """Generate babelizer config file, FILENAME."""
     def ask_until_done(text):
@@ -175,6 +201,7 @@ def generate(
         name = name or ""
         language = language or "c"
         author = author or "csdms"
+        email = email or "csdms@colorado.edu"
         username = username or "pymt-lab"
         license = license or "MIT"
         summary = summary or ""
@@ -188,6 +215,7 @@ def generate(
             default="c",
         )
         author = author or ask("Babelizing author", default="csdms")
+        email = email or ask("Babelizing author email", default="csdms@colorado.edu")
         username = username or ask(
             "GitHub username or organization that will host the project",
             default="pymt-lab",
@@ -209,6 +237,7 @@ def generate(
             info={
                 "github_username": username,
                 "plugin_author": author,
+                "plugin_author_email": email,
                 "plugin_license": license,
                 "summary": summary,
             },

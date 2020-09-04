@@ -38,7 +38,7 @@ before_install:
 - source activate _testing
 - conda info -a && conda list
 install:
-- conda install -q --file=requirements.txt
+- conda install -q --file=requirements-library.txt
 - pip install .
 script:
 - conda install -q --file=requirements-testing.txt

@@ -2,11 +2,21 @@
 from setuptools import find_packages, setup
 
 
+def read(filename):
+    with open(filename, "r", encoding="utf-8") as fp:
+        return fp.read()
+
+
+long_description = u'\n\n'.join(
+    [read('README.rst'), read('CREDITS.rst'), read('CHANGES.rst')]
+)
+
+
 setup(
     name="babelizer",
     version="0.1.3",
     description="Wrap bmi libraries with Python bindings",
-    long_description=open("README.rst", encoding="utf-8").read(),
+    long_description=long_description,
     author="Eric Hutton",
     author_email="huttone@colorado.edu",
     url="https://github.com/csdms",

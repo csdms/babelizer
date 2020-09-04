@@ -1,5 +1,1 @@
 numpy
-
-{%- for requirement in cookiecutter.plugin_requirements.split(',') %}
-# {{ requirement|trim }}
-{%- endfor %}

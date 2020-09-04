@@ -5,9 +5,6 @@ os:
 env:
   matrix:
   - PYTHON="3.8"
-  global:
-  - CONDA_PREFIX=$HOME/miniconda
-  - MINICONDA_URL_BASE="https://repo.anaconda.com/miniconda/Miniconda3-latest"
 sudo: false
 before_install:
 - |
@@ -18,18 +15,19 @@ before_install:
   fi
 - |
   if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    OS="MacOSX-x86_64"
+    curl -L https://micromamba.snakepit.net/api/micromamba/osx-64/latest | tar -xvj bin/micromamba
   else
-    OS="Linux-x86_64"
+    curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
   fi
-- curl $MINICONDA_URL_BASE-$OS.sh > $HOME/minconda.sh
-- bash $HOME/minconda.sh -b -p $CONDA_PREFIX
-- export PATH="$CONDA_PREFIX/bin:$PATH"
-- hash -r
-- conda config --set always_yes yes --set changeps1 no
-- conda create -n _testing python=$PYTHON
-- source activate _testing
-- conda info -a && conda list
+- ./bin/micromamba shell init -s bash -p ~/micromamba
+- |
+  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    source $HOME/.bash_profile
+  else
+    source $HOME/.bashrc
+  fi
+- micromamba activate
+- micromamba install python=$PYTHON pip mamba --yes -c conda-forge
 install:
 - pip install .
 script:
