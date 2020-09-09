@@ -29,16 +29,16 @@ cdef extern from "bmi.h":
 cdef extern from "bmi.c":
     BMI_Model* bmi_new()
 
-    int bmi_initialize(BMI_Model* model, const char *config_file, void**self)
+    int bmi_initialize(BMI_Model* model, const char *config_file)
     int bmi_update(BMI_Model* model)
     int bmi_update_until(BMI_Model* model, double until)
-    int bmi_update_frac(BMI_Model* model, double frac)
+    # int bmi_update_frac(BMI_Model* model, double frac)
     int bmi_finalize(BMI_Model* model)
-    int bmi_run_model(BMI_Model* model)
+    # int bmi_run_model(BMI_Model* model)
 
     int bmi_get_component_name(BMI_Model* model, char* name)
-    int bmi_get_input_var_name_count(BMI_Model* model, int *count)
-    int bmi_get_output_var_name_count(BMI_Model* model, int *count)
+    int bmi_get_input_item_count(BMI_Model* model, int *count)
+    int bmi_get_output_item_count(BMI_Model* model, int *count)
 
     int bmi_get_input_var_names(BMI_Model* model, char **names)
     int bmi_get_output_var_names(BMI_Model* model, char **names)
@@ -56,10 +56,12 @@ cdef extern from "bmi.c":
     int bmi_get_time_units(BMI_Model* model, char* units)
     int bmi_get_time_step(BMI_Model* model, double* time)
 
-    int bmi_get_value(BMI_Model* model, const char* name, void * buffer)
+    int bmi_get_value(BMI_Model* model, const char* name, void * dest)
     int bmi_get_value_ptr(BMI_Model* model, const char* name, void ** ptr)
+    int bmi_get_value_at_indices(BMI_Model* model, const char* name, void * dest, int *inds, int count)
 
-    int bmi_set_value(BMI_Model* model, const char* name, void *buffer)
+    int bmi_set_value(BMI_Model* model, const char* name, void *src)
+    int bmi_set_value_at_indices(BMI_Model* model, const char* name, int *inds, int count, void *src)
 
     int bmi_get_grid_rank(BMI_Model* model, int gid, int *rank)
     int bmi_get_grid_size(BMI_Model* model, int gid, int *size)
@@ -68,6 +70,19 @@ cdef extern from "bmi.c":
     int bmi_get_grid_shape(BMI_Model* model, int gid, int* shape)
     int bmi_get_grid_spacing(BMI_Model* model, int gid, double* spacing)
     int bmi_get_grid_origin(BMI_Model* model, int gid, double* origin)
+
+    int bmi_get_grid_x(BMI_Model *model, int grid, double *x)
+    int bmi_get_grid_y(BMI_Model *model, int grid, double *y)
+    int bmi_get_grid_z(BMI_Model *model, int grid, double *z)
+
+    int bmi_get_grid_node_count(BMI_Model *model, int grid, int *count)
+    int bmi_get_grid_edge_count(BMI_Model *model, int grid, int *count)
+    int bmi_get_grid_face_count(BMI_Model *model, int grid, int *count)
+
+    int bmi_get_grid_edge_nodes(BMI_Model *model, int grid, int *edge_nodes)
+    int bmi_get_grid_face_edges(BMI_Model *model, int grid, int *face_edges)
+    int bmi_get_grid_face_nodes(BMI_Model *model, int grid, int *face_nodes)
+    int bmi_get_grid_nodes_per_face(BMI_Model *model, int grid, int *nodes_per_face)
 
 
 def ok_or_raise(status):
@@ -91,7 +106,8 @@ cdef class {{ pymt_class }}:
     METADATA = "../data/{{ pymt_class }}"
 
     def __cinit__(self):
-        self._bmi = bmi_new()
+        # self._bmi = bmi_new()
+        self._bmi = <BMI_Model*>malloc(sizeof(BMI_Model))
 
         if self._bmi is NULL:
             raise MemoryError()
@@ -99,7 +115,8 @@ cdef class {{ pymt_class }}:
             {{ register_bmi }}(self._bmi)
 
     def initialize(self, config_file):
-        status = <int>bmi_initialize(self._bmi, <char*>config_file, <void**>&(self._bmi))
+        status = <int>bmi_initialize(self._bmi, <char*>config_file)
+        # status = <int>bmi_initialize(self._bmi, <char*>config_file, <void**>&(self._bmi))
         ok_or_raise(status)
 
     def update(self):
@@ -110,12 +127,12 @@ cdef class {{ pymt_class }}:
         status = <int>bmi_update_until(self._bmi, time)
         ok_or_raise(status)
 
-    def update_frac(self, frac):
-        status = <int>bmi_update_frac(self._bmi, frac)
-        ok_or_raise(status)
+    # def update_frac(self, frac):
+    #     status = <int>bmi_update_frac(self._bmi, frac)
+    #     ok_or_raise(status)
 
-    def run_model(self):
-        ok_or_raise(<int>bmi_run_model(self._bmi))
+    # def run_model(self):
+    #     ok_or_raise(<int>bmi_run_model(self._bmi))
 
     def finalize(self):
         status = <int>bmi_finalize(self._bmi)
@@ -125,14 +142,14 @@ cdef class {{ pymt_class }}:
         ok_or_raise(<int>bmi_get_component_name(self._bmi, self.STR_BUFFER))
         return self.STR_BUFFER
 
-    cpdef int get_input_var_name_count(self):
+    cpdef int get_input_item_count(self):
         cdef int count = 0
-        ok_or_raise(<int>bmi_get_input_var_name_count(self._bmi, &count))
+        ok_or_raise(<int>bmi_get_input_item_count(self._bmi, &count))
         return count
 
-    cpdef int get_output_var_name_count(self):
+    cpdef int get_output_item_count(self):
         cdef int count = 0
-        ok_or_raise(<int>bmi_get_output_var_name_count(self._bmi, &count))
+        ok_or_raise(<int>bmi_get_output_item_count(self._bmi, &count))
         return count
 
     def get_input_var_names(self):
@@ -142,7 +159,7 @@ cdef class {{ pymt_class }}:
         cdef int count
         cdef int status = 1
 
-        ok_or_raise(<int>bmi_get_input_var_name_count(self._bmi, &count))
+        ok_or_raise(<int>bmi_get_input_item_count(self._bmi, &count))
 
         try:
             names = <char**>malloc(count * sizeof(char*))
@@ -169,7 +186,7 @@ cdef class {{ pymt_class }}:
         cdef int count
         cdef int status = 1
 
-        ok_or_raise(<int>bmi_get_output_var_name_count(self._bmi, &count))
+        ok_or_raise(<int>bmi_get_output_item_count(self._bmi, &count))
 
         try:
             names = <char**>malloc(count * sizeof(char*))
@@ -262,6 +279,11 @@ cdef class {{ pymt_class }}:
         return rank
 
     cpdef int get_grid_size(self, gid):
+        cdef int size
+        ok_or_raise(<int>bmi_get_grid_size(self._bmi, gid, &size))
+        return size
+
+    cpdef int get_grid_node_count(self, gid):
         cdef int size
         ok_or_raise(<int>bmi_get_grid_size(self._bmi, gid, &size))
         return size
