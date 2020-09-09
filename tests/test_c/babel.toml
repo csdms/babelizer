@@ -1,0 +1,23 @@
+[build]
+define_macros = []
+extra_compile_args = []
+include_dirs = []
+libraries = []
+library_dirs = []
+undef_macros = []
+
+[info]
+github_username = "mcflugen"
+plugin_author = "Eric Hutton"
+plugin_author_email = "eric.hutton@colorado.edu"
+plugin_license = "MIT"
+summary = "PyMT plugin for hydrotrend"
+
+[library]
+entry_point = ["HeatBMI=bmiheatc:register_bmi_heat"]
+language = "c"
+
+[plugin]
+name = "heat"
+requirements = []
+
