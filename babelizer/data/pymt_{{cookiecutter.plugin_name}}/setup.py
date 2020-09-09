@@ -2,6 +2,7 @@
 import os
 import sys
 {%- if cookiecutter.language == 'fortran' %}
+import contextlib
 import subprocess
 {%- endif -%}
 
@@ -13,7 +14,6 @@ from setuptools import Extension, find_packages, setup
 {% if cookiecutter.language == 'fortran' -%}
 from setuptools.command.build_ext import build_ext as _build_ext
 from numpy.distutils.fcompiler import new_fcompiler
-from scripting.contexts import cd
 {% endif %}
 
 {% if cookiecutter.language in ['c', 'c++', 'fortran'] -%}
@@ -98,6 +98,14 @@ entry_points = {
 }
 
 {% if cookiecutter.language == 'fortran' %}
+@contextlib.contextmanager
+def as_cwd(path):
+    prev_cwd = os.getcwd()
+    os.chdir(path)
+    yield
+    os.chdir(prev_cwd)
+
+
 def build_interoperability():
     compiler = new_fcompiler()
     compiler.customize()
@@ -122,7 +130,7 @@ def build_interoperability():
 class build_ext(_build_ext):
 
     def run(self):
-        with cd('pymt_{{cookiecutter.plugin_name}}/lib'):
+        with as_cwd('pymt_{{cookiecutter.plugin_name}}/lib'):
             build_interoperability()
         _build_ext.run(self)
 
@@ -163,7 +171,7 @@ setup(
     ext_modules=ext_modules,
 {%- endif %}
 {%- if cookiecutter.language == 'fortran' %}
-    cmdclass={"build_ext": build_ext},
+    cmdclass=dict(build_ext=build_ext),
 {%- endif %}
     packages=find_packages(),
     entry_points=entry_points,
