@@ -28,6 +28,7 @@ before_install:
   fi
 - micromamba activate
 - micromamba install python=$PYTHON pip mamba --yes -c conda-forge
+- mamba install bmi-c c-compiler cmake pkg-config --yes -c conda-forge
 - |
   mkdir _build
   && pushd _build

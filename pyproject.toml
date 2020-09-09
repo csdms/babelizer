@@ -1,6 +1,6 @@
 [tool.pytest.ini_options]
 minversion = "5.0"
-testpaths = ["babelizer"]
+testpaths = ["babelizer", "tests"]
 norecursedirs = [".*", "*.egg*", "build", "dist"]
 # usefixtures = suppress_resource_warning
 addopts = """
