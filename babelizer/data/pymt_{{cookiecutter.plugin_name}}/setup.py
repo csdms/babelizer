@@ -126,8 +126,6 @@ class build_ext(_build_ext):
             build_interoperability()
         _build_ext.run(self)
 
-
-cmdclass["build_ext"] = build_ext
 {% endif -%}
 
 
@@ -163,6 +161,9 @@ setup(
 {%- if cookiecutter.language in ['c', 'c++', 'fortran'] %}
     setup_requires=["cython"],
     ext_modules=ext_modules,
+{%- endif %}
+{%- if cookiecutter.language == 'fortran' %}
+    cmdclass={"build_ext": build_ext},
 {%- endif %}
     packages=find_packages(),
     entry_points=entry_points,
