@@ -32,21 +32,29 @@ def test_babelize_init_c(tmpdir, datadir):
         assert result.exit_code == 0
         assert pathlib.Path("pymt_heat").exists()
 
-        result = subprocess.run(
-            ["pip", "install", "-e", "."],
-            cwd="pymt_heat",
-            check=True,
-            capture_output=True,
-        )
+        try:
+            result = subprocess.run(
+                ["pip", "install", "-e", "."],
+                cwd="pymt_heat",
+                check=True,
+                capture_output=True,
+            )
+        except subprocess.CalledProcessError as err:
+            assert err.output is None
+
         assert result.returncode == 0
 
         os.mkdir("_test")
         shutil.copy(datadir / "config.txt", "_test/")
 
-        result = subprocess.run(
-            ["bmi-test", "--config-file=config.txt", "--root-dir=.", "pymt_heat:HeatBMI", "-vvv"],
-            cwd="_test",
-            check=True,
-            capture_output=True,
-        )
+        try:
+            result = subprocess.run(
+                ["bmi-test", "--config-file=config.txt", "--root-dir=.", "pymt_heat:HeatBMI", "-vvv"],
+                cwd="_test",
+                check=True,
+                capture_output=True,
+            )
+        except subprocess.CalledProcessError as err:
+            assert err.output is None
+
         assert result.returncode == 0
