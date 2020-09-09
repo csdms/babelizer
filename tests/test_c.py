@@ -40,7 +40,7 @@ def test_babelize_init_c(tmpdir, datadir):
                 capture_output=True,
             )
         except subprocess.CalledProcessError as err:
-            assert err.output is None
+            assert err.stderr is None
 
         assert result.returncode == 0
 
@@ -55,6 +55,6 @@ def test_babelize_init_c(tmpdir, datadir):
                 capture_output=True,
             )
         except subprocess.CalledProcessError as err:
-            assert err.output is None
+            assert err.stderr is None
 
         assert result.returncode == 0
