@@ -37,10 +37,11 @@ def test_babelize_init_c(tmpdir, datadir):
                 ["pip", "install", "-e", "."],
                 cwd="pymt_heat",
                 check=True,
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
             )
         except subprocess.CalledProcessError as err:
-            assert err.stderr is None
+            assert err.output is None
 
         assert result.returncode == 0
 
@@ -52,9 +53,10 @@ def test_babelize_init_c(tmpdir, datadir):
                 ["bmi-test", "--config-file=config.txt", "--root-dir=.", "pymt_heat:HeatBMI", "-vvv"],
                 cwd="_test",
                 check=True,
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
             )
         except subprocess.CalledProcessError as err:
-            assert err.stderr is None
+            assert err.output is None
 
         assert result.returncode == 0
