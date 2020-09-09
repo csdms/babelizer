@@ -37,6 +37,7 @@ def test_babelize_init_c(tmpdir, datadir):
                 ["pip", "install", "-e", "."],
                 cwd="pymt_heat",
                 check=True,
+                text=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
             )
@@ -53,6 +54,7 @@ def test_babelize_init_c(tmpdir, datadir):
                 ["bmi-test", "--config-file=config.txt", "--root-dir=.", "pymt_heat:HeatBMI", "-vvv"],
                 cwd="_test",
                 check=True,
+                text=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
             )
