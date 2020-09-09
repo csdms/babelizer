@@ -263,11 +263,12 @@ For example the above *babel.toml* can be generated with the following,
 Examples
 ********
 
-Generate Python bindings for a C library that implements a BMI,
+Generate Python bindings for a library that implements a BMI,
+sending output to the current directory
 
 .. code:: bash
 
-  $ babelize init babel.toml
+  $ babelize init babel.toml .
 
 Update an existing repository
 
