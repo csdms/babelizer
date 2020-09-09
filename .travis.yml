@@ -35,6 +35,7 @@ before_install:
   && make install
   && popd
 install:
+- pip install -r requirements-testing.txt
 - pip install .
 script:
 - babelize --version
@@ -44,3 +45,4 @@ script:
 - babelize generate --help
 - babelize generate - --no-input
 - python -c 'import babelizer; print(babelizer.__version__)'
+- pytest -vvv
