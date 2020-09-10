@@ -18,13 +18,13 @@ Supported languages include:
 * C++
 * Fortran
 
-Within Python, models, regardless of their core language,
+Within Python, these models, regardless of their core language,
 appear as classes that expose a BMI.
 Users are then able to run models interactively
-through the Python command line or a Jupyter Notebook,
-or programmatically through Python scripts.
-They case also use Python-based BMI tools such as
-the bmi-tester, pymt, or Landlab.
+through the Python command line or Jupyter Notebook,
+and programmatically through Python scripts;
+they can also use Python-based BMI tools such as
+the `bmi-tester`_, `pymt`_, and `Landlab`_.
 
 	 
 User Guide
@@ -48,4 +48,7 @@ Feel free to contact us through the `CSDMS Help Desk`_.
 
 .. _Community Surface Dynamics Modeling System: https://csdms.colorado.edu
 .. _Basic Model Interface: https://github.com/csdms/bmi
+.. _bmi-tester: https://github.com/csdms/bmi-tester
+.. _pymt: https://pymt.readthedocs.io/
+.. _Landlab: https://landlab.github.io/
 .. _CSDMS Help Desk: https://github.com/csdms/help-desk
