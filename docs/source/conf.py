@@ -53,3 +53,23 @@ html_theme = 'alabaster'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# The name of an image file (relative to this directory) to place at the top
+# of the sidebar.
+html_logo = "_static/powered-by-logo-header.png"
+
+# Custom sidebar templates, maps document names to template names.
+html_sidebars = {
+    "index": [
+        "sidebarintro.html",
+        "links.html",
+        "sourcelink.html",
+        "searchbox.html",
+    ],
+    "**": [
+        "sidebarintro.html",
+        "links.html",
+        "sourcelink.html",
+        "searchbox.html",
+    ]
+}
