@@ -6,18 +6,46 @@
 
 .. title:: babelizer
 
-Welcome to babelizer's documentation!
-=====================================
+
+The *babelizer* is an open source Python utility,
+developed by the `Community Surface Dynamics Modeling System`_ (CSDMS),
+for wrapping models that expose a `Basic Model Interface`_ (BMI)
+so they can imported as Python packages.
+
+Supported languages include:
+
+* C
+* C++
+* Fortran
+
+Within Python, models, regardless of their core language,
+appear as classes that expose a BMI.
+Users are then able to run models interactively
+through the Python command line or a Jupyter Notebook,
+or programmatically through Python scripts.
+They case also use Python-based BMI tools such as
+the bmi-tester, pymt, or Landlab.
+
+	 
+User Guide
+==========
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
 
+Help
+====
 
-Indices and tables
-==================
+Adding a BMI to a model can be a daunting task.
+If you'd like assistance, CSDMS can help.
+Depending on your need, we can provide advice or consulting services.
+Feel free to contact us through the `CSDMS Help Desk`_.
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+
+..
+   Links
+
+.. _Community Surface Dynamics Modeling System: https://csdms.colorado.edu
+.. _Basic Model Interface: https://github.com/csdms/bmi
+.. _CSDMS Help Desk: https://github.com/csdms/help-desk
