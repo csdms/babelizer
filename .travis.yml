@@ -28,7 +28,15 @@ before_install:
   fi
 - micromamba activate
 - micromamba install python=$PYTHON pip mamba --yes -c conda-forge
+- mamba install bmi-c cmake pkg-config --yes -c conda-forge
+- |
+  mkdir _build \
+  && pushd _build \
+  &&   cmake ../external/bmi-example-c -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
+  &&   make install \
+  &&   popd
 install:
+- mamba install --file=requirements-testing.txt --yes -c conda-forge
 - pip install .
 script:
 - babelize --version
@@ -38,3 +46,4 @@ script:
 - babelize generate --help
 - babelize generate - --no-input
 - python -c 'import babelizer; print(babelizer.__version__)'
+- pytest -vvv
