@@ -1,10 +1,6 @@
 #include <stdlib.h>
 #include "bmi.h"
 
-static BMI_Model* bmi_new() {
-  return (BMI_Model*) calloc(1, sizeof(BMI_Model));
-}
-
 
 static int bmi_initialize(BMI_Model* model, const char *config_file) {
   return model->initialize(model, config_file);

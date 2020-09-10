@@ -27,8 +27,6 @@ cdef extern from "bmi.h":
 
 
 cdef extern from "bmi.c":
-    BMI_Model* bmi_new()
-
     int bmi_initialize(BMI_Model* model, const char *config_file)
     int bmi_update(BMI_Model* model)
     int bmi_update_until(BMI_Model* model, double until)
@@ -106,7 +104,6 @@ cdef class {{ pymt_class }}:
     METADATA = "../data/{{ pymt_class }}"
 
     def __cinit__(self):
-        # self._bmi = bmi_new()
         self._bmi = <BMI_Model*>malloc(sizeof(BMI_Model))
 
         if self._bmi is NULL:
