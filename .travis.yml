@@ -1,4 +1,4 @@
-language: generic
+language: c
 os:
 - linux
 - osx
@@ -46,6 +46,7 @@ script:
 - babelize generate --help
 - babelize generate - --no-input
 - python -c 'import babelizer; print(babelizer.__version__)'
+- gcc --version
 - |
   mkdir _tmp \
   && pushd _tmp \
