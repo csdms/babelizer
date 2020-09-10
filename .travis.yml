@@ -46,16 +46,4 @@ script:
 - babelize generate --help
 - babelize generate - --no-input
 - python -c 'import babelizer; print(babelizer.__version__)'
-- gcc --version
-- |
-  mkdir _tmp \
-  && pushd _tmp \
-  &&   cp ../tests/test_c/babel.toml . \
-  &&   babelize init babel.toml . \
-  &&   pushd pymt_heat \
-  &&     pip install -e . \
-  &&     popd \
-  &&   mkdir _tmp \
-  &&   pushd _tmp \
-  &&     cp ../../tests/test_c/config.txt . \
-  &&     bmi-test --config-file=config.txt --root-dir=. pymt_heat:HeatBMI -vvv
+- pytest -vvv
