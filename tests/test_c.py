@@ -31,6 +31,7 @@ def test_babelize_init_c(tmpdir, datadir):
 
         assert result.exit_code == 0
         assert pathlib.Path("pymt_heat").exists()
+        assert (pathlib.Path("pymt_heat") / "babel.toml").is_file()
 
         try:
             result = subprocess.run(
