@@ -1,4 +1,4 @@
-language: c
+language: generic
 os:
 - linux
 - osx
@@ -32,11 +32,11 @@ before_install:
 - |
   mkdir _build \
   && pushd _build \
-  && cmake ../external/bmi-example-c -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
-  && make install \
-  && popd
+  &&   cmake ../external/bmi-example-c -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
+  &&   make install \
+  &&   popd
 install:
-- pip install -r requirements-testing.txt
+- mamba install --file=requirements-testing.txt --yes -c conda-forge
 - pip install .
 script:
 - babelize --version
