@@ -31,7 +31,13 @@ User Guide
 ==========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
+
+   installation
+   commands
+   input_file
+   example
+   glossary
 
 
 Help
