@@ -14,7 +14,7 @@ long_description = u'\n\n'.join(
 
 setup(
     name="babelizer",
-    version="0.1.3",
+    version="0.2.0",
     description="Wrap bmi libraries with Python bindings",
     long_description=long_description,
     author="Eric Hutton",
