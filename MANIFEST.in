@@ -1,4 +1,13 @@
 include LICENSE
-include CHANGES.rst
-include requirements.txt
+include *.rst
+include requirements*.txt
+include Makefile
+exclude appveyor.yml
+exclude .gitmodules
+exclude external/bmi-example-c/.git
 recursive-include babelizer/data *
+recursive-include external/bmi-example-c *
+recursive-include tests *.py
+recursive-include tests *.toml
+recursive-include tests *.txt
+recursive-exclude recipe *
