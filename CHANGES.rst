@@ -1,8 +1,19 @@
 Changelog for babelizer
 =======================
 
-0.2.0 (unreleased)
--------------------
+0.2.1 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
+0.2.0 (2020-09-10)
+------------------
+
+- Improved testing of the babelizer and added the bmi_heat C library to use for
+  testing babelizing a package. (#20)
+
+- Updated the babelized package for C libraries to BMI 2. (#20)
 
 - Moved the external cookiecutter template into ``babelizer`` package.
 
