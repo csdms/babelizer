@@ -31,13 +31,27 @@ User Guide
 ==========
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
-   installation
-   commands
-   input_file
-   example
+   readme
    glossary
+
+..   installation
+..   commands
+..   input_file
+..   example
+
+
+API Reference
+-------------
+
+If you are looking for information on a specific function, class, or
+method, this part of the documentation is for you.
+
+.. toctree::
+   :maxdepth: 2
+
+   api/index
 
 
 Help
@@ -47,6 +61,18 @@ Adding a BMI to a model can be a daunting task.
 If you'd like assistance, CSDMS can help.
 Depending on your need, we can provide advice or consulting services.
 Feel free to contact us through the `CSDMS Help Desk`_.
+
+
+Miscellaneous Pages
+-------------------
+
+.. toctree::
+   :maxdepth: 2
+
+   authors
+   changelog
+   contributing
+   license
 
 
 ..
