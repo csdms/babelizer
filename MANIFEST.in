@@ -1,4 +1,4 @@
-include LICENSE
+include LICENSE.rst
 include CHANGES.rst
 include requirements.txt
 recursive-include babelizer/data *
