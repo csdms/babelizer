@@ -2,7 +2,7 @@
     :align: center
     :scale: 85%
     :alt: babelizer
-    :target: https://bmi.readthedocs.io/
+    :target: https://babelizer.readthedocs.io/
 
 .. title:: babelizer
 
