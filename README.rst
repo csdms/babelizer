@@ -30,7 +30,7 @@ Supported languages:
 Requirements
 ************
 
-The *babelizer* is Python 3 only.
+The *babelizer* requires Python >=3.8.
 
 
 Apart from Python, the *babelzer* has a number of other requirements, all of which
@@ -52,20 +52,19 @@ Installation
 To install the *babelizer*, first create a new environment in
 which *babelizer* will be installed. This, although not necessary, will
 isolate the installation so that there won't be conflicts with your
-base *Python* installation. This can be done with *conda* as::
+base *Python* installation. This can be done with *conda* as,
 
-  $ conda create -n babelizer python=3
-  $ conda activate babelizer
+.. code:: bash
+
+    $ conda create -n babelizer python=3
+    $ conda activate babelizer
 
 Stable Release
 ==============
 
-The *babelizer*, and its dependencies, can be installed either with *pip*
-or *conda*. Using *pip*::
+The *babelizer*, and its dependencies, is best installed with *conda*,
 
-    $ pip install babelizer
-
-Using *conda*::
+.. code:: bash
 
     $ conda install babelizer -c conda-forge
 
@@ -257,7 +256,11 @@ For example the above *babel.toml* can be generated with the following,
 
 .. code:: bash
 
-  $ babelize generate babel.toml --summary="PyMT plugin for hydrotrend" --entry-point=Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend --name=hydrotrend --requirement=hydrotrend
+  $ babelize generate babel.toml \
+      --summary="PyMT plugin for hydrotrend" \
+      --entry-point=Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend \
+      --name=hydrotrend \
+      --requirement=hydrotrend
 
 ********
 Examples
