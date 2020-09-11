@@ -34,12 +34,8 @@ User Guide
    :maxdepth: 2
 
    readme
+   example
    glossary
-
-..   installation
-..   commands
-..   input_file
-..   example
 
 
 API Reference
@@ -57,7 +53,7 @@ method, this part of the documentation is for you.
 Help
 ====
 
-Adding a BMI to a model can be a daunting task.
+Adding a BMI to a model and babelizing it can be a daunting task.
 If you'd like assistance, CSDMS can help.
 Depending on your need, we can provide advice or consulting services.
 Feel free to contact us through the `CSDMS Help Desk`_.
