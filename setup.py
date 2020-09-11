@@ -35,5 +35,5 @@ setup(
     install_requires=open("requirements.txt", "r").read().splitlines(),
     packages=find_packages(),
     include_package_data=True,
-    entry_points={"console_scripts": ["babelize=babelizer.cli:babelize",],},
+    entry_points={"console_scripts": ["babelize=babelizer.cli:babelize"]},
 )
