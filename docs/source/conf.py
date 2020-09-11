@@ -15,6 +15,9 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 
+# The master toctree document.
+master_doc = 'index'
+
 # -- Project information -----------------------------------------------------
 
 project = 'babelizer'
