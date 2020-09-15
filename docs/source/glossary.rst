@@ -53,8 +53,8 @@ A glossary of terms used with the *babelizer*.
 
    configuration file
 
-      A file that contains information, including initial values of
-      parameters, for setting up a :term:`model`.
+      A file, usually in a text-based format, that lists the tunable
+      parameters of a :term:`model` and supplies their initial values.
 
    coupling
 
@@ -67,6 +67,10 @@ A glossary of terms used with the *babelizer*.
    data
 
       Information held by an :term:`object`.
+
+   git
+
+      Version control software.
 
    import
 
@@ -87,11 +91,6 @@ A glossary of terms used with the *babelizer*.
       with mathematical relationships that evolve over time and are
       solved numerically. For more information, see, for example,
       https://en.wikipedia.org/wiki/Numerical_modeling_(geology).
-
-   model configuration file
-
-      A file, usually in a text-based format, that lists the tunable
-      parameters of a model and supplies their initial values.
 
    model coupling
 

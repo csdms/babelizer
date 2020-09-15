@@ -262,9 +262,9 @@ For example the above *babel.toml* can be generated with the following,
       --name=hydrotrend \
       --requirement=hydrotrend
 
-********
-Examples
-********
+***
+Use
+***
 
 Generate Python bindings for a library that implements a BMI,
 sending output to the current directory
@@ -278,3 +278,10 @@ Update an existing repository
 .. code:: bash
 
   $ babelize update
+
+For a complete example of using the *babelizer*
+to wrap a C library exposing a BMI,
+see the User Guide of the `documentation`_.
+
+
+.. _documentation: https://babelizer.readthedocs.io/
