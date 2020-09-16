@@ -17,12 +17,12 @@ here are the steps we'll take:
    model and wrap it with the *babelizer*
 #. Clone the `bmi-example-c`_ repository from GitHub and build the
    *heat* model from source
-#. Create a *babelizer* input file for the *heat* model
-#. Run the *babelizer* to wrap the model in Python
-#. Run the *heat* model in Python through *pymt*
+#. Create a *babelizer* input file describing the *heat* model
+#. Run the *babelizer* to generate Python bindings, then build the bindings
+#. Show the *heat* model running in Python through *pymt*
 
 Before we begin,
-create a directory to hold the work we'll do:
+create a directory to hold our work:
 
 .. code:: bash
 
@@ -34,8 +34,7 @@ Set up a conda environment
 --------------------------
 
 Start by setting up a :term:`conda environment`
-where we can build and wrap the model.
-We'll need a compiler toolchain to build and install the model,
+that includes a toolchain to build and install the model,
 as well as the *babelizer*.
 The necessary packages are listed in the conda environment file
 :download:`environment.yml`:
@@ -51,7 +50,7 @@ and create the new environment with:
   $ conda env create --file=environment.yml
 
 When this command completes,
-activate the *wrap* environment:
+activate the environment:
 
 .. code:: bash
 
@@ -182,7 +181,7 @@ under the current directory.
   LICENSE                   pyproject.toml
 
 Before we can build the Python bindings,
-we must ensure that dependencies required by the toolchain,
+we must ensure that the dependencies required by the toolchain,
 as well as any required by the model,
 as specified in the *babelizer* input file (none in this case),
 are satisfied.
@@ -196,7 +195,7 @@ into the conda environment:
   $ conda install -c conda-forge --file=requirements.txt --file=requirements-library.txt
 
 
-Build the Python bindings with:
+Now build the Python bindings with:
 
 .. code:: bash
 
@@ -223,7 +222,37 @@ We've imported the *heat* model,
 written in C,
 into Python!
 
-There are still a few steps remaining...
+At this point,
+it's a good idea to run the *bmi-tester* (`GitHub repo <bmi-tester>`_)
+over the model.
+The *bmi-tester* exercises each BMI method exposed through Python,
+ensuring it works correctly.
+
+Install *bmi-tester* with:
+
+.. code:: bash
+
+  $ conda install -c conda-forge bmi-tester
+
+Before running the *bmi-tester*, one last piece is needed.
+Like all models equipped with a BMI,
+*heat* uses a :term:`configuration file` to specify initial parameter values.
+Download the file :download:`config.txt <examples/config.txt>` for use here.
+
+Run the *bmi-tester* with:
+
+.. code:: bash
+
+  $ bmi-test pymt_heatc:HeatModel --config-file=config.txt --root-dir=. -vvv
+
+This command sets off a long list of messages,
+ending with
+
+.. code:: bash
+
+  🎉 All tests passed!
+  
+if everything has been built correctly.
 
 ..
    Links
@@ -231,3 +260,5 @@ There are still a few steps remaining...
 .. _bmi-example-c: https://github.com/csdms/bmi-example-c
 .. _README: https://github.com/csdms/bmi-example-c/blob/master/README.md
 .. _Developer Command Prompt: https://docs.microsoft.com/en-us/dotnet/framework/tools/developer-command-prompt-for-vs
+.. _bmi-tester: https://github.com/csdms/bmi-tester
+.. _Python Modeling Tool: https://pymt.readthedocs.io
