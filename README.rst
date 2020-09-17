@@ -1,6 +1,10 @@
 .. image:: https://img.shields.io/travis/csdms/babelizer.svg
         :target: https://travis-ci.org/csdms/babelizer
 
+.. image:: https://readthedocs.org/projects/babelizer/badge/?version=latest
+        :target: https://babelizer.readthedocs.io/en/latest/?badge=latest
+        :alt: Documentation Status
+
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
         :target: https://github.com/csdms/babelizer
 
@@ -15,8 +19,8 @@ Wrap BMI libraries with Python bindings
 About
 *****
 
-The *babelizer* is a utility for wrapping libraries, from a variety for
-languages, that expose a Basic Model Interface (BMI) so that they can
+The *babelizer* is a utility for wrapping libraries, from a variety of
+languages, that expose a Basic Model Interface (BMI) so that they can be
 imported as a Python package.
 
 
