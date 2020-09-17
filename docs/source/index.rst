@@ -10,7 +10,7 @@
 The *babelizer* is an open source Python utility,
 developed by the `Community Surface Dynamics Modeling System`_ (CSDMS),
 for wrapping models that expose a `Basic Model Interface`_ (BMI)
-so they can imported as Python packages.
+so they can be imported as Python packages.
 
 Supported languages include:
 

@@ -33,16 +33,15 @@ create a directory to hold our work:
 Set up a conda environment
 --------------------------
 
-Start by setting up a :term:`conda environment`
-that includes a toolchain to build and install the model,
-as well as the *babelizer*.
+Start by setting up a :term:`conda environment` that includes the *babelizer*,
+as well as a toolchain to build and install the model.
 The necessary packages are listed in the conda environment file
 :download:`environment.yml`:
 
 .. include:: environment.yml
    :literal:
 
-Download :download:`this file <environment.yml>`
+:download:`Download <environment.yml>` this file
 and create the new environment with:
 
 .. code:: bash
@@ -208,7 +207,7 @@ at the end of which you'll hopefully see:
 
   Successfully installed pymt-heatc
 
-Take a moment to pause and see what we've done.
+Pause a moment to see what we've done.
 Start a Python session and try the following commands:
 
 .. code:: python
@@ -260,7 +259,7 @@ Add metadata to make a *pymt* component
 
 The final step in wrapping the *heat* model
 is to add metadata used by the `Python Modeling Tool`_, *pymt*.
-CSDMS is developing a set of standards,
+CSDMS develops a set of standards,
 the `CSDMS Model Metadata`_,
 that provides a detailed and formalized description of a model.
 The metadata allow *heat* to be run and and :term:`coupled <model coupling>`
