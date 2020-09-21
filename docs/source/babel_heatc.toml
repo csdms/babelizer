@@ -1,0 +1,23 @@
+[library]
+language = "c"
+entry_point = ["HeatModel=bmiheatc:register_bmi_heat"]
+
+[build]
+undef_macros = []
+define_macros = []
+libraries = []
+library_dirs = []
+include_dirs = []
+extra_compile_args = []
+
+[plugin]
+name = "heatc"
+requirements = [""]
+
+[info]
+plugin_author = "csdms"
+plugin_author_email = "csdms@colorado.edu"
+github_username = "pymt-lab"
+plugin_license = "MIT"
+summary = "PyMT plugin for heat model"
+

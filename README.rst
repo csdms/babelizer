@@ -1,6 +1,10 @@
 .. image:: https://img.shields.io/travis/csdms/babelizer.svg
         :target: https://travis-ci.org/csdms/babelizer
 
+.. image:: https://readthedocs.org/projects/babelizer/badge/?version=latest
+        :target: https://babelizer.readthedocs.io/en/latest/?badge=latest
+        :alt: Documentation Status
+
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
         :target: https://github.com/csdms/babelizer
 
@@ -15,8 +19,8 @@ Wrap BMI libraries with Python bindings
 About
 *****
 
-The *babelizer* is a utility for wrapping libraries, from a variety for
-languages, that expose a Basic Model Interface (BMI) so that they can
+The *babelizer* is a utility for wrapping libraries, from a variety of
+languages, that expose a Basic Model Interface (BMI) so that they can be
 imported as a Python package.
 
 
@@ -30,7 +34,7 @@ Supported languages:
 Requirements
 ************
 
-The *babelizer* is Python 3 only.
+The *babelizer* requires Python >=3.8.
 
 
 Apart from Python, the *babelzer* has a number of other requirements, all of which
@@ -52,20 +56,19 @@ Installation
 To install the *babelizer*, first create a new environment in
 which *babelizer* will be installed. This, although not necessary, will
 isolate the installation so that there won't be conflicts with your
-base *Python* installation. This can be done with *conda* as::
+base *Python* installation. This can be done with *conda* as,
 
-  $ conda create -n babelizer python=3
-  $ conda activate babelizer
+.. code:: bash
+
+    $ conda create -n babelizer python=3
+    $ conda activate babelizer
 
 Stable Release
 ==============
 
-The *babelizer*, and its dependencies, can be installed either with *pip*
-or *conda*. Using *pip*::
+The *babelizer*, and its dependencies, is best installed with *conda*,
 
-    $ pip install babelizer
-
-Using *conda*::
+.. code:: bash
 
     $ conda install babelizer -c conda-forge
 
@@ -257,11 +260,15 @@ For example the above *babel.toml* can be generated with the following,
 
 .. code:: bash
 
-  $ babelize generate babel.toml --summary="PyMT plugin for hydrotrend" --entry-point=Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend --name=hydrotrend --requirement=hydrotrend
+  $ babelize generate babel.toml \
+      --summary="PyMT plugin for hydrotrend" \
+      --entry-point=Hydrotrend=bmi_hydrotrend:register_bmi_hydrotrend \
+      --name=hydrotrend \
+      --requirement=hydrotrend
 
-********
-Examples
-********
+***
+Use
+***
 
 Generate Python bindings for a library that implements a BMI,
 sending output to the current directory
@@ -275,3 +282,10 @@ Update an existing repository
 .. code:: bash
 
   $ babelize update
+
+For a complete example of using the *babelizer*
+to wrap a C library exposing a BMI,
+see the User Guide of the `documentation`_.
+
+
+.. _documentation: https://babelizer.readthedocs.io/

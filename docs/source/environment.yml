@@ -1,0 +1,11 @@
+# A conda environment file for the babelizer example
+name: wrap
+channels:
+  - conda-forge
+dependencies:
+- python=3
+- cmake
+- pkg-config
+- c-compiler
+- bmi-c
+- babelizer

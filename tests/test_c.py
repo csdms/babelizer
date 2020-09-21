@@ -3,9 +3,7 @@ import os
 import pathlib
 import shutil
 import subprocess
-import sys
 
-import pytest
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
