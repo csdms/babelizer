@@ -13,6 +13,8 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+import datetime
+import pkg_resources
 
 
 # The master toctree document.
@@ -21,11 +23,11 @@ master_doc = 'index'
 # -- Project information -----------------------------------------------------
 
 project = 'babelizer'
-copyright = '2020, Community Surface Dynamics Modeling System'
 author = 'Community Surface Dynamics Modeling System'
-
-# The full version, including alpha/beta/rc tags
-release = '0.2'
+version = pkg_resources.get_distribution("babelizer").version
+release = version
+this_year = datetime.date.today().year
+copyright = '%s, %s' % (this_year, author)
 
 
 # -- General configuration ---------------------------------------------------
