@@ -45,11 +45,23 @@ before_install:
   fi
 - micromamba activate
 - micromamba install python=$PYTHON pip mamba --yes -c conda-forge
-- mamba install bmi-c cmake pkg-config --yes -c conda-forge
+- mamba install bmi-c bmi-fortran cmake pkg-config --yes -c conda-forge
+- |
+  if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    sudo apt-get -y install gfortran
+  else
+    mamba install fortran-compiler --yes -c conda-forge
+  fi
 - |
   mkdir _build \
   && pushd _build \
   &&   cmake ../external/bmi-example-c -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
+  &&   make install \
+  &&   popd
+- |
+  mkdir _buildf \
+  && pushd _buildf \
+  &&   cmake ../external/bmi-example-fortran -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
   &&   make install \
   &&   popd
 install:
