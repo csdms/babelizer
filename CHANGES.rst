@@ -4,7 +4,7 @@ Changelog for babelizer
 0.3.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Automatically set version in docs from the package version. (#23)
 
 
 0.3.0 (2020-09-24)
