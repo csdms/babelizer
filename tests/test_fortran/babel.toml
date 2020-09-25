@@ -1,0 +1,22 @@
+[build]
+define_macros = []
+extra_compile_args = []
+include_dirs = []
+libraries = []
+library_dirs = []
+undef_macros = []
+
+[info]
+github_username = "mdpiper"
+plugin_author = "Mark Piper"
+plugin_author_email = "mark.piper@colorado.edu"
+plugin_license = "MIT"
+summary = "PyMT plugin for heatf model"
+
+[library]
+entry_point = ["HeatBMI=bmiheatf:bmi_heat"]
+language = "fortran"
+
+[plugin]
+name = "heatf"
+requirements = []
