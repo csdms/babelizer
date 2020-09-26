@@ -38,22 +38,10 @@ before_install:
   fi
 - bash $HOME/miniconda.sh -b -p $(pwd)/anaconda
 - export PATH="$(pwd)/anaconda/bin:$PATH"
-- conda init bash
-- |
-  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    source $HOME/.bash_profile
-  else
-    source $HOME/.bashrc
-  fi
+- hash -r
 - conda install mamba --yes -c conda-forge
-- mamba install python=$PYTHON --yes -c conda-forge
-- mamba install bmi-c bmi-fortran cmake pkg-config fortran-compiler c-compiler --yes -c conda-forge
-- |
-  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    source $HOME/.bash_profile
-  else
-    source $HOME/.bashrc
-  fi
+- mamba create -n testing python=$PYTHON bmi-c bmi-fortran cmake pkg-config fortran-compiler c-compiler --yes -c conda-forge
+- conda activate testing
 - |
   mkdir _build \
   && pushd _build \
