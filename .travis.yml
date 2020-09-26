@@ -41,7 +41,7 @@ before_install:
 - hash -r
 - conda install mamba --yes -c conda-forge
 - mamba create -n testing python=$PYTHON bmi-c bmi-fortran cmake pkg-config fortran-compiler c-compiler --yes -c conda-forge
-- conda activate testing
+- source activate testing
 - |
   mkdir _build \
   && pushd _build \
