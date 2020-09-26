@@ -45,7 +45,7 @@ before_install:
   fi
 - micromamba activate
 - micromamba install mamba --yes -c conda-forge
-- mamba create -n testing python=$PYTHON bmi-c bmi-fortran cmake pkg-config fortran-compiler c-compiler --yes -c conda-forge
+- mamba create -n testing python=$PYTHON bmi-c bmi-fortran cmake pkg-config fortran-compiler c-compiler mamba --yes -c conda-forge
 - source activate testing
 - |
   mkdir _build \
