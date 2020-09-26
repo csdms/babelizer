@@ -32,14 +32,19 @@ before_install:
   fi
 - |
   if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh > $HOME/miniconda.sh
+    curl -L https://micromamba.snakepit.net/api/micromamba/osx-64/latest | tar -xvj bin/micromamba
   else
-    curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh > $HOME/miniconda.sh
+    curl -L https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
   fi
-- bash $HOME/miniconda.sh -b -p $(pwd)/anaconda
-- export PATH="$(pwd)/anaconda/bin:$PATH"
-- hash -r
-- conda install mamba --yes -c conda-forge
+- ./bin/micromamba shell init -s bash -p ~/micromamba
+- |
+  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    source $HOME/.bash_profile
+  else
+    source $HOME/.bashrc
+  fi
+- micromamba activate
+- micromamba install mamba --yes -c conda-forge
 - mamba create -n testing python=$PYTHON bmi-c bmi-fortran cmake pkg-config fortran-compiler c-compiler --yes -c conda-forge
 - source activate testing
 - |
