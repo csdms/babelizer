@@ -47,7 +47,13 @@ before_install:
   fi
 - conda install mamba --yes -c conda-forge
 - mamba install python=$PYTHON --yes -c conda-forge
-- mamba install bmi-c bmi-fortran cmake pkg-config fortran-compiler c-compiler libgfortran --yes -c conda-forge
+- mamba install bmi-c bmi-fortran cmake pkg-config fortran-compiler c-compiler --yes -c conda-forge
+- |
+  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    source $HOME/.bash_profile
+  else
+    source $HOME/.bashrc
+  fi
 - |
   mkdir _build \
   && pushd _build \
