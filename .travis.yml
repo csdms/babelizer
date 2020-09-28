@@ -45,7 +45,7 @@ before_install:
   fi
 - micromamba activate
 - micromamba install mamba --yes -c conda-forge
-- mamba create -n testing python=$PYTHON bmi-c bmi-fortran cmake pkg-config fortran-compiler c-compiler mamba --yes -c conda-forge
+- mamba create -n testing python=$PYTHON bmi-c bmi-fortran bmi-cxx cmake pkg-config fortran-compiler c-compiler cxx-compiler mamba --yes -c conda-forge
 - source activate testing
 - |
   mkdir _build \
@@ -57,6 +57,12 @@ before_install:
   mkdir _buildf \
   && pushd _buildf \
   &&   cmake ../external/bmi-example-fortran -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
+  &&   make install \
+  &&   popd
+- |
+  mkdir _buildcxx \
+  && pushd _buildcxx \
+  &&   cmake ../external/bmi-example-cxx -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
   &&   make install \
   &&   popd
 install:
