@@ -1,56 +1,74 @@
 # cython: c_string_type=str, c_string_encoding=ascii
 
 import ctypes
-from libc.stdlib cimport malloc, free
+from libcpp.string cimport string
+from libcpp.vector cimport vector
 
 cimport numpy as np
 import numpy as np
 
 
-cdef extern from "bmi.hxx" namespace "bmi":
-    cdef cppclass Model:
+cdef extern from "bmi_heat.hxx":
+    cdef cppclass BmiHeat:
         Model() except +
-        void GetComponentName(char * name) except +
-        int GetInputVarNameCount() except +
-        int GetOutputVarNameCount() except +
-        void GetInputVarNames(char** names) except +
-        void GetOutputVarNames(char** names) except +
 
-        void Initialize (const char * config_file) except +
-        void Update() except +
-        void UpdateUntil(double time) except +
-        void Finalize() except +
+        #  Model control functions.
+        void Initialize(string config_file) except +
+        void Update()
+        void UpdateUntil(double time)
+        void Finalize()
 
-        int GetVarGrid (const char * var_name) except +
-        void GetVarType (const char * var_name, char * const vtype) except +
-        void GetVarUnits (const char * var_name, char * const units) except +
-        int GetVarItemsize(const char * name) except +
-        int GetVarNbytes(const char * name) except +
-        void GetVarLocation(const char * var_name, char * const location) except +
+        #  Model information functions.
+        string GetComponentName()
+        int GetInputItemCount()
+        int GetOutputItemCount()
+        vector[string] GetInputVarNames()
+        vector[string] GetOutputVarNames()
 
-        double GetCurrentTime () except +
-        double GetStartTime () except +
-        double GetEndTime () except +
-        double GetTimeStep () except +
-        void GetTimeUnits (char * const units) except +
+        #  Variable information functions
+        int GetVarGrid(string name)
+        string GetVarType(string name)
+        string GetVarUnits(string name)
+        int GetVarItemsize(string name)
+        int GetVarNbytes(string name)
+        string GetVarLocation(string name)
 
-        void GetValue (const char * var_name, void *buffer) except +
-        void SetValue (const char * var_name, void *buffer) except +
+        double GetCurrentTime()
+        double GetStartTime()
+        double GetEndTime()
+        string GetTimeUnits()
+        double GetTimeStep()
 
-        void GetGridType (const int grid_id, char * const gtype) except +
-        int GetGridRank (const int grid_id) except +
-        int GetGridSize (const int grid_id) except +
+        #  Variable getters
+        void GetValue(string name, void *dest)
+        void *GetValuePtr(string name)
+        void GetValueAtIndices(string name, void *dest, int *inds, int count)
 
-        void GetGridX (const int gid, double * const x) except +
-        void GetGridY (const int gid, double * const y) except +
+        #  Variable setters
+        void SetValue(string name, void *src)
+        void SetValueAtIndices(string name, int *inds, int count, void *src)
 
-        # int GetGridNumberOfEdges(const int)
-        int GetGridNumberOfFaces(const int) except +
-        
-        void GetGridEdgeNodes(const int, int * const) except +
-        void GetGridFaceEdges(const int, int * const) except +
-        void GetGridFaceNodes(const int, int * const) except +
-        void GetGridNodesPerFace(const int, int * const) except +
+        #  Grid information functions
+        int GetGridRank(const int grid)
+        int GetGridSize(const int grid)
+        string GetGridType(const int grid)
+
+        void GetGridShape(const int grid, int *shape)
+        void GetGridSpacing(const int grid, double *spacing)
+        void GetGridOrigin(const int grid, double *origin)
+
+        void GetGridX(const int grid, double *x)
+        void GetGridY(const int grid, double *y)
+        void GetGridZ(const int grid, double *z)
+
+        int GetGridNodeCount(const int grid)
+        int GetGridEdgeCount(const int grid)
+        int GetGridFaceCount(const int grid)
+
+        void GetGridEdgeNodes(const int grid, int *edge_nodes)
+        void GetGridFaceEdges(const int grid, int *face_edges)
+        void GetGridFaceNodes(const int grid, int *face_nodes)
+        void GetGridNodesPerFace(const int grid, int *nodes_per_face)
 
 {%- for entry_point in cookiecutter.entry_points.split(',') %}
     {% set pymt_class = entry_point.split('=')[0] %}
@@ -58,8 +76,7 @@ cdef extern from "bmi.hxx" namespace "bmi":
 # start: {{ pymt_class|lower }}.pyx
 
 cdef class {{ pymt_class }}:
-    cdef Model _bmi
-    cdef char[2048] STR_BUFFER
+    cdef BmiHeat _bmi
 
     METADATA = "../data/{{ pymt_class }}"
 
@@ -84,13 +101,11 @@ cdef class {{ pymt_class }}:
     cpdef int get_var_grid(self, name):
         return self._bmi.GetVarGrid(<char*>name)
 
-    cpdef object get_var_type(self, name):
-        self._bmi.GetVarType(<char*>name, self.STR_BUFFER)
-        return self.STR_BUFFER
+    cpdef string get_var_type(self, name):
+        return self._bmi.GetVarType(<char*>name)
 
-    cpdef object get_var_units(self, name):
-        self._bmi.GetVarUnits(<char*>name, self.STR_BUFFER)
-        return self.STR_BUFFER
+    cpdef string get_var_units(self, name):
+        return self._bmi.GetVarUnits(<char*>name)
 
     cpdef int get_var_itemsize(self, name):
         return self._bmi.GetVarItemsize(<char*>name)
@@ -98,65 +113,23 @@ cdef class {{ pymt_class }}:
     cpdef int get_var_nbytes(self, name):
         return self._bmi.GetVarNbytes(<char*>name)
 
-    cpdef object get_var_location(self, name):
-        self._bmi.GetVarLocation(<char*>name, self.STR_BUFFER)
-        return self.STR_BUFFER
+    cpdef string get_var_location(self, name):
+        return self._bmi.GetVarLocation(<char*>name)
 
-    cpdef get_component_name(self):
-        self._bmi.GetComponentName(self.STR_BUFFER)
-        return self.STR_BUFFER
+    cpdef string get_component_name(self):
+        return self._bmi.GetComponentName()
 
     cpdef int get_input_var_name_count(self):
-        return self._bmi.GetInputVarNameCount()
+        return self._bmi.GetInputItemCount()
 
     cpdef int get_output_var_name_count(self):
-        return self._bmi.GetOutputVarNameCount()
+        return self._bmi.GetOutputItemCount()
 
     def get_input_var_names(self):
-        cdef list py_names = []
-        cdef char** names
-        cdef int i
-        cdef int count = self._bmi.GetInputVarNameCount()
-
-        try:
-            names = <char**>malloc(count * sizeof(char*))
-            names[0] = <char*>malloc(count * 2048 * sizeof(char))
-            for i in range(1, count):
-                names[i] = names[i - 1] + 2048
-            self._bmi.GetInputVarNames(names)
-
-            for i in range(count):
-                py_names.append((names[i]))
-        except Exception:
-            raise
-        finally:
-            free(names[0])
-            free(names)
-
-        return tuple(py_names)
+        return tuple(self._bmi.GetInputVarNames())
 
     def get_output_var_names(self):
-        cdef list py_names = []
-        cdef char** names
-        cdef int i
-        cdef int count = self._bmi.GetOutputVarNameCount()
-
-        try:
-            names = <char**>malloc(count * sizeof(char*))
-            names[0] = <char*>malloc(count * 2048 * sizeof(char))
-            for i in range(1, count):
-                names[i] = names[i - 1] + 2048
-            self._bmi.GetOutputVarNames(names)
-
-            for i in range(count):
-                py_names.append(names[i])
-        except Exception:
-            raise
-        finally:
-            free(names[0])
-            free(names)
-
-        return tuple(py_names)
+        return tuple(self._bmi.GetOutputVarNames())
 
     cpdef double get_current_time(self):
         return self._bmi.GetCurrentTime()
@@ -167,9 +140,8 @@ cdef class {{ pymt_class }}:
     cpdef double get_end_time(self):
         return self._bmi.GetEndTime()
 
-    cpdef object get_time_units(self):
-        self._bmi.GetTimeUnits(self.STR_BUFFER)
-        return self.STR_BUFFER
+    cpdef string get_time_units(self):
+        return self._bmi.GetTimeUnits()
 
     cpdef double get_time_step(self):
         return self._bmi.GetTimeStep()
@@ -188,18 +160,29 @@ cdef class {{ pymt_class }}:
     cpdef int get_grid_size(self, gid):
         return self._bmi.GetGridSize(gid)
 
-    cpdef int get_grid_number_of_nodes(self, gid):
-        return self._bmi.GetGridSize(gid)
+    cpdef int get_grid_node_count(self, gid):
+        return self._bmi.GetGridNodeCount(gid)
 
-    cpdef int get_grid_number_of_faces(self, gid):
-        return self._bmi.GetGridNumberOfFaces(gid)
+    cpdef int get_grid_edge_count(self, gid):
+        return self._bmi.GetGridEdgeCount(gid)
 
-    # cpdef int get_grid_number_of_edges(self, gid):
-    #     return self._bmi.GetGridNumberOfEdges(gid)
+    cpdef int get_grid_face_count(self, gid):
+        return self._bmi.GetGridFaceCount(gid)
 
-    cpdef object get_grid_type(self, gid):
-        self._bmi.GetGridType(gid, self.STR_BUFFER)
-        return self.STR_BUFFER
+    cpdef string get_grid_type(self, gid):
+        return self._bmi.GetGridType(gid)
+
+    cpdef get_grid_shape(self, gid, np.ndarray[int, ndim=1] shape):
+        self._bmi.GetGridShape(gid, &shape[0])
+        return shape
+
+    cpdef get_grid_spacing(self, gid, np.ndarray[double, ndim=1] spacing):
+        self._bmi.GetGridSpacing(gid, &spacing[0])
+        return spacing
+
+    cpdef get_grid_origin(self, gid, np.ndarray[double, ndim=1] origin):
+        self._bmi.GetGridOrigin(gid, &origin[0])
+        return origin
 
     cpdef get_grid_x(self, gid, np.ndarray[double, ndim=1] buff):
         self._bmi.GetGridX(gid, &buff[0])
