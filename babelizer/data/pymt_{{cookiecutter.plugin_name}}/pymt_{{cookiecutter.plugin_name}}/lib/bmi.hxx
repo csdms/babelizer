@@ -1,117 +1,76 @@
-#ifndef BMI_H_
-#define BMI_H_
-
-#define BMI_GET_GRID_CONNECTIVITY
-
+#ifndef BMI_HXX
+#define BMI_HXX
 
 namespace bmi {
 
-const int MAX_COMPONENT_NAME = 2048;
-const int MAX_VAR_NAME = 2048;
-const int MAX_UNITS_NAME = 2048;
+  const int BMI_SUCCESS = 0;
+  const int BMI_FAILURE = 1;
 
-typedef enum {
-  FAILURE = 1,
-  BAD_ARGUMENT,
-  BAD_VAR_NAME,
-  BAD_FILE,
-  CLASS_NOT_INITIALIZED,
-} FatalError;
+  const int MAX_COMPONENT_NAME = 2048;
+  const int MAX_VAR_NAME = 2048;
+  const int MAX_UNITS_NAME = 2048;
+  const int MAX_TYPE_NAME = 2048;
 
-typedef enum {
-  FUNCTION_NOT_IMPLEMENTED = -1,
-} NonFatalError;
+  class Bmi {
+    public:
+      // Model control functions.
+      virtual void Initialize(std::string config_file) = 0;
+      virtual void Update() = 0;
+      virtual void UpdateUntil(double time) = 0;
+      virtual void Finalize() = 0;
 
+      // Model information functions.
+      virtual std::string GetComponentName() = 0;
+      virtual int GetInputItemCount() = 0;
+      virtual int GetOutputItemCount() = 0;
+      virtual std::vector<std::string> GetInputVarNames() = 0;
+      virtual std::vector<std::string> GetOutputVarNames() = 0;
 
-class Model {
- public:
-  Model ();
+      // Variable information functions
+      virtual int GetVarGrid(std::string name) = 0;
+      virtual std::string GetVarType(std::string name) = 0;
+      virtual std::string GetVarUnits(std::string name) = 0;
+      virtual int GetVarItemsize(std::string name) = 0;
+      virtual int GetVarNbytes(std::string name) = 0;
+      virtual std::string GetVarLocation(std::string name) = 0;
 
-  // Model control functions.
-  void Initialize (const char *);
-  void Update ();
-  void UpdateUntil (double);
-  void Finalize ();
+      virtual double GetCurrentTime() = 0;
+      virtual double GetStartTime() = 0;
+      virtual double GetEndTime() = 0;
+      virtual std::string GetTimeUnits() = 0;
+      virtual double GetTimeStep() = 0;
 
-  // Model information functions.
-  void GetComponentName(char * const name);
-  int GetInputVarNameCount (void);
-  int GetOutputVarNameCount (void);
-  void GetInputVarNames (char * const * const names);
-  void GetOutputVarNames (char * const * const names);
+      // Variable getters
+      virtual void GetValue(std::string name, void *dest) = 0;
+      virtual void *GetValuePtr(std::string name) = 0;
+      virtual void GetValueAtIndices(std::string name, void *dest, int *inds, int count) = 0;
 
-  // Variable information functions
-  int GetVarGrid (const char * var_name);
-  void GetVarType (const char * var_name, char * const vtype);
-  void GetVarUnits (const char * var_name, char * const units);
-  int GetVarItemsize(const char * name);
-  int GetVarNbytes(const char * name);
-  void GetVarLocation(const char * name, char * const location);
+      // Variable setters
+      virtual void SetValue(std::string name, void *src) = 0;
+      virtual void SetValueAtIndices(std::string name, int *inds, int count, void *src) = 0;
 
-  double GetCurrentTime ();
-  double GetStartTime ();
-  double GetEndTime ();
-  double GetTimeStep ();
-  void GetTimeUnits (char * const units);
+      // Grid information functions
+      virtual int GetGridRank(const int grid) = 0;
+      virtual int GetGridSize(const int grid) = 0;
+      virtual std::string GetGridType(const int grid) = 0;
 
-  // Variable getters
-  void GetValue (const char * var_name, void *);
-  double * GetValuePtr (const char * var_name) {
-    throw bmi::FUNCTION_NOT_IMPLEMENTED;
-  }
-  void GetValueStride (const char * var_name, int * const stride) {
-    throw bmi::FUNCTION_NOT_IMPLEMENTED;
-  }
+      virtual void GetGridShape(const int grid, int *shape) = 0;
+      virtual void GetGridSpacing(const int grid, double *spacing) = 0;
+      virtual void GetGridOrigin(const int grid, double *origin) = 0;
 
-  // Variable setters
-  void SetValue (const char *, void *);
+      virtual void GetGridX(const int grid, double *x) = 0;
+      virtual void GetGridY(const int grid, double *y) = 0;
+      virtual void GetGridZ(const int grid, double *z) = 0;
 
-  // Grid information functions
-  void GetGridType (const int grid_id, char * const gtype);
-  int GetGridRank (const int grid_id);
-  int GetGridSize (const int grid_id);
+      virtual int GetGridNodeCount(const int grid) = 0;
+      virtual int GetGridEdgeCount(const int grid) = 0;
+      virtual int GetGridFaceCount(const int grid) = 0;
 
-  void GetGridShape (const int, int *) {
-    throw bmi::FUNCTION_NOT_IMPLEMENTED;
-  }
-  void GetGridSpacing (const int, double *) {
-    throw bmi::FUNCTION_NOT_IMPLEMENTED;
-  }
-  void GetGridOrigin (const int, double *) {
-    throw bmi::FUNCTION_NOT_IMPLEMENTED;
-  }
-
-  void GetGridX (const int, double * const);
-  void GetGridY (const int, double * const);
-  void GetGridZ (const int, double * const) {
-    throw bmi::FUNCTION_NOT_IMPLEMENTED;
-  }
-
-  int GetGridFaceCount(const int);
-  int GetGridVertexCount(const int);
-  void GetGridConnectivity (const int, int * const );
-  void GetGridOffset (const int, int * const);
-
-  int GetGridNumberOfEdges(const int);
-  int GetGridNumberOfFaces(const int);
-
-  void GetGridEdgeNodes(const int, int * const);
-  void GetGridFaceEdges(const int, int * const);
-  void GetGridFaceNodes(const int, int * const);
-  void GetGridNodesPerFace(const int, int * const);
-
-
- private:
-  bool HasInputVar (const char * var_name);
-  bool HasOutputVar (const char * var_name);
-
-  int input_var_name_count;
-  int output_var_name_count;
-
-  char input_var_names[5][2048];
-  char output_var_names[6][2048];
-};
-
-} // namespace bmi
+      virtual void GetGridEdgeNodes(const int grid, int *edge_nodes) = 0;
+      virtual void GetGridFaceEdges(const int grid, int *face_edges) = 0;
+      virtual void GetGridFaceNodes(const int grid, int *face_nodes) = 0;
+      virtual void GetGridNodesPerFace(const int grid, int *nodes_per_face) = 0;
+  };
+}
 
 #endif
