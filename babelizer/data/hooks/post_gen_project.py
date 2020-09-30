@@ -113,11 +113,10 @@ if __name__ == "__main__":
     if not package_datadir.exists():
         package_datadir.symlink_to(".." / datadir, target_is_directory=True)
 
-{% for entry_point in cookiecutter.entry_points.split(',') %}
-    {%- set pymt_class = entry_point.split('=')[0] %}
+{%- for pymt_class, component in cookiecutter.components|dictsort %}
     write_api_yaml(
         datadir / "{{ pymt_class }}",
-        language="{{ cookiecutter.language }}",
+        language="{{ component.language }}",
         plugin_class="{{ pymt_class }}",
         plugin_name="{{ cookiecutter.plugin_name }}",
     )

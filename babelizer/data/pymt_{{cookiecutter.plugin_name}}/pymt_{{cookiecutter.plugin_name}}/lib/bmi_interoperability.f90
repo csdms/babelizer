@@ -3,9 +3,7 @@
 !
 module bmi_interoperability
 
-{%- set entry_point = cookiecutter.entry_points.split(',')[0] %}
-{%- set pymt_class = entry_point.split('=')[0] %}
-{%- set plugin_module, plugin_class = entry_point.split('=')[1].split(':') %}
+{%- for pymt_class, component in cookiecutter.components|dictsort %}
 
   use, intrinsic :: iso_c_binding
   use bmif_2_0
@@ -15,12 +13,12 @@ module bmi_interoperability
   use {{ lib }}
 {%- endfor %}
 {%- endif %}
-  use {{ plugin_module }}
+  use {{ component.library }}
 
   implicit none
 
   integer, parameter :: N_MODELS = 2048
-  type ({{ plugin_class }}) :: model_array(N_MODELS)
+  type ({{ component.class }}) :: model_array(N_MODELS)
   logical :: model_avail(N_MODELS) = .true.
 
 contains
@@ -817,3 +815,4 @@ contains
   end function bmi_set_value_double
 
 end module bmi_interoperability
+{%- endfor %}

@@ -122,9 +122,7 @@ cpdef to_string(bytes):
     except AttributeError:
         return bytes
 
-{%- set entry_point = cookiecutter.entry_points.split(',')[0] -%}
-{% set pymt_class = entry_point.split('=')[0] %}
-{% set plugin_module, plugin_class = entry_point.split('=')[1].split(':') %}
+{%- for pymt_class in cookiecutter.components %}
 
 # start: {{ pymt_class|lower }}.pyx
 
@@ -527,3 +525,4 @@ cdef class {{ pymt_class }}:
             ok_or_raise(ENOMSG)
 
         return buffer
+{%- endfor %}

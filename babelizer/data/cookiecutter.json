@@ -22,6 +22,5 @@
   "project_short_description": "PyMT plugin for {{cookiecutter.plugin_name}}",
   "full_name": "Eric Hutton",
   "email": "csdms@colorado.edu",
-  "github_username": "mcflugen",
-  "entry_points": "Foo=bar:Baz"
+  "github_username": "mcflugen"
 }

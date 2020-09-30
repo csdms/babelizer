@@ -38,12 +38,9 @@ def is_valid_entry_point(entry_point):
     return True
 
 
-{%- for entry_point in cookiecutter.entry_points.split(',') %}
-if not is_valid_entry_point("{{ entry_point }}"):
-    print(
-        "ERROR: The entry point (%s) is not a valid Python entry point."
-        % "{{ entry_point }}"
-    )
+{%- for pymt_class, component in cookiecutter.components|dictsort %}
+if not is_valid_entry_point(entry_point := "{{ pymt_class }}={{ component.library }}:{{ component.class}}"):
+    print(f"ERROR: The entry point ({entry_point}) is not a valid Python entry point.")
 
     sys.exit(2)
 {% endfor %}

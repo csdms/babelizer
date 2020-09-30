@@ -43,7 +43,6 @@ install:
 script:
 - conda install -q --file=requirements-testing.txt
 - python -c 'import pymt_{{ cookiecutter.plugin_name }}'
-{%- for entry_point in cookiecutter.entry_points.split(',') %}
-    {%- set pymt_class = entry_point.split('=')[0] %}
+{%- for pymt_class in cookiecutter.components %}
 - bmi-test pymt_{{ cookiecutter.plugin_name }}.bmi:{{ pymt_class }} -vvv
 {%- endfor %}
