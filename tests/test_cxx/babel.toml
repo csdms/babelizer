@@ -1,0 +1,25 @@
+[build]
+define_macros = []
+extra_compile_args = []
+include_dirs = []
+libraries = []
+library_dirs = []
+undef_macros = []
+
+[info]
+github_username = "mcflugen"
+plugin_author = "Eric Hutton"
+plugin_author_email = "eric.hutton@colorado.edu"
+plugin_license = "MIT"
+summary = "PyMT plugin for heat model"
+
+[library]
+language = "c++"
+pymt_class = "HeatBMI"
+header = "bmi_heat.hxx"
+library = "bmiheatcxx"
+class = "BmiHeat"
+
+[plugin]
+name = "heat"
+requirements = []
