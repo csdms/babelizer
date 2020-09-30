@@ -1,8 +1,7 @@
 #! /usr/bin/env python
 
 {% set classes = [] -%}
-{%- for entry_point in cookiecutter.entry_points.split(',') -%}
-    {%- set pymt_class = entry_point.split('=')[0] -%}
+{%- for pymt_class, _ in cookiecutter.components|dictsort -%}
     {% set _ = classes.append(pymt_class) %}
 {%- endfor -%}
 

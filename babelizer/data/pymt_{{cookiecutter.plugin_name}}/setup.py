@@ -21,33 +21,31 @@ common_flags = {
     "include_dirs": [
         np.get_include(),
         os.path.join(sys.prefix, "include"),
-        {%- if cookiecutter.include_dirs -%}
-        {%- for dir in cookiecutter.include_dirs.split(',') %}
-            "{{ dir|trim }}",{% endfor %}
-        {%- endif %}
+        {%- for dir in cookiecutter.build.include_dirs %}
+            "{{ dir|trim }}",
+        {% endfor %}
     ],
     "library_dirs": [
-        {%- if cookiecutter.library_dirs -%}
-        {%- for libdir in cookiecutter.library_dirs.split(',') %}
-            "{{ libdir|trim }}",{% endfor %}
-        {%- endif %}
+        {%- for libdir in cookiecutter.build.library_dirs %}
+            "{{ libdir|trim }}",
+        {% endfor %}
     ],
     "define_macros": [
-        {%- if cookiecutter.define_macros -%}
-        {%- for item in cookiecutter.define_macros.split(',') %}
+        {%- if cookiecutter.build.define_macros -%}
+        {%- for item in cookiecutter.build.define_macros %}
         {%- set key_value = item.split('=') %}
             ("{{ key_value[0]|trim }}", "{{ key_value[1]|trim }}"),{% endfor %}
         {%- endif %}
     ],
     "undef_macros": [
-        {%- if cookiecutter.undef_macros -%}
-        {%- for macro in cookiecutter.undef_macros.split(',') %}
+        {%- if cookiecutter.build.undef_macros -%}
+        {%- for macro in cookiecutter.build.undef_macros %}
             "{{ macro|trim }}",{% endfor %}
         {%- endif %}
     ],
     "extra_compile_args": [
-        {%- if cookiecutter.extra_compile_args -%}
-        {%- for arg in cookiecutter.extra_compile_args.split(',') %}
+        {%- if cookiecutter.build.extra_compile_args -%}
+        {%- for arg in cookiecutter.build.extra_compile_args %}
             "{{ arg|trim }}",{% endfor %}
         {%- endif %}
     ],
@@ -59,8 +57,8 @@ common_flags = {
 }
 
 libraries = [
-{%- if cookiecutter.libraries -%}
-{%- for lib in cookiecutter.libraries.split(',') %}
+{%- if cookiecutter.build.libraries -%}
+{%- for lib in cookiecutter.build.libraries %}
     "{{ lib|trim }}",{% endfor %}
 {%- endif %}
 ]
@@ -71,13 +69,11 @@ if sys.platform.startswith("win"):
     common_flags["library_dirs"].append(os.path.join(sys.prefix, "Library", "lib"))
 
 ext_modules = [
-{%- for entry_point in cookiecutter.entry_points.split(',') %}
-    {%- set pymt_class = entry_point.split('=')[0] -%}
-    {%- set bmi_lib, _ = entry_point.split('=')[1].split(":") %}
+{%- for pymt_class, component in cookiecutter.components|dictsort %}
     Extension(
         "pymt_{{cookiecutter.plugin_name}}.lib.{{ pymt_class|lower }}",
         ["pymt_{{cookiecutter.plugin_name}}/lib/{{ pymt_class|lower }}.pyx"],
-        libraries=libraries + ["{{ bmi_lib }}"],
+        libraries=libraries + ["{{ component.library }}"],
         {% if cookiecutter.language == 'fortran' -%}
         extra_objects=['pymt_{{cookiecutter.plugin_name}}/lib/bmi_interoperability.o'],
         {% endif -%}
@@ -90,8 +86,7 @@ ext_modules = [
 
 entry_points = {
     "pymt.plugins": [
-{%- for entry_point in cookiecutter.entry_points.split(',') %}
-    {%- set pymt_class = entry_point.split('=')[0] -%}
+{%- for pymt_class, _ in cookiecutter.components|dictsort %}
         "{{ pymt_class }}=pymt_{{ cookiecutter.plugin_name }}.bmi:{{ pymt_class }}",
 {%- endfor %}
     ]
@@ -149,8 +144,8 @@ long_description = u'\n\n'.join(
 
 setup(
     name="pymt_{{cookiecutter.plugin_name}}",
-    author="{{cookiecutter.full_name}}",
-    author_email="{{cookiecutter.email}}",
+    author="{{cookiecutter.info.full_name}}",
+    author_email="{{cookiecutter.info.email}}",
     description="PyMT plugin for {{cookiecutter.plugin_name}}",
     long_description=long_description,
     version="{{cookiecutter.plugin_version}}",

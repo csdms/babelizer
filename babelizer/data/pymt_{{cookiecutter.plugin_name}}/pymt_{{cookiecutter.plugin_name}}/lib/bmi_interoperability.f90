@@ -10,8 +10,8 @@ module bmi_interoperability
   use, intrinsic :: iso_c_binding
   use bmif_2_0
 
-{%- if cookiecutter.libraries %}
-{%- for lib in cookiecutter.libraries.split(',') %}
+{%- if cookiecutter.build.libraries %}
+{%- for lib in cookiecutter.build.libraries %}
   use {{ lib }}
 {%- endfor %}
 {%- endif %}

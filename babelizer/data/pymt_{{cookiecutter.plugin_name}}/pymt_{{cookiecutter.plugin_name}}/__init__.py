@@ -6,15 +6,13 @@ __version__ = pkg_resources.get_distribution("pymt_{{ cookiecutter.plugin_name }
 
 
 from .bmi import (
-{%- for entry_point in cookiecutter.entry_points.split(',') %}
-    {%- set pymt_class = entry_point.split('=')[0] -%}
+{%- for pymt_class, _ in cookiecutter.components|dictsort %}
     {{ pymt_class }},
 {%- endfor %}
 )
 
 __all__ = [
-{%- for entry_point in cookiecutter.entry_points.split(',') %}
-    {%- set pymt_class = entry_point.split('=')[0] -%}
+{%- for pymt_class, _ in cookiecutter.components|dictsort %}
     "{{ pymt_class }}",
 {%- endfor %}
 ]

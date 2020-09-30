@@ -87,14 +87,11 @@ def ok_or_raise(status):
     if status != 0:
         raise RuntimeError('error code {status}'.format(status=status))
 
-{%- for entry_point in cookiecutter.entry_points.split(',') %}
-    {% set pymt_class = entry_point.split('=')[0] %}
-    {% set plugin_module, register_bmi = entry_point.split('=')[1].split(':') %}
-
+{%- for pymt_class, component in cookiecutter.components|dictsort %}
 # start: {{ pymt_class|lower }}.pyx
 
 cdef extern from "bmi.h":
-    Bmi* {{ register_bmi }}(Bmi *model)
+    Bmi* {{ component.class }}(Bmi *model)
 
 
 cdef class {{ pymt_class }}:
@@ -109,7 +106,7 @@ cdef class {{ pymt_class }}:
         if self._bmi is NULL:
             raise MemoryError()
         else:
-            {{ register_bmi }}(self._bmi)
+            {{ component.class }}(self._bmi)
 
     def initialize(self, config_file):
         status = <int>bmi_initialize(self._bmi, <char*>config_file)

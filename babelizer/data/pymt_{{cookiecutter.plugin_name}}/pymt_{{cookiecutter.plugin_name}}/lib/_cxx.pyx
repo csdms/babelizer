@@ -7,9 +7,11 @@ from libcpp.vector cimport vector
 cimport numpy as np
 import numpy as np
 
+{%- for pymt_class, component in cookiecutter.components|dictsort %}
+# start: {{ pymt_class|lower }}.pyx
 
-cdef extern from "bmi_heat.hxx":
-    cdef cppclass BmiHeat:
+cdef extern from "{{ component.header }}":
+    cdef cppclass {{ component.class }}:
         Model() except +
 
         #  Model control functions.
@@ -70,13 +72,8 @@ cdef extern from "bmi_heat.hxx":
         void GetGridFaceNodes(const int grid, int *face_nodes)
         void GetGridNodesPerFace(const int grid, int *nodes_per_face)
 
-{%- for entry_point in cookiecutter.entry_points.split(',') %}
-    {% set pymt_class = entry_point.split('=')[0] %}
-
-# start: {{ pymt_class|lower }}.pyx
-
 cdef class {{ pymt_class }}:
-    cdef BmiHeat _bmi
+    cdef {{ component.class }} _bmi
 
     METADATA = "../data/{{ pymt_class }}"
 

@@ -33,8 +33,7 @@ pymt_{{ cookiecutter.plugin_name }}
 {% endif %}
 
 {% set mwidth = ["Component" | length] -%}
-{%- for entry_point in cookiecutter.entry_points.split(',') %}
-    {%- set pymt_class = entry_point.split('=')[0] -%}
+{%- for pymt_class, component in cookiecutter.components|dictsort %}
     {%- if pymt_class|length > mwidth[0] -%}
         {% set _ = mwidth.pop() -%}
         {% set _ = mwidth.append(pymt_class|length) -%}
@@ -48,8 +47,7 @@ pymt_{{ cookiecutter.plugin_name }}
 {{ '=' * max_width }} {{ '=' * width_col_2 }}
 {{ fmt | format("Component",) }} PyMT
 {{ '=' * max_width }} {{ '=' * width_col_2 }}
-{% for entry_point in cookiecutter.entry_points.split(',') %}
-    {%- set pymt_class = entry_point.split('=')[0] -%}
+{% for pymt_class, component in cookiecutter.components|dictsort %}
 {{ fmt | format(pymt_class) }} `from pymt.models import {{ pymt_class }}`
 {% endfor -%}
 {{ '=' * max_width }} {{ '=' * width_col_2 }}

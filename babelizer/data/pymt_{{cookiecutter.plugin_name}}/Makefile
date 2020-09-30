@@ -58,8 +58,7 @@ pretty:
 	black setup.py pymt_{{ cookiecutter.plugin_name }}
 
 test: ## run tests quickly with the default Python
-{%- for entry_point in cookiecutter.entry_points.split(',') %}
-    {%- set pymt_class = entry_point.split('=')[0] %}
+{%- for pymt_class, component in cookiecutter.components|dictsort %}
 	bmi-test pymt_{{ cookiecutter.plugin_name }}.bmi:{{ pymt_class }} -vvv
 {%- endfor %}
 

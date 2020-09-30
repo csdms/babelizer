@@ -1,8 +1,7 @@
 from __future__ import absolute_import
 
 {% set classes = [] -%}
-{%- for entry_point in cookiecutter.entry_points.split(',') -%}
-    {%- set pymt_class = entry_point.split('=')[0] -%}
+{%- for pymt_class in cookiecutter.components -%}
     {% set _ = classes.append(pymt_class) %}
 {%- endfor -%}
 
@@ -13,11 +12,9 @@ from .lib import {{ classes|join(', ') }}
 {%- else %}
 import pkg_resources
 
-{% for entry_point in cookiecutter.entry_points.split(',') %}
-        {%- set pymt_class = entry_point.split('=')[0] -%}
-        {%- set plugin_module, plugin_class = entry_point.split('=')[1].split(':') -%}
+{% for pymt_class, component in cookiecutter.components %}
 
-from {{ plugin_module }} import {{ plugin_class }} as {{ pymt_class }}
+from {{ component.library }} import {{ component.class }} as {{ pymt_class }}
 
     {%- endfor %}
 
