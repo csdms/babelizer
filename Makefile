@@ -52,7 +52,7 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
-	flake8 babelizer
+	flake8 babelizer tests
 
 pretty: ## reformat files to make them look pretty
 	isort --apply --recursive babelizer
