@@ -55,8 +55,8 @@ lint: ## check style with flake8
 	flake8 babelizer tests
 
 pretty: ## reformat files to make them look pretty
-	isort --apply --recursive babelizer
-	black setup.py babelizer --exclude=babelizer/data
+	isort babelizer tests
+	black setup.py babelizer tests --exclude=babelizer/data
 
 
 test: ## run tests quickly with the default Python

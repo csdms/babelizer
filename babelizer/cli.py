@@ -49,7 +49,9 @@ def babelize(cd):
     "-v", "--verbose", is_flag=True, help="Also emit status messages to stderr."
 )
 @click.option(
-    "--template", default=None, help="Location of cookiecutter template",
+    "--template",
+    default=None,
+    help="Location of cookiecutter template",
 )
 @click.option(
     "--package-version",
@@ -111,7 +113,9 @@ def init(meta, output, template, quiet, verbose, package_version):
     "-v", "--verbose", is_flag=True, help="Also emit status messages to stderr."
 )
 @click.option(
-    "--template", default=None, help="Location of cookiecutter template",
+    "--template",
+    default=None,
+    help="Location of cookiecutter template",
 )
 def update(template, quiet, verbose):
     package_path = pathlib.Path(".").resolve()
@@ -146,7 +150,13 @@ def update(template, quiet, verbose):
 
     out(f"re-rendering {package_path}")
     with save_files(["CHANGES.rst", "CREDITS.rst"]):
-        render(babel_metadata, package_path.parent, template=template, clobber=True, version=version)
+        render(
+            babel_metadata,
+            package_path.parent,
+            template=template,
+            clobber=True,
+            version=version,
+        )
 
     if not quiet:
         out(
@@ -160,13 +170,17 @@ def update(template, quiet, verbose):
 
 @babelize.command()
 @click.option(
-    "--no-input", is_flag=True, help="Don’t ask questions, just use the default values",
+    "--no-input",
+    is_flag=True,
+    help="Don’t ask questions, just use the default values",
 )
 @click.option(
-    "--name", help="Name to use for the babelized package",
+    "--name",
+    help="Name to use for the babelized package",
 )
 @click.option(
-    "--email", help="Contact email to use for the babelized package",
+    "--email",
+    help="Contact email to use for the babelized package",
 )
 @click.option(
     "--language",
@@ -175,13 +189,16 @@ def update(template, quiet, verbose):
 )
 @click.option("--author", help="Babelizing author")
 @click.option(
-    "--username", help="GitHub username or organization that will host the project",
+    "--username",
+    help="GitHub username or organization that will host the project",
 )
 @click.option(
-    "--license", help="License to use for the babelized project",
+    "--license",
+    help="License to use for the babelized project",
 )
 @click.option(
-    "--summary", help="Brief description of what the library does",
+    "--summary",
+    help="Brief description of what the library does",
 )
 @click.option(
     "--entry-point", help="Entry point to the library BMI", multiple=True, default=None
@@ -189,9 +206,20 @@ def update(template, quiet, verbose):
 @click.option("--requirement", help="Requirement", multiple=True, default=None)
 @click.argument("file_", metavar="FILENAME", type=click.File(mode="w", lazy=True))
 def generate(
-    no_input, name, email, language, author, username, license, summary, entry_point, requirement, file_
+    no_input,
+    name,
+    email,
+    language,
+    author,
+    username,
+    license,
+    summary,
+    entry_point,
+    requirement,
+    file_,
 ):
     """Generate babelizer config file, FILENAME."""
+
     def ask_until_done(text):
         answers = []
         while (answer := ask(text, default="done")) != "done":
@@ -241,7 +269,9 @@ def generate(
             libraries[babelized_class] = {
                 "language": language,
                 "library": ask(f"[{babelized_class}] Name of library to babelize"),
-                "header": ask(f"[{babelized_class}] Name of header file containing BMI class "),
+                "header": ask(
+                    f"[{babelized_class}] Name of header file containing BMI class "
+                ),
                 "class": ask(f"[{babelized_class}] Name of BMI class "),
             }
             if not yes("Add another library?", default=False):

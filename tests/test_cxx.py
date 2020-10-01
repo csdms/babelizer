@@ -39,7 +39,13 @@ def test_babelize_init_cxx(tmpdir, datadir):
 
         try:
             result = subprocess.run(
-                ["bmi-test", "--config-file=config.txt", "--root-dir=.", "pymt_heat:HeatBMI", "-vvv"],
+                [
+                    "bmi-test",
+                    "--config-file=config.txt",
+                    "--root-dir=.",
+                    "pymt_heat:HeatBMI",
+                    "-vvv",
+                ],
                 cwd="_test",
                 check=True,
                 text=True,

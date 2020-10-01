@@ -138,7 +138,7 @@ class BabelMetadata:
             "library": library or {},
             "build": build or {},
             "package": package or {},
-            "info": info or {}
+            "info": info or {},
         }
 
         BabelMetadata.validate(config)
@@ -185,7 +185,11 @@ class BabelMetadata:
                     raise ValidationError(f"poorly-formed entry point ({entry_point})")
         else:
             for babelized_class, library in libraries.items():
-                validate_dict(library, required={"language", "library", "header", "class"}, optional={})
+                validate_dict(
+                    library,
+                    required={"language", "library", "header", "class"},
+                    optional={},
+                )
 
         validate_dict(
             config["build"],
@@ -240,7 +244,9 @@ class BabelMetadata:
 
         libraries = {}
         for entry_point in entry_points:
-            babelized_class, library, class_name = BabelMetadata.parse_entry_point(entry_point)
+            babelized_class, library, class_name = BabelMetadata.parse_entry_point(
+                entry_point
+            )
             libraries[babelized_class] = {
                 "language": language,
                 "library": library,
