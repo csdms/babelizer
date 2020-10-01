@@ -1,6 +1,7 @@
 import pathlib
 import re
-from collections import OrderedDict
+import warnings
+from collections import OrderedDict, defaultdict
 
 import tomlkit as toml
 import yaml
@@ -128,9 +129,9 @@ class BabelMetadata:
 
     def __init__(self, library=None, build=None, package=None, info=None, plugin=None):
         if plugin is not None:
-            warn.warning()
+            warnings.warn("use 'package' instead of 'plugin'", DeprecationWarning)
             if package is not None:
-                raise ValueError()
+                raise ValueError("specify one of 'package' or 'plugin', not both")
             package = plugin
 
         config = {
@@ -195,17 +196,31 @@ class BabelMetadata:
             ),
         )
         validate_dict(config["package"], required=("name", "requirements"), optional={})
-        validate_dict(
-            config["info"],
-            required=(
-                "package_author",
-                "package_author_email",
-                "github_username",
-                "package_license",
-                "summary",
-            ),
-            optional={},
-        )
+        try:
+            validate_dict(
+                config["info"],
+                required=(
+                    "package_author",
+                    "package_author_email",
+                    "github_username",
+                    "package_license",
+                    "summary",
+                ),
+                optional={},
+            )
+        except ValidationError:
+            validate_dict(
+                config["info"],
+                required=(
+                    "plugin_author",
+                    "plugin_author_email",
+                    "github_username",
+                    "plugin_license",
+                    "summary",
+                ),
+                optional={},
+            )
+            warnings.warn("use 'package' instead of 'plugin'", DeprecationWarning)
 
         for library in libraries:
             try:
@@ -250,6 +265,16 @@ class BabelMetadata:
         return libraries
 
     @staticmethod
+    def _handle_old_style_info(info):
+        return {
+            "package_author": info["plugin_author"],
+            "package_author_email": info["plugin_author_email"],
+            "github_username": info["github_username"],
+            "package_license": info["plugin_license"],
+            "summary": info["summary"],
+        }
+
+    @staticmethod
     def norm(config):
         build = defaultdict(list)
         try:
@@ -262,6 +287,11 @@ class BabelMetadata:
 
         if len(libraries) == 1 and "entry_point" in libraries[0]:
             libraries = BabelMetadata._handle_old_style_entry_points(libraries[0])
+
+        if "plugin_author" in config["info"]:
+            info = BabelMetadata._handle_old_style_info(config["info"])
+        else:
+            info = config["info"]
 
         lib = {}
         for library in libraries:
@@ -287,13 +317,7 @@ class BabelMetadata:
                 "name": config["package"]["name"],
                 "requirements": list(config["package"]["requirements"]),
             },
-            "info": {
-                "package_author": config["info"]["package_author"],
-                "package_author_email": config["info"]["package_author_email"],
-                "github_username": config["info"]["github_username"],
-                "package_license": config["info"]["package_license"],
-                "summary": config["info"]["summary"],
-            },
+            "info": info,
         }
 
     def dump(self, fp, fmt="yaml"):
