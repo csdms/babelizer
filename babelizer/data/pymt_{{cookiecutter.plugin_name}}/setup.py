@@ -69,13 +69,13 @@ if sys.platform.startswith("win"):
     common_flags["library_dirs"].append(os.path.join(sys.prefix, "Library", "lib"))
 
 ext_modules = [
-{%- for pymt_class, component in cookiecutter.components|dictsort %}
+{%- for babelized_class, component in cookiecutter.components|dictsort %}
     Extension(
-        "pymt_{{cookiecutter.plugin_name}}.lib.{{ pymt_class|lower }}",
-        ["pymt_{{cookiecutter.plugin_name}}/lib/{{ pymt_class|lower }}.pyx"],
+        "pymt_{{cookiecutter.package_name}}.lib.{{ babelized_class|lower }}",
+        ["pymt_{{cookiecutter.package_name}}/lib/{{ babelized_class|lower }}.pyx"],
         libraries=libraries + ["{{ component.library }}"],
         {% if cookiecutter.language == 'fortran' -%}
-        extra_objects=['pymt_{{cookiecutter.plugin_name}}/lib/bmi_interoperability.o'],
+        extra_objects=['pymt_{{cookiecutter.package_name}}/lib/bmi_interoperability.o'],
         {% endif -%}
         **common_flags
     ),
@@ -86,8 +86,8 @@ ext_modules = [
 
 entry_points = {
     "pymt.plugins": [
-{%- for pymt_class, _ in cookiecutter.components|dictsort %}
-        "{{ pymt_class }}=pymt_{{ cookiecutter.plugin_name }}.bmi:{{ pymt_class }}",
+{%- for babelized_class, _ in cookiecutter.components|dictsort %}
+        "{{ babelized_class }}=pymt_{{ cookiecutter.package_name }}.bmi:{{ babelized_class }}",
 {%- endfor %}
     ]
 }
@@ -125,7 +125,7 @@ def build_interoperability():
 class build_ext(_build_ext):
 
     def run(self):
-        with as_cwd('pymt_{{cookiecutter.plugin_name}}/lib'):
+        with as_cwd('pymt_{{cookiecutter.package_name}}/lib'):
             build_interoperability()
         _build_ext.run(self)
 
@@ -143,13 +143,13 @@ long_description = u'\n\n'.join(
 
 
 setup(
-    name="pymt_{{cookiecutter.plugin_name}}",
+    name="pymt_{{cookiecutter.package_name}}",
     author="{{cookiecutter.info.full_name}}",
     author_email="{{cookiecutter.info.email}}",
-    description="PyMT plugin for {{cookiecutter.plugin_name}}",
+    description="PyMT plugin for {{cookiecutter.package_name}}",
     long_description=long_description,
     version="{{cookiecutter.plugin_version}}",
-    url="https://github.com/{{ cookiecutter.github_username }}/pymt_{{ cookiecutter.plugin_name }}",
+    url="https://github.com/{{ cookiecutter.github_username }}/pymt_{{ cookiecutter.package_name }}",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",

@@ -3,7 +3,7 @@
 !
 module bmi_interoperability
 
-{%- for pymt_class, component in cookiecutter.components|dictsort %}
+{%- for _, component in cookiecutter.components|dictsort %}
 
   use, intrinsic :: iso_c_binding
   use bmif_2_0

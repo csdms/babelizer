@@ -1,4 +1,4 @@
-recursive-include pymt_{{ cookiecutter.plugin_name }}/data *
+recursive-include pymt_{{ cookiecutter.package_name }}/data *
 include LICENSE
 include requirements.txt
 include *.rst

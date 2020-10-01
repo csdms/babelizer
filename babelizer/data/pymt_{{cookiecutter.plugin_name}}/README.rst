@@ -1,6 +1,6 @@
-====={{ '=' * cookiecutter.plugin_name | length }}
-pymt_{{ cookiecutter.plugin_name }}
-====={{ '=' * cookiecutter.plugin_name | length }}
+====={{ '=' * cookiecutter.package_name | length }}
+pymt_{{ cookiecutter.package_name }}
+====={{ '=' * cookiecutter.package_name | length }}
 
 {% set is_open_source = cookiecutter.open_source_license != 'Not open source' -%}
 
@@ -9,14 +9,14 @@ pymt_{{ cookiecutter.plugin_name }}
         :target: https://bmi.readthedocs.io/
         :alt: Basic Model Interface
 
-.. image:: https://img.shields.io/badge/recipe-pymt_{{ cookiecutter.plugin_name }}-green.svg
-        :target: https://anaconda.org/conda-forge/pymt_{{ cookiecutter.plugin_name }}
+.. image:: https://img.shields.io/badge/recipe-pymt_{{ cookiecutter.package_name }}-green.svg
+        :target: https://anaconda.org/conda-forge/pymt_{{ cookiecutter.package_name }}
 
-.. image:: https://img.shields.io/travis/{{ cookiecutter.github_username }}/pymt_{{ cookiecutter.plugin_name }}.svg
-        :target: https://travis-ci.org/{{ cookiecutter.github_username }}/pymt_{{ cookiecutter.plugin_name }}
+.. image:: https://img.shields.io/travis/{{ cookiecutter.github_username }}/pymt_{{ cookiecutter.package_name }}.svg
+        :target: https://travis-ci.org/{{ cookiecutter.github_username }}/pymt_{{ cookiecutter.package_name }}
 
-.. image:: https://readthedocs.org/projects/pymt_{{ cookiecutter.plugin_name | replace("_", "-") }}/badge/?version=latest
-        :target: https://pymt_{{ cookiecutter.plugin_name | replace("_", "-") }}.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/pymt_{{ cookiecutter.package_name | replace("_", "-") }}/badge/?version=latest
+        :target: https://pymt_{{ cookiecutter.package_name | replace("_", "-") }}.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
@@ -29,14 +29,14 @@ pymt_{{ cookiecutter.plugin_name }}
 
 {% if is_open_source %}
 * Free software: {{ cookiecutter.open_source_license }}
-* Documentation: https://{{ cookiecutter.plugin_name | replace("_", "-") }}.readthedocs.io.
+* Documentation: https://{{ cookiecutter.package_name | replace("_", "-") }}.readthedocs.io.
 {% endif %}
 
 {% set mwidth = ["Component" | length] -%}
-{%- for pymt_class, component in cookiecutter.components|dictsort %}
-    {%- if pymt_class|length > mwidth[0] -%}
+{%- for babelized_class, component in cookiecutter.components|dictsort %}
+    {%- if babelized_class|length > mwidth[0] -%}
         {% set _ = mwidth.pop() -%}
-        {% set _ = mwidth.append(pymt_class|length) -%}
+        {% set _ = mwidth.append(babelized_class|length) -%}
     {%- endif -%}
 {%- endfor %}
 {% set max_width = mwidth[0] %}
@@ -47,8 +47,8 @@ pymt_{{ cookiecutter.plugin_name }}
 {{ '=' * max_width }} {{ '=' * width_col_2 }}
 {{ fmt | format("Component",) }} PyMT
 {{ '=' * max_width }} {{ '=' * width_col_2 }}
-{% for pymt_class, component in cookiecutter.components|dictsort %}
-{{ fmt | format(pymt_class) }} `from pymt.models import {{ pymt_class }}`
+{% for babelized_class, component in cookiecutter.components|dictsort %}
+{{ fmt | format(babelized_class) }} `from pymt.models import {{ babelized_class }}`
 {% endfor -%}
 {{ '=' * max_width }} {{ '=' * width_col_2 }}
 
@@ -83,12 +83,12 @@ It is possible to list all of the versions of `pymt` available on your platform 
 
   conda search pymt --channel conda-forge
 
-----------------{{ '-' * cookiecutter.plugin_name | length }}
-Installing pymt_{{ cookiecutter.plugin_name }}
-----------------{{ '-' * cookiecutter.plugin_name | length }}
+----------------{{ '-' * cookiecutter.package_name | length }}
+Installing pymt_{{ cookiecutter.package_name }}
+----------------{{ '-' * cookiecutter.package_name | length }}
 
 {% if cookiecutter.plugin_requirements -%}
-Once `pymt` is installed, the dependencies of `pymt_{{ cookiecutter.plugin_name }}` can
+Once `pymt` is installed, the dependencies of `pymt_{{ cookiecutter.package_name }}` can
 be installed with:
 
 .. code::
@@ -97,8 +97,8 @@ be installed with:
 
 {%- endif %}
 
-To install `pymt_{{ cookiecutter.plugin_name }}`,
+To install `pymt_{{ cookiecutter.package_name }}`,
 
 .. code::
 
-  conda install pymt_{{ cookiecutter.plugin_name }}
+  conda install pymt_{{ cookiecutter.package_name }}

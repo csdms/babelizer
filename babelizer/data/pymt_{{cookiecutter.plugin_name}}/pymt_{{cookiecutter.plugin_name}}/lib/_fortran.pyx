@@ -122,16 +122,16 @@ cpdef to_string(bytes):
     except AttributeError:
         return bytes
 
-{%- for pymt_class in cookiecutter.components %}
+{%- for babelized_class in cookiecutter.components %}
 
-# start: {{ pymt_class|lower }}.pyx
+# start: {{ babelized_class|lower }}.pyx
 
-cdef class {{ pymt_class }}:
+cdef class {{ babelized_class }}:
 
     cdef int _bmi
     cdef char[2048] STR_BUFFER
 
-    METADATA = "../data/{{ pymt_class }}"
+    METADATA = "../data/{{ babelized_class }}"
 
     def __cinit__(self):
         self._bmi = bmi_new()

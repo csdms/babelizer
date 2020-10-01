@@ -1,16 +1,11 @@
 #! /usr/bin/env python
 
-{% set classes = [] -%}
-{%- for pymt_class, _ in cookiecutter.components|dictsort -%}
-    {% set _ = classes.append(pymt_class) %}
-{%- endfor -%}
-
-{%- for cls in classes %}
-from .{{ cls|lower }} import {{ cls }}
+{%- for babelized_class in cookiecutter.components -%}
+from .{{ babelized_class|lower }} import {{ babelized_class }}
 {%- endfor %}
 
 __all__ = [
-{%- for cls in classes %}
-    "{{ cls }}",
+{%- for babelized_class in cookiecutter.components -%}
+    "{{ babelized_class }}",
 {%- endfor %}
 ]

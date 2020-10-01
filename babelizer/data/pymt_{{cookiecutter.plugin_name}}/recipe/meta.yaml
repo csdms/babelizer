@@ -42,9 +42,9 @@ test:
   imports:
     - pymt_{{cookiecutter.plugin_name}}
   commands:
-{%- for pymt_class in cookiecutter.components %}
-    - config_file=$(mmd-stage {{ pymt_class }} . > MANIFEST && mmd-query {{ pymt_class }} --var=run.config_file.path)
-    - bmi-test pymt_{{ cookiecutter.plugin_name }}.bmi:{{ pymt_class }} --config-file=$config_file --manifest=MANIFEST -v
+{%- for babelized_class in cookiecutter.components %}
+    - config_file=$(mmd-stage {{ babelized_class }} . > MANIFEST && mmd-query {{ babelized_class }} --var=run.config_file.path)
+    - bmi-test pymt_{{ cookiecutter.plugin_name }}.bmi:{{ babelized_class }} --config-file=$config_file --manifest=MANIFEST -v
 {%- endfor %}
 
 about:

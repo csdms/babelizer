@@ -12,14 +12,14 @@
     "full_name": "CSDMS",
     "email": "csdms@colorado.edu",
     "github_username": "csdms",
-    "project_short_description": "PyMT plugin for {{cookiecutter.plugin_name}}"
+    "project_short_description": "PyMT plugin for {{cookiecutter.package_name}}"
   },
-  "plugin_name": "plugin",
-  "plugin_requirements": "",
-  "plugin_version": "0.1",
+  "package_name": "package",
+  "package_requirements": "",
+  "package_version": "0.1",
   "language": ["c", "c++", "fortran", "python"],
   "open_source_license": ["MIT License", "BSD License", "ISC License", "Apache Software License 2.0", "GNU General Public License v3", "Not open source"],
-  "project_short_description": "PyMT plugin for {{cookiecutter.plugin_name}}",
+  "project_short_description": "PyMT plugin for {{cookiecutter.package_name}}",
   "full_name": "Eric Hutton",
   "email": "csdms@colorado.edu",
   "github_username": "mcflugen"

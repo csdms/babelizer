@@ -7,8 +7,8 @@ from libcpp.vector cimport vector
 cimport numpy as np
 import numpy as np
 
-{%- for pymt_class, component in cookiecutter.components|dictsort %}
-# start: {{ pymt_class|lower }}.pyx
+{%- for babelized_class, component in cookiecutter.components|dictsort %}
+# start: {{ babelized_class|lower }}.pyx
 
 cdef extern from "{{ component.header }}":
     cdef cppclass {{ component.class }}:
@@ -72,10 +72,10 @@ cdef extern from "{{ component.header }}":
         void GetGridFaceNodes(const int grid, int *face_nodes)
         void GetGridNodesPerFace(const int grid, int *nodes_per_face)
 
-cdef class {{ pymt_class }}:
+cdef class {{ babelized_class }}:
     cdef {{ component.class }} _bmi
 
-    METADATA = "../data/{{ pymt_class }}"
+    METADATA = "../data/{{ babelized_class }}"
 
     def __cinit__(self):
         pass

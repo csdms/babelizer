@@ -120,17 +120,23 @@ def validate_dict(meta, required=None, optional=None):
 class BabelMetadata:
     REQUIRED = {
         "library": ("language", "entry_point"),
-        "plugin": ("name", "requirements"),
-        "info": ("github_username", "plugin_license", "summary"),
+        "package": ("name", "requirements"),
+        "info": ("github_username", "package_license", "summary"),
     }
 
     LOADERS = {"yaml": yaml.safe_load, "toml": toml.parse}
 
-    def __init__(self, library=None, build=None, plugin=None, info=None):
+    def __init__(self, library=None, build=None, package=None, info=None, plugin=None):
+        if plugin is not None:
+            warn.warning()
+            if package is not None:
+                raise ValueError()
+            package = plugin
+
         config = {
             "library": library or {},
             "build": build or {},
-            "plugin": plugin or {},
+            "package": package or {},
             "info": info or {}
         }
 
@@ -174,7 +180,7 @@ class BabelMetadata:
             try:
                 validate_dict(library, required=("language", "entry_point"), optional={})
             except ValidationError:
-                validate_dict(library, required={"language", "library", "header", "class", "pymt_class"}, optional={})
+                validate_dict(library, required={"language", "library", "header", "class", "babelized_class"}, optional={})
 
         validate_dict(
             config["build"],
@@ -188,14 +194,14 @@ class BabelMetadata:
                 "extra_compile_args",
             ),
         )
-        validate_dict(config["plugin"], required=("name", "requirements"), optional={})
+        validate_dict(config["package"], required=("name", "requirements"), optional={})
         validate_dict(
             config["info"],
             required=(
-                "plugin_author",
-                "plugin_author_email",
+                "package_author",
+                "package_author_email",
                 "github_username",
-                "plugin_license",
+                "package_license",
                 "summary",
             ),
             optional={},
@@ -217,34 +223,49 @@ class BabelMetadata:
                         raise ValidationError(f"poorly-formed entry point ({entry_point})")
 
     @staticmethod
+    def _handle_old_style_entry_points(library):
+        def _header_ext(language):
+            try:
+                return {"c": ".h", "c++": ".hxx"}[language]
+            except KeyError:
+                return ""
+
+        language = library["language"]
+        if isinstance(entry_points := library["entry_point"], str):
+            entry_points = [entry_points]
+
+        libraries = []
+        for entry_point in entry_points:
+            babelized_class, library, class_name = BabelMetadata.parse_entry_point(entry_point)
+            libraries.append(
+                {
+                    "language": language,
+                    "library": library,
+                    "header": library + _header_ext(language),
+                    "class": class_name,
+                    "babelized_class": babelized_class,
+                }
+            )
+
+        return libraries
+
+    @staticmethod
     def norm(config):
-        if "build" not in config:
-            config["build"] = {}
+        build = defaultdict(list)
+        try:
+            build.update(config["build"])
+        except KeyError:
+            pass
 
         if isinstance(libraries := config["library"], dict):
             libraries = [libraries]
 
         if len(libraries) == 1 and "entry_point" in libraries[0]:
-            language = libraries[0]["language"]
-            if isinstance(entry_points := libraries[0]["entry_point"], str):
-                entry_points = [entry_points]
-
-            libraries = []
-            for entry_point in entry_points:
-                pymt_class, library, class_name = BabelMetadata.parse_entry_point(entry_point)
-                libraries.append(
-                    {
-                        "language": language,
-                        "library": library,
-                        "header": library,
-                        "class": class_name,
-                        "pymt_class": pymt_class,
-                    }
-                )
+            libraries = BabelMetadata._handle_old_style_entry_points(libraries[0])
 
         lib = {}
         for library in libraries:
-            lib[library["pymt_class"]] = {
+            lib[library["babelized_class"]] = {
                 "language": library["language"],
                 "library": library["library"],
                 "header": library["header"],
@@ -254,22 +275,23 @@ class BabelMetadata:
         return {
             "library": lib,
             "build": {
-                "undef_macros": config["build"].get("undef_macros", []),
-                "define_macros": config["build"].get("define_macros", []),
-                "libraries": config["build"].get("libraries", []),
-                "library_dirs": config["build"].get("library_dirs", []),
-                "include_dirs": config["build"].get("include_dirs", []),
-                "extra_compile_args": config["build"].get("extra_compile_args", []),
+                "undef_macros": build["undef_macros"],
+                "undef_macros": build["undef_macros"],
+                "define_macros": build["define_macros"],
+                "libraries": build["libraries"],
+                "library_dirs": build["library_dirs"],
+                "include_dirs": build["include_dirs"],
+                "extra_compile_args": build["extra_compile_args"],
             },
-            "plugin": {
-                "name": config["plugin"]["name"],
-                "requirements": list(config["plugin"]["requirements"]),
+            "package": {
+                "name": config["package"]["name"],
+                "requirements": list(config["package"]["requirements"]),
             },
             "info": {
-                "plugin_author": config["info"]["plugin_author"],
-                "plugin_author_email": config["info"]["plugin_author_email"],
+                "package_author": config["info"]["package_author"],
+                "package_author_email": config["info"]["package_author_email"],
                 "github_username": config["info"]["github_username"],
-                "plugin_license": config["info"]["plugin_license"],
+                "package_license": config["info"]["package_license"],
                 "summary": config["info"]["summary"],
             },
         }
@@ -345,13 +367,13 @@ class BabelMetadata:
                 "extra_compile_args": self._meta["build"]["extra_compile_args"],
             },
             "info": {
-                "full_name": self._meta["info"]["plugin_author"],
-                "email": self._meta["info"]["plugin_author_email"],
+                "full_name": self._meta["info"]["package_author"],
+                "email": self._meta["info"]["package_author_email"],
                 "github_username": self._meta["info"]["github_username"],
                 "project_short_description": self._meta["info"]["summary"],
             },
-            "plugin_name": self._meta["plugin"]["name"],
-            "plugin_requirements": ",".join(self._meta["plugin"]["requirements"]),
+            "package_name": self._meta["package"]["name"],
+            "package_requirements": ",".join(self._meta["package"]["requirements"]),
             "language": language,
-            "open_source_license": self._meta["info"]["plugin_license"],
+            "open_source_license": self._meta["info"]["package_license"],
         }

@@ -87,18 +87,18 @@ def ok_or_raise(status):
     if status != 0:
         raise RuntimeError('error code {status}'.format(status=status))
 
-{%- for pymt_class, component in cookiecutter.components|dictsort %}
-# start: {{ pymt_class|lower }}.pyx
+{%- for babelized_class, component in cookiecutter.components|dictsort %}
+# start: {{ babelized_class|lower }}.pyx
 
 cdef extern from "bmi.h":
     Bmi* {{ component.class }}(Bmi *model)
 
 
-cdef class {{ pymt_class }}:
+cdef class {{ babelized_class }}:
     cdef Bmi* _bmi
     cdef char[2048] STR_BUFFER
 
-    METADATA = "../data/{{ pymt_class }}"
+    METADATA = "../data/{{ babelized_class }}"
 
     def __cinit__(self):
         self._bmi = <Bmi*>malloc(sizeof(Bmi))

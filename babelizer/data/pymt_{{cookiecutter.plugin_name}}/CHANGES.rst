@@ -1,5 +1,5 @@
-Changelog for pymt_{{cookiecutter.plugin_name}}
-==================={{ '=' * cookiecutter.plugin_name | length }}
+Changelog for pymt_{{cookiecutter.package_name}}
+==================={{ '=' * cookiecutter.package_name | length }}
 
 0.2.0 (unreleased)
 -------------------

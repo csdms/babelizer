@@ -1,8 +1,8 @@
 from __future__ import absolute_import
 
 {% set classes = [] -%}
-{%- for pymt_class in cookiecutter.components -%}
-    {% set _ = classes.append(pymt_class) %}
+{%- for babelized_class in cookiecutter.components -%}
+    {% set _ = classes.append(babelized_class) %}
 {%- endfor -%}
 
 {%- if cookiecutter.language in ['c', 'c++', 'fortran'] %}
@@ -12,9 +12,9 @@ from .lib import {{ classes|join(', ') }}
 {%- else %}
 import pkg_resources
 
-{% for pymt_class, component in cookiecutter.components %}
+{% for babelized_class, component in cookiecutter.components %}
 
-from {{ component.library }} import {{ component.class }} as {{ pymt_class }}
+from {{ component.library }} import {{ component.class }} as {{ babelized_class }}
 
     {%- endfor %}
 
