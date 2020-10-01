@@ -282,7 +282,6 @@ class BabelMetadata:
             "library": libraries,
             "build": {
                 "undef_macros": build["undef_macros"],
-                "undef_macros": build["undef_macros"],
                 "define_macros": build["define_macros"],
                 "libraries": build["libraries"],
                 "library_dirs": build["library_dirs"],
