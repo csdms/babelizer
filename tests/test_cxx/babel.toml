@@ -13,9 +13,8 @@ plugin_author_email = "eric.hutton@colorado.edu"
 plugin_license = "MIT"
 summary = "PyMT plugin for heat model"
 
-[library]
+[library.HeatBMI]
 language = "c++"
-pymt_class = "HeatBMI"
 header = "bmi_heat.hxx"
 library = "bmiheatcxx"
 class = "BmiHeat"

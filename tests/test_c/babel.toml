@@ -13,9 +13,11 @@ plugin_author_email = "eric.hutton@colorado.edu"
 plugin_license = "MIT"
 summary = "PyMT plugin for heat model"
 
-[library]
-entry_point = ["HeatBMI=bmiheatc:register_bmi_heat"]
+[library.HeatBMI]
 language = "c"
+library = "bmiheatc"
+header = "bmi.h"
+class = "register_bmi_heat"
 
 [plugin]
 name = "heat"
