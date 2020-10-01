@@ -178,7 +178,7 @@ class BabelMetadata:
         libraries = config["library"]
         if "entry_point" in libraries:
             validate_dict(libraries, required=("language", "entry_point"), optional={})
-            for entry_point in libraries["entry_points"]:
+            for entry_point in libraries["entry_point"]:
                 try:
                     BabelMetadata.parse_entry_point(entry_point)
                 except ValidationError:
