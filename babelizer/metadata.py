@@ -175,13 +175,17 @@ class BabelMetadata:
 
     @staticmethod
     def validate(config):
-        if isinstance(libraries := config["library"], dict):
-            libraries = [libraries]
-        for library in libraries:
-            try:
-                validate_dict(library, required=("language", "entry_point"), optional={})
-            except ValidationError:
-                validate_dict(library, required={"language", "library", "header", "class", "babelized_class"}, optional={})
+        libraries = config["library"]
+        if "entry_point" in libraries:
+            validate_dict(libraries, required=("language", "entry_point"), optional={})
+            for entry_point in libraries["entry_points"]:
+                try:
+                    BabelMetadata.parse_entry_point(entry_point)
+                except ValidationError:
+                    raise ValidationError(f"poorly-formed entry point ({entry_point})")
+        else:
+            for babelized_class, library in libraries.items():
+                validate_dict(library, required={"language", "library", "header", "class"}, optional={})
 
         validate_dict(
             config["build"],
@@ -222,21 +226,6 @@ class BabelMetadata:
             )
             warnings.warn("use 'package' instead of 'plugin'", DeprecationWarning)
 
-        for library in libraries:
-            try:
-                entry_points = library["entry_point"]
-            except KeyError:
-                pass
-            else:
-                if isinstance(entry_points, str):
-                    entry_points = [entry_points]
-
-                for entry_point in entry_points:
-                    try:
-                        BabelMetadata.parse_entry_point(entry_point)
-                    except ValidationError:
-                        raise ValidationError(f"poorly-formed entry point ({entry_point})")
-
     @staticmethod
     def _handle_old_style_entry_points(library):
         def _header_ext(language):
@@ -249,18 +238,15 @@ class BabelMetadata:
         if isinstance(entry_points := library["entry_point"], str):
             entry_points = [entry_points]
 
-        libraries = []
+        libraries = {}
         for entry_point in entry_points:
             babelized_class, library, class_name = BabelMetadata.parse_entry_point(entry_point)
-            libraries.append(
-                {
-                    "language": language,
-                    "library": library,
-                    "header": library + _header_ext(language),
-                    "class": class_name,
-                    "babelized_class": babelized_class,
-                }
-            )
+            libraries[babelized_class] = {
+                "language": language,
+                "library": library,
+                "header": library + _header_ext(language),
+                "class": class_name,
+            }
 
         return libraries
 
@@ -282,28 +268,18 @@ class BabelMetadata:
         except KeyError:
             pass
 
-        if isinstance(libraries := config["library"], dict):
-            libraries = [libraries]
-
-        if len(libraries) == 1 and "entry_point" in libraries[0]:
-            libraries = BabelMetadata._handle_old_style_entry_points(libraries[0])
+        if "entry_point" in config["library"]:
+            libraries = BabelMetadata._handle_old_style_entry_points(config["library"])
+        else:
+            libraries = config["library"]
 
         if "plugin_author" in config["info"]:
             info = BabelMetadata._handle_old_style_info(config["info"])
         else:
             info = config["info"]
 
-        lib = {}
-        for library in libraries:
-            lib[library["babelized_class"]] = {
-                "language": library["language"],
-                "library": library["library"],
-                "header": library["header"],
-                "class": library["class"],
-            }
-
         return {
-            "library": lib,
+            "library": libraries,
             "build": {
                 "undef_macros": build["undef_macros"],
                 "undef_macros": build["undef_macros"],
