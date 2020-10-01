@@ -15,6 +15,7 @@ from .utils import get_setup_py_version, save_files
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
 ask = partial(click.prompt, show_default=True, err=True)
+yes = partial(click.confirm, show_default=True, err=True)
 
 
 class BabelizerAbort(click.Abort):
@@ -205,8 +206,15 @@ def generate(
         username = username or "pymt-lab"
         license = license or "MIT"
         summary = summary or ""
-        entry_points = entry_point or ()
         requirements = requirement or ()
+        libraries = {
+            "Name": {
+                "language": language,
+                "library": "",
+                "header": "",
+                "class": "",
+            }
+        }
     else:
         name = name or ask("Name to use for the babelized package", default="")
         language = language or ask(
@@ -227,18 +235,28 @@ def generate(
             "Brief description of what the library does", default=""
         )
 
-        entry_points = entry_point or ask_until_done("Entry point")
+        libraries = {}
+        while 1:
+            babelized_class = ask("Name of babelized class")
+            libraries[babelized_class] = {
+                "language": language,
+                "library": ask(f"[{babelized_class}] Name of library to babelize"),
+                "header": ask(f"[{babelized_class}] Name of header file containing BMI class "),
+                "class": ask(f"[{babelized_class}] Name of BMI class "),
+            }
+            if not yes("Add another library?", default=False):
+                break
         requirements = requirement or ask_until_done("Requirement")
 
     print(
         BabelMetadata(
-            library={"language": language, "entry_point": entry_points},
+            library=libraries,
             plugin={"name": name, "requirements": requirements},
             info={
                 "github_username": username,
-                "plugin_author": author,
-                "plugin_author_email": email,
-                "plugin_license": license,
+                "package_author": author,
+                "package_author_email": email,
+                "package_license": license,
                 "summary": summary,
             },
             build={},
