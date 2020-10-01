@@ -148,7 +148,7 @@ setup(
     author_email="{{cookiecutter.info.email}}",
     description="PyMT plugin for {{cookiecutter.package_name}}",
     long_description=long_description,
-    version="{{cookiecutter.plugin_version}}",
+    version="{{cookiecutter.package_version}}",
     url="https://github.com/{{ cookiecutter.github_username }}/pymt_{{ cookiecutter.package_name }}",
     classifiers=[
         "Development Status :: 4 - Beta",

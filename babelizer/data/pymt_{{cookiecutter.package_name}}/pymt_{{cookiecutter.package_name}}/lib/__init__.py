@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-{%- for babelized_class in cookiecutter.components -%}
+{% for babelized_class in cookiecutter.components -%}
 from .{{ babelized_class|lower }} import {{ babelized_class }}
 {%- endfor %}
 

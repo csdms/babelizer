@@ -1,5 +1,5 @@
-Welcome to pymt_{{ cookiecutter.plugin_name }}'s documentation!
-================{{ '=' * cookiecutter.plugin_name | length }}=================
+Welcome to pymt_{{ cookiecutter.package_name }}'s documentation!
+================{{ '=' * cookiecutter.package_name | length }}=================
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

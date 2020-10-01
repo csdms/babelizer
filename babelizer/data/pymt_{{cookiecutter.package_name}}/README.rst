@@ -87,13 +87,13 @@ It is possible to list all of the versions of `pymt` available on your platform 
 Installing pymt_{{ cookiecutter.package_name }}
 ----------------{{ '-' * cookiecutter.package_name | length }}
 
-{% if cookiecutter.plugin_requirements -%}
+{% if cookiecutter.package_requirements -%}
 Once `pymt` is installed, the dependencies of `pymt_{{ cookiecutter.package_name }}` can
 be installed with:
 
 .. code::
 
-  conda install {{ cookiecutter.plugin_requirements.split(',') | join(" ") }}
+  conda install {{ cookiecutter.package_requirements.split(',') | join(" ") }}
 
 {%- endif %}
 

@@ -42,7 +42,7 @@ install:
 - pip install -e .
 script:
 - conda install -q --file=requirements-testing.txt
-- python -c 'import pymt_{{ cookiecutter.plugin_name }}'
+- python -c 'import pymt_{{ cookiecutter.package_name }}'
 {%- for babelized_class in cookiecutter.components %}
-- bmi-test pymt_{{ cookiecutter.plugin_name }}.bmi:{{ babelized_class }} -vvv
+- bmi-test pymt_{{ cookiecutter.package_name }}.bmi:{{ babelized_class }} -vvv
 {%- endfor %}
