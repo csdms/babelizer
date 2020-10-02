@@ -45,7 +45,7 @@ before_install:
   fi
 - micromamba activate
 - micromamba install mamba --yes -c conda-forge
-- mamba create -n testing python=$PYTHON bmi-c bmi-fortran bmi-cxx cmake pkg-config fortran-compiler c-compiler cxx-compiler mamba --yes -c conda-forge
+- mamba create -n testing python=$PYTHON --file=requirements-testing.txt --yes -c conda-forge
 - source activate testing
 - |
   mkdir _build \
@@ -66,7 +66,6 @@ before_install:
   &&   make install \
   &&   popd
 install:
-- mamba install --file=requirements-testing.txt --yes -c conda-forge
 - pip install .
 script:
 - babelize --version

@@ -1,3 +1,11 @@
+bmi-tester
+bmi-c
+bmi-cxx
+bmi-fortran
+cmake
+c-compiler
+cxx-compiler
+fortran-compiler
+pkg-config
 pytest
 pytest-datadir
-bmi-tester
