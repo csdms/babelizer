@@ -19,6 +19,6 @@ library = "bmiheatc"
 header = "bmi_heat.h"
 class = "register_bmi_heat"
 
-[plugin]
-name = "heat"
+[package]
+name = "pymt_heat"
 requirements = []

@@ -17,6 +17,6 @@ summary = "PyMT plugin for heatf model"
 entry_point = ["HeatBMI=bmiheatf:bmi_heat"]
 language = "fortran"
 
-[plugin]
-name = "heatf"
+[package]
+name = "pymt_heatf"
 requirements = []
