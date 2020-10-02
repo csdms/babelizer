@@ -1,8 +1,1 @@
 numpy
-{%- if cookiecutter.language == 'c' %}
-bmi-c
-{%- elif cookiecutter.language == 'c++' %}
-bmi-cxx
-{%- elif cookiecutter.language == 'fortran' %}
-bmi-fortran
-{%- endif %}
