@@ -258,7 +258,7 @@ cdef class {{ babelized_class }}:
         cdef int gid = self.get_var_grid(name)
         cdef int size = self.get_grid_size(gid)
         cdef void* ptr
-        ok_or_raise(bmi_get_value_ptr(self._bmi, <char*>name, &ptr))
+        ok_or_raise(self._bmi.get_value_ptr(self._bmi, <char*>name, &ptr))
         return np.asarray(<np.float_t[:size]>ptr)
 
     cpdef set_value(self, name, np.ndarray buff):
@@ -281,7 +281,7 @@ cdef class {{ babelized_class }}:
         return size
 
     cpdef object get_grid_type(self, gid):
-        ok_or_raise(bmi_get_grid_type(self._bmi, gid, self.STR_BUFFER))
+        ok_or_raise(self._bmi.get_grid_type(self._bmi, gid, self.STR_BUFFER))
         return self.STR_BUFFER
 
     cpdef get_grid_shape(self, int gid, np.ndarray[int, ndim=1] shape):
