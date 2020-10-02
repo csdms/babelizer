@@ -3,7 +3,7 @@ requires = ["cython", "numpy", "setuptools", "wheel"]
 
 [tool.pytest.ini_options]
 minversion = "5.0"
-testpaths = ["pymt_{{ cookiecutter.package_name }}", "tests"]
+testpaths = ["{{ cookiecutter.package_name }}", "tests"]
 norecursedirs = [".*", "*.egg*", "build", "dist"]
 addopts = """
     --ignore setup.py
@@ -28,6 +28,6 @@ line_length = 88
 
 [tool.check-manifest]
 ignore = [
-  "pymt_{{ cookiecutter.package_name }}/data",
-  "pymt_{{ cookiecutter.package_name }}/data/**/*",
+  "{{ cookiecutter.package_name }}/data",
+  "{{ cookiecutter.package_name }}/data/**/*",
 ]

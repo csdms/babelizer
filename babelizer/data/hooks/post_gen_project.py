@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 PROJECT_DIRECTORY = Path.cwd().resolve()
-LIB_DIRECTORY = Path("pymt_{{cookiecutter.package_name}}", "lib")
+LIB_DIRECTORY = Path("{{ cookiecutter.package_name }}", "lib")
 
 
 def remove_file(filepath):
@@ -109,7 +109,7 @@ if __name__ == "__main__":
         remove_file("LICENSE")
 
     datadir = Path("meta")
-    package_datadir = Path("pymt_{{cookiecutter.package_name}}") / "data"
+    package_datadir = Path("{{ cookiecutter.package_name }}") / "data"
     if not package_datadir.exists():
         package_datadir.symlink_to(".." / datadir, target_is_directory=True)
 

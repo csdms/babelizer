@@ -1,7 +1,7 @@
 {{"{%"}} set data = load_setup_py_data() {{"%}"}}
 
 package:
-  name: "pymt_{{cookiecutter.package_name}}"
+  name: "{{cookiecutter.package_name}}"
   version: {{"{{"}} data.get('version') {{"}}"}}
 
 source:
@@ -40,16 +40,16 @@ test:
     - bmi-tester
     - model_metadata
   imports:
-    - pymt_{{cookiecutter.package_name}}
+    - {{cookiecutter.package_name}}
   commands:
 {%- for babelized_class in cookiecutter.components %}
     - config_file=$(mmd-stage {{ babelized_class }} . > MANIFEST && mmd-query {{ babelized_class }} --var=run.config_file.path)
-    - bmi-test pymt_{{ cookiecutter.package_name }}.bmi:{{ babelized_class }} --config-file=$config_file --manifest=MANIFEST -v
+    - bmi-test {{ cookiecutter.package_name }}.bmi:{{ babelized_class }} --config-file=$config_file --manifest=MANIFEST -v
 {%- endfor %}
 
 about:
   summary: Python package that wraps the {{cookiecutter.package_name}} BMI.
-  home: https://github.com/{{cookiecutter.github_username}}/pymt_{{cookiecutter.package_name}}
+  home: https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.package_name}}
   license: {{cookiecutter.open_source_license}}
   license_file: LICENSE
-  dev_url: https://github.com/{{cookiecutter.github_username}}/pymt_{{cookiecutter.package_name}}
+  dev_url: https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.package_name}}

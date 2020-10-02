@@ -71,11 +71,11 @@ if sys.platform.startswith("win"):
 ext_modules = [
 {%- for babelized_class, component in cookiecutter.components|dictsort %}
     Extension(
-        "pymt_{{cookiecutter.package_name}}.lib.{{ babelized_class|lower }}",
-        ["pymt_{{cookiecutter.package_name}}/lib/{{ babelized_class|lower }}.pyx"],
+        "{{cookiecutter.package_name}}.lib.{{ babelized_class|lower }}",
+        ["{{cookiecutter.package_name}}/lib/{{ babelized_class|lower }}.pyx"],
         libraries=libraries + ["{{ component.library }}"],
         {% if cookiecutter.language == 'fortran' -%}
-        extra_objects=['pymt_{{cookiecutter.package_name}}/lib/bmi_interoperability.o'],
+        extra_objects=['{{cookiecutter.package_name}}/lib/bmi_interoperability.o'],
         {% endif -%}
         **common_flags
     ),
@@ -87,7 +87,7 @@ ext_modules = [
 entry_points = {
     "pymt.plugins": [
 {%- for babelized_class, _ in cookiecutter.components|dictsort %}
-        "{{ babelized_class }}=pymt_{{ cookiecutter.package_name }}.bmi:{{ babelized_class }}",
+        "{{ babelized_class }}={{ cookiecutter.package_name }}.bmi:{{ babelized_class }}",
 {%- endfor %}
     ]
 }
@@ -125,7 +125,7 @@ def build_interoperability():
 class build_ext(_build_ext):
 
     def run(self):
-        with as_cwd('pymt_{{cookiecutter.package_name}}/lib'):
+        with as_cwd('{{cookiecutter.package_name}}/lib'):
             build_interoperability()
         _build_ext.run(self)
 
@@ -143,13 +143,13 @@ long_description = u'\n\n'.join(
 
 
 setup(
-    name="pymt_{{cookiecutter.package_name}}",
+    name="{{cookiecutter.package_name}}",
     author="{{cookiecutter.info.full_name}}",
     author_email="{{cookiecutter.info.email}}",
     description="PyMT plugin for {{cookiecutter.package_name}}",
     long_description=long_description,
     version="{{cookiecutter.package_version}}",
-    url="https://github.com/{{ cookiecutter.github_username }}/pymt_{{ cookiecutter.package_name }}",
+    url="https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",

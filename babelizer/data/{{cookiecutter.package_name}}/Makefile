@@ -51,15 +51,15 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
-	flake8 pymt_{{ cookiecutter.package_name }}
+	flake8 {{ cookiecutter.package_name }}
 
 pretty:
-	find pymt_{{ cookiecutter.package_name }} -name '*.py' | xargs isort
-	black setup.py pymt_{{ cookiecutter.package_name }}
+	find {{ cookiecutter.package_name }} -name '*.py' | xargs isort
+	black setup.py {{ cookiecutter.package_name }}
 
 test: ## run tests quickly with the default Python
 {%- for babelized_class, component in cookiecutter.components|dictsort %}
-	bmi-test pymt_{{ cookiecutter.package_name }}.bmi:{{ babelized_class }} -vvv
+	bmi-test {{ cookiecutter.package_name }}.bmi:{{ babelized_class }} -vvv
 {%- endfor %}
 
 test-all: ## run tests on every Python version with tox
@@ -72,9 +72,9 @@ coverage: ## check code coverage quickly with the default Python
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/pymt_{{ cookiecutter.package_name }}.rst
+	rm -f docs/{{ cookiecutter.package_name }}.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ pymt_{{ cookiecutter.package_name }}
+	sphinx-apidoc -o docs/ {{ cookiecutter.package_name }}
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html

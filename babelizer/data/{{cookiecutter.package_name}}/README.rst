@@ -1,6 +1,6 @@
-====={{ '=' * cookiecutter.package_name | length }}
-pymt_{{ cookiecutter.package_name }}
-====={{ '=' * cookiecutter.package_name | length }}
+'=' * cookiecutter.package_name | length }}
+{{ cookiecutter.package_name }}
+'=' * cookiecutter.package_name | length }}
 
 {% set is_open_source = cookiecutter.open_source_license != 'Not open source' -%}
 
@@ -9,14 +9,14 @@ pymt_{{ cookiecutter.package_name }}
         :target: https://bmi.readthedocs.io/
         :alt: Basic Model Interface
 
-.. image:: https://img.shields.io/badge/recipe-pymt_{{ cookiecutter.package_name }}-green.svg
-        :target: https://anaconda.org/conda-forge/pymt_{{ cookiecutter.package_name }}
+.. image:: https://img.shields.io/badge/recipe-{{ cookiecutter.package_name }}-green.svg
+        :target: https://anaconda.org/conda-forge/{{ cookiecutter.package_name }}
 
-.. image:: https://img.shields.io/travis/{{ cookiecutter.github_username }}/pymt_{{ cookiecutter.package_name }}.svg
-        :target: https://travis-ci.org/{{ cookiecutter.github_username }}/pymt_{{ cookiecutter.package_name }}
+.. image:: https://img.shields.io/travis/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}.svg
+        :target: https://travis-ci.org/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}
 
-.. image:: https://readthedocs.org/projects/pymt_{{ cookiecutter.package_name | replace("_", "-") }}/badge/?version=latest
-        :target: https://pymt_{{ cookiecutter.package_name | replace("_", "-") }}.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/{{ cookiecutter.package_name | replace("_", "-") }}/badge/?version=latest
+        :target: https://{{ cookiecutter.package_name | replace("_", "-") }}.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
@@ -83,12 +83,12 @@ It is possible to list all of the versions of `pymt` available on your platform 
 
   conda search pymt --channel conda-forge
 
-----------------{{ '-' * cookiecutter.package_name | length }}
-Installing pymt_{{ cookiecutter.package_name }}
-----------------{{ '-' * cookiecutter.package_name | length }}
+-----------'-' * cookiecutter.package_name | length }}
+Installing {{ cookiecutter.package_name }}
+-----------'-' * cookiecutter.package_name | length }}
 
 {% if cookiecutter.package_requirements -%}
-Once `pymt` is installed, the dependencies of `pymt_{{ cookiecutter.package_name }}` can
+Once `pymt` is installed, the dependencies of `{{ cookiecutter.package_name }}` can
 be installed with:
 
 .. code::
@@ -97,8 +97,8 @@ be installed with:
 
 {%- endif %}
 
-To install `pymt_{{ cookiecutter.package_name }}`,
+To install `{{ cookiecutter.package_name }}`,
 
 .. code::
 
-  conda install pymt_{{ cookiecutter.package_name }}
+  conda install {{ cookiecutter.package_name }}
