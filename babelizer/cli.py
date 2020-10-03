@@ -14,7 +14,7 @@ from .utils import get_setup_py_version, save_files
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
-ask = partial(click.prompt, show_default=True, err=True)
+# ask = partial(click.prompt, show_default=True, err=True)
 yes = partial(click.confirm, show_default=True, err=True)
 
 
@@ -175,8 +175,12 @@ def update(template, quiet, verbose):
     help="Don’t ask questions, just use the default values",
 )
 @click.option(
-    "--name",
+    "--package",
     help="Name to use for the babelized package",
+)
+@click.option(
+    "--name",
+    help="Name of the babelized class",
 )
 @click.option(
     "--email",
@@ -200,13 +204,18 @@ def update(template, quiet, verbose):
     "--summary",
     help="Brief description of what the library does",
 )
+@click.option("--library", help="Name of the BMI library to wrap", default=None)
 @click.option(
-    "--entry-point", help="Entry point to the library BMI", multiple=True, default=None
+    "--header", help="Name of the header file declaring the BMI class", default=None
+)
+@click.option(
+    "--class", "class_", help="Name of the BMI class to babelize", default=None
 )
 @click.option("--requirement", help="Requirement", multiple=True, default=None)
 @click.argument("file_", metavar="FILENAME", type=click.File(mode="w", lazy=True))
 def generate(
     no_input,
+    package,
     name,
     email,
     language,
@@ -214,11 +223,61 @@ def generate(
     username,
     license,
     summary,
-    entry_point,
+    library,
+    header,
+    class_,
     requirement,
     file_,
 ):
     """Generate babelizer config file, FILENAME."""
+
+    meta = _gather_input(
+        no_input=no_input,
+        package=package,
+        name=name,
+        email=email,
+        language=language,
+        author=author,
+        username=username,
+        license=license,
+        summary=summary,
+        library=library,
+        header=header,
+        class_=class_,
+        requirement=requirement,
+    )
+
+    print(BabelMetadata(**meta).format(fmt="toml"), file=file_)
+
+
+def _gather_input(
+    no_input=False,
+    package=None,
+    name=None,
+    email=None,
+    language=None,
+    author=None,
+    username=None,
+    license=None,
+    summary=None,
+    library=None,
+    header=None,
+    class_=None,
+    requirement=None,
+):
+    """Gather input either from command-line option, default, or user prompt.
+
+    If a value is not ``None``, that means it was provided on the command
+    line and so its value will be used. Otherwise, depending on
+    the value of ``no_input``, either a default value is used or
+    the user will be prompted for a value.
+    """
+
+    if no_input:
+        def ask(text, default=None, **kwds):
+            return default
+    else:
+        ask = partial(click.prompt, show_default=True, err=True)
 
     def ask_until_done(text):
         answers = []
@@ -226,44 +285,44 @@ def generate(
             answers.append(answer)
         return answers
 
-    if no_input:
-        name = name or ""
-        language = language or "c"
-        author = author or "csdms"
-        email = email or "csdms@colorado.edu"
-        username = username or "pymt-lab"
-        license = license or "MIT"
-        summary = summary or ""
-        requirements = requirement or ()
-        libraries = {
-            "Name": {
-                "language": language,
-                "library": "",
-                "header": "",
-                "class": "",
-            }
-        }
-    else:
-        name = name or ask("Name to use for the babelized package", default="")
-        language = language or ask(
-            "Programming language of the library being babelized",
-            show_choices=["c", "c++", "fortran", "python"],
-            default="c",
-        )
-        author = author or ask("Babelizing author", default="csdms")
-        email = email or ask("Babelizing author email", default="csdms@colorado.edu")
-        username = username or ask(
+    package = {
+        "name": package or ask("Name to use for the babelized package", default=""),
+        "requirements": requirement or ask_until_done("Requirement"),
+    }
+    info = {
+        "github_username": username
+        or ask(
             "GitHub username or organization that will host the project",
             default="pymt-lab",
-        )
-        license = license or ask(
-            "License to use for the babelized project", default="MIT"
-        )
-        summary = summary or ask(
-            "Brief description of what the library does", default=""
-        )
+        ),
+        "package_author": author or ask("Babelizing author", default="csdms"),
+        "package_author_email": email
+        or ask("Babelizing author email", default="csdms@colorado.edu"),
+        "package_license": license
+        or ask("License to use for the babelized project", default="MIT"),
+        "summary": summary
+        or ask("Brief description of what the library does", default=""),
+    }
 
-        libraries = {}
+    language = language or ask(
+        "Programming language of the library being babelized",
+        show_choices=["c", "c++", "fortran", "python"],
+        default="c",
+    )
+
+    libraries = {}
+    if no_input or any([x is not None for x in (name, library, header, class_)]):
+        babelized_class = name or ask("Name of babelized class", default="<name>")
+        libraries[babelized_class] = {
+            "language": language,
+            "library": library or ask(f"[{babelized_class}] Name of library to babelize", default=""),
+            "header": header or ask(
+                f"[{babelized_class}] Name of header file containing BMI class ",
+                default=""
+            ),
+            "class": class_ or ask(f"[{babelized_class}] Name of BMI class ", default=""),
+        }
+    else:
         while 1:
             babelized_class = ask("Name of babelized class")
             libraries[babelized_class] = {
@@ -276,23 +335,8 @@ def generate(
             }
             if not yes("Add another library?", default=False):
                 break
-        requirements = requirement or ask_until_done("Requirement")
 
-    print(
-        BabelMetadata(
-            library=libraries,
-            plugin={"name": name, "requirements": requirements},
-            info={
-                "github_username": username,
-                "package_author": author,
-                "package_author_email": email,
-                "package_license": license,
-                "summary": summary,
-            },
-            build={},
-        ).format(fmt="toml"),
-        file=file_,
-    )
+    return {"library": libraries, "package": package, "info": info, "build": {}}
 
 
 if __name__ == "__main__":
