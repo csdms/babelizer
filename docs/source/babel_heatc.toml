@@ -1,6 +1,9 @@
 [library]
+[library.HeatModel]
 language = "c"
-entry_point = ["HeatModel=bmiheatc:register_bmi_heat"]
+library = "bmiheatc"
+header = "bmi_heat.h"
+class = "register_bmi_heat"
 
 [build]
 undef_macros = []
@@ -10,14 +13,14 @@ library_dirs = []
 include_dirs = []
 extra_compile_args = []
 
-[plugin]
-name = "heatc"
+[package]
+name = "pymt_heatc"
 requirements = [""]
 
 [info]
-plugin_author = "csdms"
-plugin_author_email = "csdms@colorado.edu"
 github_username = "pymt-lab"
-plugin_license = "MIT"
+package_author = "csdms"
+package_author_email = "csdms@colorado.edu"
+package_license = "MIT"
 summary = "PyMT plugin for heat model"
 
