@@ -167,7 +167,7 @@ Class
 The name of the BMI class to babelize.
 
 An example of a C++ library (*bmi_child*), exposing a class *BmiChild* (which
-implemets a BMI) might look like the following:
+implements a BMI) might look like the following:
 
 .. code:: toml
 
@@ -283,7 +283,7 @@ called *hydrotrend*.
     package_license = "MIT"
     summary = "PyMT plugin for hydrotrend"
 
-You can use the `babelize generate` command to generate *babel.toml* files.
+You can use the ``babelize generate`` command to generate *babel.toml* files.
 For example the above *babel.toml* can be generated with the following,
 
 .. code:: bash
