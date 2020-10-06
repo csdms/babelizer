@@ -39,7 +39,7 @@ def is_valid_entry_point(entry_point):
 
 
 {%- for babelized_class, component in cookiecutter.components|dictsort %}
-if not is_valid_entry_point(entry_point := "{{ babelized_class }}={{ component.library }}:{{ component.class}}"):
+if not is_valid_entry_point(entry_point := "{{ babelized_class }}={{ component.library }}:{{ component.entry_point}}"):
     print(f"ERROR: The entry point ({entry_point}) is not a valid Python entry point.")
 
     sys.exit(2)

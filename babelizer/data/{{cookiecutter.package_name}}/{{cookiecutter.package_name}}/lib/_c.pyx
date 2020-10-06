@@ -90,10 +90,11 @@ def ok_or_raise(status):
         raise RuntimeError('error code {status}'.format(status=status))
 
 {%- for babelized_class, component in cookiecutter.components|dictsort %}
+
 # start: {{ babelized_class|lower }}.pyx
 
 cdef extern from "{{ component.header }}":
-    Bmi* {{ component.class }}(Bmi *model)
+    Bmi* {{ component.entry_point }}(Bmi *model)
 
 
 cdef class {{ babelized_class }}:
@@ -108,7 +109,7 @@ cdef class {{ babelized_class }}:
         if self._bmi is NULL:
             raise MemoryError()
         else:
-            {{ component.class }}(self._bmi)
+            {{ component.entry_point }}(self._bmi)
 
     def __dealloc__(self):
         free(self._bmi)

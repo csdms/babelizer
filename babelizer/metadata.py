@@ -187,7 +187,7 @@ class BabelMetadata:
             for babelized_class, library in libraries.items():
                 validate_dict(
                     library,
-                    required={"language", "library", "header", "class"},
+                    required={"language", "library", "header", "entry_point"},
                     optional={},
                 )
 
@@ -251,7 +251,7 @@ class BabelMetadata:
                 "language": language,
                 "library": library,
                 "header": library + _header_ext(language),
-                "class": class_name,
+                "entry_point": class_name,
             }
 
         return libraries

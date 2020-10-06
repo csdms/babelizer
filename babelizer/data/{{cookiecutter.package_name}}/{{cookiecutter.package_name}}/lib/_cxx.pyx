@@ -11,7 +11,7 @@ import numpy as np
 # start: {{ babelized_class|lower }}.pyx
 
 cdef extern from "{{ component.header }}":
-    cdef cppclass {{ component.class }}:
+    cdef cppclass {{ component.entry_point }}:
         Model() except +
 
         #  Model control functions.
@@ -73,7 +73,7 @@ cdef extern from "{{ component.header }}":
         void GetGridNodesPerFace(const int grid, int *nodes_per_face)
 
 cdef class {{ babelized_class }}:
-    cdef {{ component.class }} _bmi
+    cdef {{ component.entry_point }} _bmi
 
     METADATA = "../data/{{ babelized_class }}"
 
