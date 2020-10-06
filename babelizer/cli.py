@@ -209,7 +209,7 @@ def update(template, quiet, verbose):
     "--header", help="Name of the header file declaring the BMI class", default=None
 )
 @click.option(
-    "--class", "class_", help="Name of the BMI class to babelize", default=None
+    "--entry-point", help="Name of the BMI entry point into the library", default=None
 )
 @click.option("--requirement", help="Requirement", multiple=True, default=None)
 @click.argument("file_", metavar="FILENAME", type=click.File(mode="w", lazy=True))
@@ -225,7 +225,7 @@ def generate(
     summary,
     library,
     header,
-    class_,
+    entry_point,
     requirement,
     file_,
 ):
@@ -243,7 +243,7 @@ def generate(
         summary=summary,
         library=library,
         header=header,
-        class_=class_,
+        entry_point=entry_point,
         requirement=requirement,
     )
 
@@ -262,7 +262,7 @@ def _gather_input(
     summary=None,
     library=None,
     header=None,
-    class_=None,
+    entry_point=None,
     requirement=None,
 ):
     """Gather input either from command-line option, default, or user prompt.
@@ -311,7 +311,7 @@ def _gather_input(
     )
 
     libraries = {}
-    if no_input or any([x is not None for x in (name, library, header, class_)]):
+    if no_input or any([x is not None for x in (name, library, header, entry_point)]):
         babelized_class = name or ask("Name of babelized class", default="<name>")
         libraries[babelized_class] = {
             "language": language,
@@ -320,7 +320,7 @@ def _gather_input(
                 f"[{babelized_class}] Name of header file containing BMI class ",
                 default=""
             ),
-            "class": class_ or ask(f"[{babelized_class}] Name of BMI class ", default=""),
+            "entry_point": entry_point or ask(f"[{babelized_class}] Name of BMI class ", default=""),
         }
     else:
         while 1:
@@ -331,7 +331,7 @@ def _gather_input(
                 "header": ask(
                     f"[{babelized_class}] Name of header file containing BMI class "
                 ),
-                "class": ask(f"[{babelized_class}] Name of BMI class "),
+                "entry_point": ask(f"[{babelized_class}] Name of BMI class "),
             }
             if not yes("Add another library?", default=False):
                 break
