@@ -17,7 +17,7 @@ summary = "PyMT plugin for heat model"
 language = "c++"
 header = "bmi_heat.hxx"
 library = "bmiheatcxx"
-class = "BmiHeat"
+entry_point = "BmiHeat"
 
 [package]
 name = "pymt_heat"

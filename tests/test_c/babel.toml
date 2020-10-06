@@ -17,7 +17,7 @@ summary = "PyMT plugin for heat model"
 language = "c"
 library = "bmiheatc"
 header = "bmi_heat.h"
-class = "register_bmi_heat"
+entry_point = "register_bmi_heat"
 
 [package]
 name = "pymt_heat"
