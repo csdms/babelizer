@@ -4,7 +4,7 @@ Changelog for babelizer
 0.3.2 (unreleased)
 ------------------
 
-- Added user guide and API documentation. (#21)
+- No changes yet
 
 
 0.3.1 (2020-09-25)
