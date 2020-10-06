@@ -97,7 +97,7 @@ An example of a blank *babel.toml* file,
     language = "c"
     library = ""
     header = ""
-    class = ""
+    entry_point = ""
 
     [build]
     undef_macros = []
@@ -161,10 +161,14 @@ Header
 The name of the header file (*.h*, *.hxx*) declaring the BMI class.
 This option is only needed when wrapping C and C++ libraries.
 
-Class
------
+Entry point
+-----------
 
-The name of the BMI class to babelize.
+The name of the BMI entry point into the library.
+For object-oriented languages,
+this is typically the name of a class that implements the BMI.
+For procedural languages,
+this is typically a function.
 
 An example of a C++ library (*bmi_child*), exposing a class *BmiChild* (which
 implements a BMI) might look like the following:
@@ -174,9 +178,21 @@ implements a BMI) might look like the following:
    [library]
    [library.Child]
    language = "c++"
-   library = bmi_child
-   header = bmi_child.hxx
-   class = BmiChild
+   library = "bmi_child"
+   header = "bmi_child.hxx"
+   entry_point = "BmiChild"
+
+whereas a C library (*bmi_cem*), exposing a function *register_bmi_cem* (which
+implements a BMI) might look like:
+
+.. code:: toml
+
+   [library]
+   [library.Cem]
+   language = "c"
+   library = "bmi_cem"
+   header = "bmi_cem.h"
+   entry_point = "register_bmi_cem"
 
 Build section
 =============
@@ -262,7 +278,7 @@ called *hydrotrend*.
     language = "c"
     library = "bmi_hydrotrend"
     header = "bmi_hydrotrend.h"
-    class = "register_bmi_hydrotrend"
+    entry_point = "register_bmi_hydrotrend"
 
     [build]
     undef_macros = []
@@ -294,7 +310,7 @@ For example the above *babel.toml* can be generated with the following,
 	  --language=c \
 	  --library=bmi_hydrotrend \
 	  --header=bmi_hydrotrend.h \
-	  --class=register_bmi_hydrotrend \
+	  --entry_point=register_bmi_hydrotrend \
 	  --name=Hydrotrend \
 	  --requirement=hydrotrend
 
