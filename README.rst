@@ -310,7 +310,7 @@ For example the above *babel.toml* can be generated with the following,
 	  --language=c \
 	  --library=bmi_hydrotrend \
 	  --header=bmi_hydrotrend.h \
-	  --entry_point=register_bmi_hydrotrend \
+	  --entry-point=register_bmi_hydrotrend \
 	  --name=Hydrotrend \
 	  --requirement=hydrotrend
 

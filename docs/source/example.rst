@@ -138,7 +138,7 @@ Return to our initial ``build`` directory and call ``babelize generate`` with:
       --language=c \
       --library=bmiheatc \
       --header=bmi_heat.h \
-      --entry_point=register_bmi_heat \
+      --entry-point=register_bmi_heat \
       --name=HeatModel \
       --requirement=""
 
