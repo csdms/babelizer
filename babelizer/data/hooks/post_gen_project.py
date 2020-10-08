@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 PROJECT_DIRECTORY = Path.cwd().resolve()
-LIB_DIRECTORY = Path("pymt_{{cookiecutter.plugin_name}}", "lib")
+LIB_DIRECTORY = Path("{{ cookiecutter.package_name }}", "lib")
 
 
 def remove_file(filepath):
@@ -71,9 +71,9 @@ def write_api_yaml(folderpath, **kwds):
 
     api_yaml = PROJECT_DIRECTORY / folderpath / "api.yaml"
     contents = """
-name: {plugin_name}
+name: {package_name}
 language: {language}
-package: {plugin_name}
+package: {package_name}
 class: {plugin_class}
 """.format(**kwds).strip()
     with open(api_yaml, "w") as fp:
@@ -109,16 +109,15 @@ if __name__ == "__main__":
         remove_file("LICENSE")
 
     datadir = Path("meta")
-    package_datadir = Path("pymt_{{cookiecutter.plugin_name}}") / "data"
+    package_datadir = Path("{{ cookiecutter.package_name }}") / "data"
     if not package_datadir.exists():
         package_datadir.symlink_to(".." / datadir, target_is_directory=True)
 
-{% for entry_point in cookiecutter.entry_points.split(',') %}
-    {%- set pymt_class = entry_point.split('=')[0] %}
+{%- for babelized_class, component in cookiecutter.components|dictsort %}
     write_api_yaml(
-        datadir / "{{ pymt_class }}",
-        language="{{ cookiecutter.language }}",
-        plugin_class="{{ pymt_class }}",
-        plugin_name="{{ cookiecutter.plugin_name }}",
+        datadir / "{{ babelized_class }}",
+        language="{{ component.language }}",
+        plugin_class="{{ babelized_class }}",
+        package_name="{{ cookiecutter.package_name }}",
     )
 {% endfor %}

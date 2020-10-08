@@ -1,6 +1,7 @@
 import pathlib
 import re
-from collections import OrderedDict
+import warnings
+from collections import OrderedDict, defaultdict
 
 import tomlkit as toml
 import yaml
@@ -120,18 +121,24 @@ def validate_dict(meta, required=None, optional=None):
 class BabelMetadata:
     REQUIRED = {
         "library": ("language", "entry_point"),
-        "plugin": ("name", "requirements"),
-        "info": ("github_username", "plugin_license", "summary"),
+        "package": ("name", "requirements"),
+        "info": ("github_username", "package_license", "summary"),
     }
 
     LOADERS = {"yaml": yaml.safe_load, "toml": toml.parse}
 
-    def __init__(self, library=None, build=None, plugin=None, info=None):
+    def __init__(self, library=None, build=None, package=None, info=None, plugin=None):
+        if plugin is not None:
+            warnings.warn("use 'package' instead of 'plugin'", DeprecationWarning)
+            if package is not None:
+                raise ValueError("specify one of 'package' or 'plugin', not both")
+            package = plugin
+
         config = {
             "library": library or {},
             "build": build or {},
-            "plugin": plugin or {},
-            "info": info or {}
+            "package": package or {},
+            "info": info or {},
         }
 
         BabelMetadata.validate(config)
@@ -146,13 +153,15 @@ class BabelMetadata:
             raise ValueError(f"unrecognized format ({fmt})")
 
         try:
-            return cls(**loader(stream.read()))
-        except TypeError:
-            raise ValidationError("metadata file does not contain a mapping object")
+            meta = loader(stream.read())
         except yaml.scanner.ScannerError as error:
             raise ScanError(f"unable to scan yaml-formatted metadata file:\n{error}")
         except toml.exceptions.ParseError as error:
             raise ScanError(f"unable to scan toml-formatted metadata file:\n{error}")
+        else:
+            if not isinstance(meta, dict):
+                raise ValidationError("metadata file does not contain a mapping object")
+        return cls(**meta)
 
     @classmethod
     def from_path(cls, filepath):
@@ -166,7 +175,22 @@ class BabelMetadata:
 
     @staticmethod
     def validate(config):
-        validate_dict(config["library"], required=("language", "entry_point"), optional={})
+        libraries = config["library"]
+        if "entry_point" in libraries:
+            validate_dict(libraries, required=("language", "entry_point"), optional={})
+            for entry_point in libraries["entry_point"]:
+                try:
+                    BabelMetadata.parse_entry_point(entry_point)
+                except ValidationError:
+                    raise ValidationError(f"poorly-formed entry point ({entry_point})")
+        else:
+            for babelized_class, library in libraries.items():
+                validate_dict(
+                    library,
+                    required={"language", "library", "header", "entry_point"},
+                    optional={},
+                )
+
         validate_dict(
             config["build"],
             required=None,
@@ -179,60 +203,102 @@ class BabelMetadata:
                 "extra_compile_args",
             ),
         )
-        validate_dict(config["plugin"], required=("name", "requirements"), optional={})
-        validate_dict(
-            config["info"],
-            required=(
-                "plugin_author",
-                "plugin_author_email",
-                "github_username",
-                "plugin_license",
-                "summary",
-            ),
-            optional={},
-        )
+        validate_dict(config["package"], required=("name", "requirements"), optional={})
+        try:
+            validate_dict(
+                config["info"],
+                required=(
+                    "package_author",
+                    "package_author_email",
+                    "github_username",
+                    "package_license",
+                    "summary",
+                ),
+                optional={},
+            )
+        except ValidationError:
+            validate_dict(
+                config["info"],
+                required=(
+                    "plugin_author",
+                    "plugin_author_email",
+                    "github_username",
+                    "plugin_license",
+                    "summary",
+                ),
+                optional={},
+            )
+            warnings.warn("use 'package' instead of 'plugin'", DeprecationWarning)
 
-        if isinstance(entry_points := config["library"]["entry_point"], str):
+    @staticmethod
+    def _handle_old_style_entry_points(library):
+        def _header_ext(language):
+            try:
+                return {"c": ".h", "c++": ".hxx"}[language]
+            except KeyError:
+                return ""
+
+        language = library["language"]
+        if isinstance(entry_points := library["entry_point"], str):
             entry_points = [entry_points]
 
+        libraries = {}
         for entry_point in entry_points:
-            try:
-                BabelMetadata.parse_entry_point(entry_point)
-            except ValidationError:
-                raise ValidationError(f"poorly-formed entry point ({entry_point})")
+            babelized_class, library, class_name = BabelMetadata.parse_entry_point(
+                entry_point
+            )
+            libraries[babelized_class] = {
+                "language": language,
+                "library": library,
+                "header": library + _header_ext(language),
+                "entry_point": class_name,
+            }
+
+        return libraries
+
+    @staticmethod
+    def _handle_old_style_info(info):
+        return {
+            "package_author": info["plugin_author"],
+            "package_author_email": info["plugin_author_email"],
+            "github_username": info["github_username"],
+            "package_license": info["plugin_license"],
+            "summary": info["summary"],
+        }
 
     @staticmethod
     def norm(config):
-        if "build" not in config:
-            config["build"] = {}
+        build = defaultdict(list)
+        try:
+            build.update(config["build"])
+        except KeyError:
+            pass
 
-        if isinstance(entry_points := config["library"]["entry_point"], str):
-            entry_points = [entry_points]
+        if "entry_point" in config["library"]:
+            libraries = BabelMetadata._handle_old_style_entry_points(config["library"])
+        else:
+            libraries = config["library"]
+
+        if "plugin_author" in config["info"]:
+            info = BabelMetadata._handle_old_style_info(config["info"])
+        else:
+            info = config["info"]
 
         return {
-            "library": {
-                "language": config["library"]["language"],
-                "entry_point": list(entry_points),
-            },
+            "library": libraries,
             "build": {
-                "undef_macros": config["build"].get("undef_macros", []),
-                "define_macros": config["build"].get("define_macros", []),
-                "libraries": config["build"].get("libraries", []),
-                "library_dirs": config["build"].get("library_dirs", []),
-                "include_dirs": config["build"].get("include_dirs", []),
-                "extra_compile_args": config["build"].get("extra_compile_args", []),
+                "undef_macros": build["undef_macros"],
+                "define_macros": build["define_macros"],
+                "libraries": build["libraries"],
+                "library_dirs": build["library_dirs"],
+                "include_dirs": build["include_dirs"],
+                "extra_compile_args": build["extra_compile_args"],
             },
-            "plugin": {
-                "name": config["plugin"]["name"],
-                "requirements": list(config["plugin"]["requirements"]),
+            "package": {
+                "name": config["package"]["name"],
+                "requirements": list(config["package"]["requirements"]),
             },
-            "info": {
-                "plugin_author": config["info"]["plugin_author"],
-                "plugin_author_email": config["info"]["plugin_author_email"],
-                "github_username": config["info"]["github_username"],
-                "plugin_license": config["info"]["plugin_license"],
-                "summary": config["info"]["summary"],
-            },
+            "info": info,
         }
 
     def dump(self, fp, fmt="yaml"):
@@ -292,32 +358,27 @@ class BabelMetadata:
         return name, module, obj
 
     def as_cookiecutter_context(self):
-        language = self._meta["library"]["language"]
-        plugin_module = ""
-        plugin_class = ""
-        entry_point = ""
-
-        if isinstance(entry_points := self._meta["library"]["entry_point"], str):
-            entry_points = [entry_points]
-        entry_points = ",".join(entry_points)
+        languages = [lib["language"] for lib in self._meta["library"].values()]
+        language = languages[0]
 
         return {
-            "entry_points": entry_points,
-            "full_name": self._meta["info"]["plugin_author"],
-            "email": self._meta["info"]["plugin_author_email"],
-            "github_username": self._meta["info"]["github_username"],
-            "plugin_name": self._meta["plugin"]["name"],
-            "plugin_module": plugin_module,
-            "plugin_class": plugin_class,
-            "pymt_class": entry_point,
-            "plugin_requirements": ",".join(self._meta["plugin"]["requirements"]),
+            "components": self._meta["library"],
+            "build": {
+                "undef_macros": self._meta["build"]["undef_macros"],
+                "define_macros": self._meta["build"]["define_macros"],
+                "libraries": self._meta["build"]["libraries"],
+                "library_dirs": self._meta["build"]["library_dirs"],
+                "include_dirs": self._meta["build"]["include_dirs"],
+                "extra_compile_args": self._meta["build"]["extra_compile_args"],
+            },
+            "info": {
+                "full_name": self._meta["info"]["package_author"],
+                "email": self._meta["info"]["package_author_email"],
+                "github_username": self._meta["info"]["github_username"],
+                "project_short_description": self._meta["info"]["summary"],
+            },
+            "package_name": self._meta["package"]["name"],
+            "package_requirements": ",".join(self._meta["package"]["requirements"]),
             "language": language,
-            "undef_macros": ",".join(self._meta["build"]["undef_macros"]),
-            "define_macros": ",".join(self._meta["build"]["define_macros"]),
-            "libraries": ",".join(self._meta["build"]["libraries"]),
-            "library_dirs": ",".join(self._meta["build"]["library_dirs"]),
-            "include_dirs": ",".join(self._meta["build"]["include_dirs"]),
-            "extra_compile_args": ",".join(self._meta["build"]["extra_compile_args"]),
-            "open_source_license": self._meta["info"]["plugin_license"],
-            "project_short_description": self._meta["info"]["summary"],
+            "open_source_license": self._meta["info"]["package_license"],
         }

@@ -7,8 +7,8 @@ def read(filename):
         return fp.read()
 
 
-long_description = u'\n\n'.join(
-    [read('README.rst'), read('CREDITS.rst'), read('CHANGES.rst')]
+long_description = u"\n\n".join(
+    [read("README.rst"), read("CREDITS.rst"), read("CHANGES.rst")]
 )
 
 

@@ -4,7 +4,9 @@ Changelog for babelizer
 0.3.2 (unreleased)
 ------------------
 
-- Added user guide and API documentation. (#21)
+- Fix babelizing C++ libraries and added tests for C++ babelizing.
+  This fix necessitated a change to the "library" section
+  of the babel.toml configuration file. (#26)
 
 
 0.3.1 (2020-09-25)

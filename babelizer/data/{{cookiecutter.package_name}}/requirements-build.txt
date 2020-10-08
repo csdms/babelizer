@@ -1,0 +1,10 @@
+{%- if cookiecutter.language == 'c' %}
+bmi-c
+c-compiler
+{%- elif cookiecutter.language == 'c++' %}
+bmi-cxx
+cxx-compiler
+{%- elif cookiecutter.language == 'fortran' %}
+bmi-fortran
+fortran-compiler
+{%- endif %}

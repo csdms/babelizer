@@ -4,7 +4,7 @@ import sys
 
 MODULE_REGEX = r"^[_a-zA-Z][_a-zA-Z0-9]+$"
 
-module_name = "{{ cookiecutter.plugin_name }}"
+module_name = "{{ cookiecutter.package_name }}"
 
 
 if not re.match(MODULE_REGEX, module_name):
@@ -19,7 +19,7 @@ if not re.match(MODULE_REGEX, module_name):
 
 def is_valid_entry_point(entry_point):
     try:
-        pymt_class, plugin_entry_point = entry_point.split("=")
+        babelized_class, plugin_entry_point = entry_point.split("=")
     except ValueError:
         return False
     try:
@@ -27,7 +27,7 @@ def is_valid_entry_point(entry_point):
     except ValueError:
         return False
 
-    if not re.match(MODULE_REGEX, pymt_class):
+    if not re.match(MODULE_REGEX, babelized_class):
         return False
     for module_name in plugin_module.split("."):
         if not re.match(MODULE_REGEX, module_name):
@@ -38,12 +38,9 @@ def is_valid_entry_point(entry_point):
     return True
 
 
-{%- for entry_point in cookiecutter.entry_points.split(',') %}
-if not is_valid_entry_point("{{ entry_point }}"):
-    print(
-        "ERROR: The entry point (%s) is not a valid Python entry point."
-        % "{{ entry_point }}"
-    )
+{%- for babelized_class, component in cookiecutter.components|dictsort %}
+if not is_valid_entry_point(entry_point := "{{ babelized_class }}={{ component.library }}:{{ component.entry_point}}"):
+    print(f"ERROR: The entry point ({entry_point}) is not a valid Python entry point.")
 
     sys.exit(2)
 {% endfor %}
