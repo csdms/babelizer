@@ -160,9 +160,11 @@ def update(template, quiet, verbose):
             version=version,
         )
 
-    extra_files = _repo_contents(package_path) - _generated_files(babel_metadata, template=template, version=version)
+    extra_files = _repo_contents(package_path) - _generated_files(
+        babel_metadata, template=template, version=version
+    )
 
-    ignore = ["meta*", "notebooks*", "docs*", f"**/data"]
+    ignore = ["meta*", "notebooks*", "docs*", "**/data"]
     for pattern in ignore:
         extra_files.difference_update(fnmatch.filter(extra_files, pattern))
 
@@ -287,8 +289,10 @@ def _gather_input(
     """
 
     if no_input:
+
         def ask(text, default=None, **kwds):
             return default
+
     else:
         ask = partial(click.prompt, show_default=True, err=True)
 
@@ -328,12 +332,15 @@ def _gather_input(
         babelized_class = name or ask("Name of babelized class", default="<name>")
         libraries[babelized_class] = {
             "language": language,
-            "library": library or ask(f"[{babelized_class}] Name of library to babelize", default=""),
-            "header": header or ask(
+            "library": library
+            or ask(f"[{babelized_class}] Name of library to babelize", default=""),
+            "header": header
+            or ask(
                 f"[{babelized_class}] Name of header file containing BMI class ",
-                default=""
+                default="",
             ),
-            "entry_point": entry_point or ask(f"[{babelized_class}] Name of BMI class ", default=""),
+            "entry_point": entry_point
+            or ask(f"[{babelized_class}] Name of BMI class ", default=""),
         }
     else:
         while 1:
@@ -366,7 +373,9 @@ def _get_dir_contents(base, trunk=None):
 
 def _repo_contents(base):
     repo = git.Repo(str(base))
-    return set(repo.git.ls_tree("--full-tree", "-r", "--name-only", "HEAD").splitlines())
+    return set(
+        repo.git.ls_tree("--full-tree", "-r", "--name-only", "HEAD").splitlines()
+    )
 
 
 def _generated_files(babel_metadata, template=None, version="0.1"):
