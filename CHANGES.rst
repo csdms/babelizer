@@ -1,7 +1,7 @@
 Changelog for babelizer
 =======================
 
-0.3.2 (unreleased)
+0.3.2 (2020-10-08)
 ------------------
 
 - Fix babelizing C++ libraries and added tests for C++ babelizing.
