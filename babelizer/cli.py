@@ -1,6 +1,8 @@
 #! /usr/bin/env python
+import fnmatch
 import os
 import pathlib
+import tempfile
 from functools import partial
 
 import click
@@ -157,6 +159,17 @@ def update(template, quiet, verbose):
             clobber=True,
             version=version,
         )
+
+    extra_files = _repo_contents(package_path) - _generated_files(babel_metadata, template=template, version=version)
+
+    ignore = ["meta*", "notebooks*", "docs*", f"**/data"]
+    for pattern in ignore:
+        extra_files.difference_update(fnmatch.filter(extra_files, pattern))
+
+    if extra_files:
+        out(f"found extra files in {package_path}:")
+        for name in sorted(extra_files):
+            out(f"  {name}")
 
     if not quiet:
         out(
@@ -337,6 +350,34 @@ def _gather_input(
                 break
 
     return {"library": libraries, "package": package, "info": info, "build": {}}
+
+
+def _get_dir_contents(base, trunk=None):
+    base = pathlib.Path(base)
+    files = set()
+    for item in base.iterdir():
+        if item.is_dir():
+            files |= _get_dir_contents(item, trunk=trunk)
+        else:
+            files.add(str(item.relative_to(trunk)))
+
+    return files
+
+
+def _repo_contents(base):
+    repo = git.Repo(str(base))
+    return set(repo.git.ls_tree("--full-tree", "-r", "--name-only", "HEAD").splitlines())
+
+
+def _generated_files(babel_metadata, template=None, version="0.1"):
+    with tempfile.TemporaryDirectory() as tmpdir:
+        new_folder = render(
+            babel_metadata,
+            tmpdir,
+            template=template,
+            version=version,
+        )
+        return _get_dir_contents(new_folder, trunk=new_folder)
 
 
 if __name__ == "__main__":
