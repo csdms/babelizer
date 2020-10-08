@@ -1,22 +1,26 @@
+[library]
+[library.HeatBMI]
+language = "fortran"
+library = "bmiheatf"
+header = ""
+entry_point = "bmi_heat"
+
 [build]
+undef_macros = []
 define_macros = []
-extra_compile_args = []
-include_dirs = []
 libraries = []
 library_dirs = []
-undef_macros = []
+include_dirs = []
+extra_compile_args = []
+
+[package]
+name = "pymt_heatf"
+requirements = [""]
 
 [info]
-github_username = "mdpiper"
-plugin_author = "Mark Piper"
-plugin_author_email = "mark.piper@colorado.edu"
-plugin_license = "MIT"
+github_username = "pymt-lab"
+package_author = "csdms"
+package_author_email = "csdms@colorado.edu"
+package_license = "MIT"
 summary = "PyMT plugin for heatf model"
 
-[library]
-entry_point = ["HeatBMI=bmiheatf:bmi_heat"]
-language = "fortran"
-
-[plugin]
-name = "heatf"
-requirements = []

@@ -70,11 +70,11 @@ def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
     except OutputDirExistsException as err:
         raise OutputDirExistsError(", ".join(err.args))
 
-    name = context["plugin_name"]
+    name = context["package_name"]
 
-    # path = os.path.join(output_dir, "pymt_{}".format(context["plugin_name"]))
+    # path = os.path.join(output_dir, "{}".format(context["package_name"]))
     # if not os.path.isdir(path):
-    path = output_dir / f"pymt_{name}"
+    path = output_dir / f"{name}"
     if not path.is_dir():
         raise RenderError("error creating {0}".format(path))
 
@@ -108,7 +108,7 @@ def prettify_python(path_to_repo):
     path_to_repo = pathlib.Path(path_to_repo)
     with open(path_to_repo / "babel.toml") as fp:
         meta = toml.load(fp)
-    module_name = "pymt_" + meta["plugin"]["name"]
+    module_name = meta["package"]["name"]
 
     files_to_fix = [
         path_to_repo / "setup.py",

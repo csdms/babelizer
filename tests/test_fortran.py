@@ -39,7 +39,13 @@ def test_babelize_init_fortran(tmpdir, datadir):
 
         try:
             result = subprocess.run(
-                ["bmi-test", "--config-file=sample.cfg", "--root-dir=.", "pymt_heatf:HeatBMI", "-vvv"],
+                [
+                    "bmi-test",
+                    "--config-file=sample.cfg",
+                    "--root-dir=.",
+                    "pymt_heatf:HeatBMI",
+                    "-vvv",
+                ],
                 cwd="_test",
                 check=True,
                 text=True,

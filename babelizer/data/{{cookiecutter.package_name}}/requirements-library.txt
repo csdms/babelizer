@@ -1,0 +1,3 @@
+{%- for requirement in cookiecutter.package_requirements.split(',') %}
+{{ requirement|trim }}
+{%- endfor %}

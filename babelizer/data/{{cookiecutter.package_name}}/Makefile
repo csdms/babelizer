@@ -24,7 +24,6 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 
-
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
 help:
@@ -52,35 +51,33 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
-	flake8 babelizer tests
+	flake8 {{ cookiecutter.package_name }}
 
-pretty: ## reformat files to make them look pretty
-	isort babelizer tests
-	black setup.py babelizer tests --exclude=babelizer/data
-
+pretty:
+	find {{ cookiecutter.package_name }} -name '*.py' | xargs isort
+	black setup.py {{ cookiecutter.package_name }}
 
 test: ## run tests quickly with the default Python
-	pytest --cov=babelizer
-
-benchmark: ## run benchmarks only
-	pytest --benchmark-only --benchmark-autosave
+{%- for babelized_class, component in cookiecutter.components|dictsort %}
+	bmi-test {{ cookiecutter.package_name }}.bmi:{{ babelized_class }} -vvv
+{%- endfor %}
 
 test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source babelizer -m pytest
+	coverage run --source {{ cookiecutter.package_name }} -m pytest
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/source/api/babelizer.rst
-	rm -f docs/source/api/modules.rst
-	sphinx-apidoc -o docs/source/api babelizer
+	rm -f docs/{{ cookiecutter.package_name }}.rst
+	rm -f docs/modules.rst
+	sphinx-apidoc -o docs/ {{ cookiecutter.package_name }}
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
-	$(BROWSER) docs/build/html/index.html
+	$(BROWSER) docs/_build/html/index.html
 
 servedocs: docs ## compile the docs watching for changes
 	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
@@ -94,4 +91,4 @@ dist: clean ## builds source and wheel package
 	ls -l dist
 
 install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+	pip install -e .

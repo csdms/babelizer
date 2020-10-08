@@ -14,10 +14,10 @@ plugin_license = "MIT"
 summary = "PyMT plugin for heat model"
 
 [library.HeatBMI]
-language = "c"
-library = "bmiheatc"
-header = "bmi_heat.h"
-entry_point = "register_bmi_heat"
+language = "c++"
+header = "bmi_heat.hxx"
+library = "bmiheatcxx"
+entry_point = "BmiHeat"
 
 [package]
 name = "pymt_heat"

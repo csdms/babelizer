@@ -4,3 +4,6 @@
 [submodule "external/bmi-example-fortran"]
 	path = external/bmi-example-fortran
 	url = https://github.com/csdms/bmi-example-fortran
+[submodule "external/bmi-example-cxx"]
+	path = external/bmi-example-cxx
+	url = https://github.com/csdms/bmi-example-cxx

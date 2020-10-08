@@ -1,6 +1,8 @@
 #! /usr/bin/env python
+import fnmatch
 import os
 import pathlib
+import tempfile
 from functools import partial
 
 import click
@@ -14,7 +16,8 @@ from .utils import get_setup_py_version, save_files
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
-ask = partial(click.prompt, show_default=True, err=True)
+# ask = partial(click.prompt, show_default=True, err=True)
+yes = partial(click.confirm, show_default=True, err=True)
 
 
 class BabelizerAbort(click.Abort):
@@ -48,7 +51,9 @@ def babelize(cd):
     "-v", "--verbose", is_flag=True, help="Also emit status messages to stderr."
 )
 @click.option(
-    "--template", default=None, help="Location of cookiecutter template",
+    "--template",
+    default=None,
+    help="Location of cookiecutter template",
 )
 @click.option(
     "--package-version",
@@ -110,7 +115,9 @@ def init(meta, output, template, quiet, verbose, package_version):
     "-v", "--verbose", is_flag=True, help="Also emit status messages to stderr."
 )
 @click.option(
-    "--template", default=None, help="Location of cookiecutter template",
+    "--template",
+    default=None,
+    help="Location of cookiecutter template",
 )
 def update(template, quiet, verbose):
     package_path = pathlib.Path(".").resolve()
@@ -145,7 +152,26 @@ def update(template, quiet, verbose):
 
     out(f"re-rendering {package_path}")
     with save_files(["CHANGES.rst", "CREDITS.rst"]):
-        render(babel_metadata, package_path.parent, template=template, clobber=True, version=version)
+        render(
+            babel_metadata,
+            package_path.parent,
+            template=template,
+            clobber=True,
+            version=version,
+        )
+
+    extra_files = _repo_contents(package_path) - _generated_files(
+        babel_metadata, template=template, version=version
+    )
+
+    ignore = ["meta*", "notebooks*", "docs*", "**/data"]
+    for pattern in ignore:
+        extra_files.difference_update(fnmatch.filter(extra_files, pattern))
+
+    if extra_files:
+        out(f"found extra files in {package_path}:")
+        for name in sorted(extra_files):
+            out(f"  {name}")
 
     if not quiet:
         out(
@@ -159,13 +185,21 @@ def update(template, quiet, verbose):
 
 @babelize.command()
 @click.option(
-    "--no-input", is_flag=True, help="Don’t ask questions, just use the default values",
+    "--no-input",
+    is_flag=True,
+    help="Don’t ask questions, just use the default values",
 )
 @click.option(
-    "--name", help="Name to use for the babelized package",
+    "--package",
+    help="Name to use for the babelized package",
 )
 @click.option(
-    "--email", help="Contact email to use for the babelized package",
+    "--name",
+    help="Name of the babelized class",
+)
+@click.option(
+    "--email",
+    help="Contact email to use for the babelized package",
 )
 @click.option(
     "--language",
@@ -174,77 +208,185 @@ def update(template, quiet, verbose):
 )
 @click.option("--author", help="Babelizing author")
 @click.option(
-    "--username", help="GitHub username or organization that will host the project",
+    "--username",
+    help="GitHub username or organization that will host the project",
 )
 @click.option(
-    "--license", help="License to use for the babelized project",
+    "--license",
+    help="License to use for the babelized project",
 )
 @click.option(
-    "--summary", help="Brief description of what the library does",
+    "--summary",
+    help="Brief description of what the library does",
+)
+@click.option("--library", help="Name of the BMI library to wrap", default=None)
+@click.option(
+    "--header", help="Name of the header file declaring the BMI class", default=None
 )
 @click.option(
-    "--entry-point", help="Entry point to the library BMI", multiple=True, default=None
+    "--entry-point", help="Name of the BMI entry point into the library", default=None
 )
 @click.option("--requirement", help="Requirement", multiple=True, default=None)
 @click.argument("file_", metavar="FILENAME", type=click.File(mode="w", lazy=True))
 def generate(
-    no_input, name, email, language, author, username, license, summary, entry_point, requirement, file_
+    no_input,
+    package,
+    name,
+    email,
+    language,
+    author,
+    username,
+    license,
+    summary,
+    library,
+    header,
+    entry_point,
+    requirement,
+    file_,
 ):
     """Generate babelizer config file, FILENAME."""
+
+    meta = _gather_input(
+        no_input=no_input,
+        package=package,
+        name=name,
+        email=email,
+        language=language,
+        author=author,
+        username=username,
+        license=license,
+        summary=summary,
+        library=library,
+        header=header,
+        entry_point=entry_point,
+        requirement=requirement,
+    )
+
+    print(BabelMetadata(**meta).format(fmt="toml"), file=file_)
+
+
+def _gather_input(
+    no_input=False,
+    package=None,
+    name=None,
+    email=None,
+    language=None,
+    author=None,
+    username=None,
+    license=None,
+    summary=None,
+    library=None,
+    header=None,
+    entry_point=None,
+    requirement=None,
+):
+    """Gather input either from command-line option, default, or user prompt.
+
+    If a value is not ``None``, that means it was provided on the command
+    line and so its value will be used. Otherwise, depending on
+    the value of ``no_input``, either a default value is used or
+    the user will be prompted for a value.
+    """
+
+    if no_input:
+
+        def ask(text, default=None, **kwds):
+            return default
+
+    else:
+        ask = partial(click.prompt, show_default=True, err=True)
+
     def ask_until_done(text):
         answers = []
         while (answer := ask(text, default="done")) != "done":
             answers.append(answer)
         return answers
 
-    if no_input:
-        name = name or ""
-        language = language or "c"
-        author = author or "csdms"
-        email = email or "csdms@colorado.edu"
-        username = username or "pymt-lab"
-        license = license or "MIT"
-        summary = summary or ""
-        entry_points = entry_point or ()
-        requirements = requirement or ()
-    else:
-        name = name or ask("Name to use for the babelized package", default="")
-        language = language or ask(
-            "Programming language of the library being babelized",
-            show_choices=["c", "c++", "fortran", "python"],
-            default="c",
-        )
-        author = author or ask("Babelizing author", default="csdms")
-        email = email or ask("Babelizing author email", default="csdms@colorado.edu")
-        username = username or ask(
+    package = {
+        "name": package or ask("Name to use for the babelized package", default=""),
+        "requirements": requirement or ask_until_done("Requirement"),
+    }
+    info = {
+        "github_username": username
+        or ask(
             "GitHub username or organization that will host the project",
             default="pymt-lab",
-        )
-        license = license or ask(
-            "License to use for the babelized project", default="MIT"
-        )
-        summary = summary or ask(
-            "Brief description of what the library does", default=""
-        )
+        ),
+        "package_author": author or ask("Babelizing author", default="csdms"),
+        "package_author_email": email
+        or ask("Babelizing author email", default="csdms@colorado.edu"),
+        "package_license": license
+        or ask("License to use for the babelized project", default="MIT"),
+        "summary": summary
+        or ask("Brief description of what the library does", default=""),
+    }
 
-        entry_points = entry_point or ask_until_done("Entry point")
-        requirements = requirement or ask_until_done("Requirement")
-
-    print(
-        BabelMetadata(
-            library={"language": language, "entry_point": entry_points},
-            plugin={"name": name, "requirements": requirements},
-            info={
-                "github_username": username,
-                "plugin_author": author,
-                "plugin_author_email": email,
-                "plugin_license": license,
-                "summary": summary,
-            },
-            build={},
-        ).format(fmt="toml"),
-        file=file_,
+    language = language or ask(
+        "Programming language of the library being babelized",
+        show_choices=["c", "c++", "fortran", "python"],
+        default="c",
     )
+
+    libraries = {}
+    if no_input or any([x is not None for x in (name, library, header, entry_point)]):
+        babelized_class = name or ask("Name of babelized class", default="<name>")
+        libraries[babelized_class] = {
+            "language": language,
+            "library": library
+            or ask(f"[{babelized_class}] Name of library to babelize", default=""),
+            "header": header
+            or ask(
+                f"[{babelized_class}] Name of header file containing BMI class ",
+                default="",
+            ),
+            "entry_point": entry_point
+            or ask(f"[{babelized_class}] Name of BMI class ", default=""),
+        }
+    else:
+        while 1:
+            babelized_class = ask("Name of babelized class")
+            libraries[babelized_class] = {
+                "language": language,
+                "library": ask(f"[{babelized_class}] Name of library to babelize"),
+                "header": ask(
+                    f"[{babelized_class}] Name of header file containing BMI class "
+                ),
+                "entry_point": ask(f"[{babelized_class}] Name of BMI class "),
+            }
+            if not yes("Add another library?", default=False):
+                break
+
+    return {"library": libraries, "package": package, "info": info, "build": {}}
+
+
+def _get_dir_contents(base, trunk=None):
+    base = pathlib.Path(base)
+    files = set()
+    for item in base.iterdir():
+        if item.is_dir():
+            files |= _get_dir_contents(item, trunk=trunk)
+        else:
+            files.add(str(item.relative_to(trunk)))
+
+    return files
+
+
+def _repo_contents(base):
+    repo = git.Repo(str(base))
+    return set(
+        repo.git.ls_tree("--full-tree", "-r", "--name-only", "HEAD").splitlines()
+    )
+
+
+def _generated_files(babel_metadata, template=None, version="0.1"):
+    with tempfile.TemporaryDirectory() as tmpdir:
+        new_folder = render(
+            babel_metadata,
+            tmpdir,
+            template=template,
+            version=version,
+        )
+        return _get_dir_contents(new_folder, trunk=new_folder)
 
 
 if __name__ == "__main__":

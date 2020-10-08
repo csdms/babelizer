@@ -26,8 +26,7 @@ create a directory to hold our work:
 
 .. code:: bash
 
-  $ mkdir build
-  $ cd build
+  $ mkdir build && cd build
 
 
 Set up a conda environment
@@ -134,10 +133,13 @@ Return to our initial ``build`` directory and call ``babelize generate`` with:
 
   $ cd ~/build
   $ babelize generate babel_heatc.toml \
-      --language=c \
+      --package=pymt_heatc \
       --summary="PyMT plugin for heat model" \
-      --entry-point=HeatModel=bmiheatc:register_bmi_heat \
-      --name=heatc \
+      --language=c \
+      --library=bmiheatc \
+      --header=bmi_heat.h \
+      --entry-point=register_bmi_heat \
+      --name=HeatModel \
       --requirement=""
 
 In this call,
@@ -145,7 +147,7 @@ the *babelizer* will also interactively prompt for author name, author email,
 GitHub username, and license.
 These can be optionally be filled in, or the defaults can be used.
 
-The resulting file, ``babel_heatc.toml``,
+The resulting file, :download:`babel_heatc.toml`,
 will look something like this:
 
 .. include:: babel_heatc.toml
@@ -170,14 +172,14 @@ under the current directory.
 .. code:: bash
 
   $ ls -aF pymt_heatc
-  ./                        MANIFEST.in               recipe/
-  ../                       Makefile                  requirements-library.txt
-  .git/                     README.rst                requirements-testing.txt
-  .gitignore                babel.toml                requirements.txt
-  .travis.yml               docs/                     setup.cfg
-  CHANGES.rst               meta/                     setup.py
-  CREDITS.rst               pymt_heatc/
-  LICENSE                   pyproject.toml
+  ./                        MANIFEST.in               pyproject.toml
+  ../                       Makefile                  recipe/
+  .git/                     README.py                 requirements-build.txt
+  .gitignore                README.rst                requirements-library.txt
+  .travis.yml               babel.toml                requirements-testing.txt
+  CHANGES.rst               docs/                     requirements.txt
+  CREDITS.rst               meta/                     setup.cfg
+  LICENSE                   pymt_heatc/               setup.py
 
 Before we can build the Python bindings,
 we must ensure that the dependencies required by the toolchain,
@@ -191,8 +193,11 @@ into the conda environment:
 .. code:: bash
 
   $ cd pymt_heatc
-  $ conda install -c conda-forge --file=requirements.txt --file=requirements-library.txt
-
+  $ conda install -c conda-forge \
+      --file=requirements-build.txt \
+      --file=requirements-testing.txt \
+      --file=requirements-library.txt \
+      --file=requirements.txt
 
 Now build the Python bindings with:
 
@@ -226,14 +231,8 @@ it's a good idea to run the *bmi-tester* (`GitHub repo <bmi-tester>`_)
 over the model.
 The *bmi-tester* exercises each BMI method exposed through Python,
 ensuring it works correctly.
-
-Install *bmi-tester* with:
-
-.. code:: bash
-
-  $ conda install -c conda-forge bmi-tester
-
-Before running the *bmi-tester*, one last piece is needed.
+However, before running the *bmi-tester*,
+one last piece of information is needed.
 Like all models equipped with a BMI,
 *heat* uses a :term:`configuration file` to specify initial parameter values.
 Download the file :download:`config.txt <examples/config.txt>` for use here.
