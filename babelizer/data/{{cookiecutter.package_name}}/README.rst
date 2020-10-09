@@ -1,6 +1,6 @@
-'=' * cookiecutter.package_name | length }}
+{{ '=' * cookiecutter.package_name | length }}
 {{ cookiecutter.package_name }}
-'=' * cookiecutter.package_name | length }}
+{{ '=' * cookiecutter.package_name | length }}
 
 {% set is_open_source = cookiecutter.open_source_license != 'Not open source' -%}
 
@@ -12,8 +12,8 @@
 .. image:: https://img.shields.io/badge/recipe-{{ cookiecutter.package_name }}-green.svg
         :target: https://anaconda.org/conda-forge/{{ cookiecutter.package_name }}
 
-.. image:: https://img.shields.io/travis/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}.svg
-        :target: https://travis-ci.org/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}
+.. image:: https://img.shields.io/travis/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}.svg
+        :target: https://travis-ci.org/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}
 
 .. image:: https://readthedocs.org/projects/{{ cookiecutter.package_name | replace("_", "-") }}/badge/?version=latest
         :target: https://{{ cookiecutter.package_name | replace("_", "-") }}.readthedocs.io/en/latest/?badge=latest
@@ -25,7 +25,7 @@
 {%- endif %}
 
 
-{{ cookiecutter.project_short_description }}
+{{ cookiecutter.info.project_short_description }}
 
 {% if is_open_source %}
 * Free software: {{ cookiecutter.open_source_license }}
@@ -83,9 +83,9 @@ It is possible to list all of the versions of `pymt` available on your platform 
 
   conda search pymt --channel conda-forge
 
------------'-' * cookiecutter.package_name | length }}
+-----------{{ '-' * cookiecutter.package_name | length }}
 Installing {{ cookiecutter.package_name }}
------------'-' * cookiecutter.package_name | length }}
+-----------{{ '-' * cookiecutter.package_name | length }}
 
 {% if cookiecutter.package_requirements -%}
 Once `pymt` is installed, the dependencies of `{{ cookiecutter.package_name }}` can

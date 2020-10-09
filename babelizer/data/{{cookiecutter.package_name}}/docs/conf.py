@@ -48,8 +48,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'{{ cookiecutter.package_name }}'
-copyright = u"{% now 'local', '%Y' %}, {{ cookiecutter.full_name }}"
-author = u"{{ cookiecutter.full_name }}"
+copyright = u"{% now 'local', '%Y' %}, {{ cookiecutter.info.full_name }}"
+author = u"{{ cookiecutter.info.full_name }}"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -130,7 +130,7 @@ latex_elements = {
 latex_documents = [
     (master_doc, '{{ cookiecutter.package_name }}.tex',
      u'{{ cookiecutter.package_name }} Documentation',
-     u'{{ cookiecutter.full_name }}', 'manual'),
+     u'{{ cookiecutter.info.full_name }}', 'manual'),
 ]
 
 
