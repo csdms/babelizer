@@ -1,6 +1,6 @@
-'=' * cookiecutter.package_name | length }}
+{{ '=' * cookiecutter.package_name | length }}
 {{ cookiecutter.package_name }}
-'=' * cookiecutter.package_name | length }}
+{{ '=' * cookiecutter.package_name | length }}
 
 {% set is_open_source = cookiecutter.open_source_license != 'Not open source' -%}
 
