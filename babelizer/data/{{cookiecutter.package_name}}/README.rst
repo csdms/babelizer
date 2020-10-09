@@ -12,8 +12,8 @@
 .. image:: https://img.shields.io/badge/recipe-{{ cookiecutter.package_name }}-green.svg
         :target: https://anaconda.org/conda-forge/{{ cookiecutter.package_name }}
 
-.. image:: https://img.shields.io/travis/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}.svg
-        :target: https://travis-ci.org/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}
+.. image:: https://img.shields.io/travis/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}.svg
+        :target: https://travis-ci.org/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}
 
 .. image:: https://readthedocs.org/projects/{{ cookiecutter.package_name | replace("_", "-") }}/badge/?version=latest
         :target: https://{{ cookiecutter.package_name | replace("_", "-") }}.readthedocs.io/en/latest/?badge=latest
@@ -25,7 +25,7 @@
 {%- endif %}
 
 
-{{ cookiecutter.project_short_description }}
+{{ cookiecutter.info.project_short_description }}
 
 {% if is_open_source %}
 * Free software: {{ cookiecutter.open_source_license }}

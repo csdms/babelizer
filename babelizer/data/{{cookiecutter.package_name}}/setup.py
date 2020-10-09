@@ -149,7 +149,7 @@ setup(
     description="PyMT plugin for {{cookiecutter.package_name}}",
     long_description=long_description,
     version="{{cookiecutter.package_version}}",
-    url="https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.package_name }}",
+    url="https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",
