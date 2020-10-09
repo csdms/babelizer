@@ -18,5 +18,5 @@
   "package_requirements": "",
   "package_version": "0.1",
   "language": ["c", "c++", "fortran", "python"],
-  "open_source_license": ["MIT License", "BSD License", "ISC License", "Apache Software License 2.0", "GNU General Public License v3", "Not open source"],
+  "open_source_license": ["MIT License", "BSD License", "ISC License", "Apache Software License 2.0", "GNU General Public License v3", "Not open source"]
 }
