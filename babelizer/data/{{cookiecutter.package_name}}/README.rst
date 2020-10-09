@@ -83,9 +83,9 @@ It is possible to list all of the versions of `pymt` available on your platform 
 
   conda search pymt --channel conda-forge
 
------------'-' * cookiecutter.package_name | length }}
+-----------{{ '-' * cookiecutter.package_name | length }}
 Installing {{ cookiecutter.package_name }}
------------'-' * cookiecutter.package_name | length }}
+-----------{{ '-' * cookiecutter.package_name | length }}
 
 {% if cookiecutter.package_requirements -%}
 Once `pymt` is installed, the dependencies of `{{ cookiecutter.package_name }}` can
