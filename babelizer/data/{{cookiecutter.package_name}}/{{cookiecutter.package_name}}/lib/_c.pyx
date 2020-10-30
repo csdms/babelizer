@@ -309,15 +309,15 @@ cdef class {{ babelized_class }}:
 
     cpdef get_grid_x(self, gid, np.ndarray[double, ndim=1] buff):
         ok_or_raise(<int>self._bmi.get_grid_x(self._bmi, gid, &buff[0]))
-        return origin
+        return buff
 
     cpdef get_grid_y(self, gid, np.ndarray[double, ndim=1] buff):
         ok_or_raise(<int>self._bmi.get_grid_y(self._bmi, gid, &buff[0]))
-        return origin
+        return buff
 
     cpdef get_grid_z(self, gid, np.ndarray[double, ndim=1] buff):
         ok_or_raise(<int>self._bmi.get_grid_z(self._bmi, gid, &buff[0]))
-        return origin
+        return buff
 
     cpdef get_grid_edge_nodes(self, gid, np.ndarray[int, ndim=1] buff):
         ok_or_raise(<int>self._bmi.get_grid_edge_nodes(self._bmi, gid, &buff[0]))
