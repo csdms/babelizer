@@ -44,7 +44,7 @@ before_install:
     source $HOME/.bashrc
   fi
 - micromamba activate
-- micromamba install mamba --yes -c conda-forge
+- micromamba install mamba --yes -c conda-forge -p $MAMBA_ROOT_PREFIX
 - mamba create -n testing python=$PYTHON --file=requirements-testing.txt --yes -c conda-forge
 - source activate testing
 - |
