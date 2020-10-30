@@ -4,7 +4,13 @@ Changelog for babelizer
 0.3.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added missing methods, primarily for unstructured grids, to C and C++
+  implementation
+
+- Fixed a rendering error that caused import lines to run together
+  when wrapping multiple components
+
+- Removed Python 3.6 builds
 
 
 0.3.2 (2020-10-08)
