@@ -1,4 +1,4 @@
-bmi-tester
+bmi-tester>=0.5.4
 bmi-c
 bmi-cxx
 bmi-fortran

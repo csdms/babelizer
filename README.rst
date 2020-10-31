@@ -1,5 +1,5 @@
-.. image:: https://img.shields.io/travis/csdms/babelizer.svg
-        :target: https://travis-ci.org/csdms/babelizer
+.. image:: https://travis-ci.com/csdms/babelizer.svg?branch=master
+        :target: https://travis-ci.com/csdms/babelizer
 
 .. image:: https://readthedocs.org/projects/babelizer/badge/?version=latest
         :target: https://babelizer.readthedocs.io/en/latest/?badge=latest

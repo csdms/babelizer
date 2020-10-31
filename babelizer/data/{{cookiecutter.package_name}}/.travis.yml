@@ -4,7 +4,6 @@ os:
 - linux
 env:
   matrix:
-  - PYTHON="3.6"
   - PYTHON="3.7"
   - PYTHON="3.8"
   global:
@@ -38,6 +37,7 @@ before_install:
 - source activate _testing
 - conda info -a && conda list
 install:
+- conda install -q --file=requirements-build.txt
 - conda install -q --file=requirements-library.txt
 - pip install -e .
 script:

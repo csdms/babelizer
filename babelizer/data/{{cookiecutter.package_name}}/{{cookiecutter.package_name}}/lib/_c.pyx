@@ -278,7 +278,17 @@ cdef class {{ babelized_class }}:
 
     cpdef int get_grid_node_count(self, gid):
         cdef int size
-        ok_or_raise(<int>self._bmi.get_grid_size(self._bmi, gid, &size))
+        ok_or_raise(<int>self._bmi.get_grid_node_count(self._bmi, gid, &size))
+        return size
+
+    cpdef int get_grid_edge_count(self, gid):
+        cdef int size
+        ok_or_raise(<int>self._bmi.get_grid_edge_count(self._bmi, gid, &size))
+        return size
+
+    cpdef int get_grid_face_count(self, gid):
+        cdef int size
+        ok_or_raise(<int>self._bmi.get_grid_face_count(self._bmi, gid, &size))
         return size
 
     cpdef object get_grid_type(self, gid):
@@ -297,4 +307,31 @@ cdef class {{ babelized_class }}:
         ok_or_raise(<int>self._bmi.get_grid_origin(self._bmi, gid, &origin[0]))
         return origin
 
+    cpdef get_grid_x(self, gid, np.ndarray[double, ndim=1] buff):
+        ok_or_raise(<int>self._bmi.get_grid_x(self._bmi, gid, &buff[0]))
+        return buff
+
+    cpdef get_grid_y(self, gid, np.ndarray[double, ndim=1] buff):
+        ok_or_raise(<int>self._bmi.get_grid_y(self._bmi, gid, &buff[0]))
+        return buff
+
+    cpdef get_grid_z(self, gid, np.ndarray[double, ndim=1] buff):
+        ok_or_raise(<int>self._bmi.get_grid_z(self._bmi, gid, &buff[0]))
+        return buff
+
+    cpdef get_grid_edge_nodes(self, gid, np.ndarray[int, ndim=1] buff):
+        ok_or_raise(<int>self._bmi.get_grid_edge_nodes(self._bmi, gid, &buff[0]))
+        return buff
+
+    cpdef get_grid_face_edges(self, gid, np.ndarray[int, ndim=1] buff):
+        ok_or_raise(<int>self._bmi.get_grid_face_edges(self._bmi, gid, &buff[0]))
+        return buff
+
+    cpdef get_grid_face_nodes(self, gid, np.ndarray[int, ndim=1] buff):
+        ok_or_raise(<int>self._bmi.get_grid_face_nodes(self._bmi, gid, &buff[0]))
+        return buff
+
+    cpdef get_grid_nodes_per_face(self, gid, np.ndarray[int, ndim=1] buff):
+        ok_or_raise(<int>self._bmi.get_grid_nodes_per_face(self._bmi, gid, &buff[0]))
+        return buff
 {% endfor %}

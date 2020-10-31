@@ -1,1 +1,1 @@
-bmi-tester
+bmi-tester>=0.5.4

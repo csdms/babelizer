@@ -21,7 +21,7 @@ def render(plugin_metadata, output, template=None, clobber=False, version="0.1")
         path = render_plugin_repo(
             template,
             context=dict(
-                plugin_metadata.as_cookiecutter_context(), plugin_version=version
+                plugin_metadata.as_cookiecutter_context(), package_version=version
             ),
             output_dir=output,
             clobber=clobber,

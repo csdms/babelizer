@@ -189,11 +189,19 @@ cdef class {{ babelized_class }}:
         self._bmi.GetGridY(gid, &buff[0])
         return buff
 
+    cpdef get_grid_z(self, gid, np.ndarray[double, ndim=1] buff):
+        self._bmi.GetGridZ(gid, &buff[0])
+        return buff
+
     cpdef get_grid_face_nodes(self, gid, np.ndarray[int, ndim=1] buff):
         self._bmi.GetGridFaceNodes(gid, &buff[0])
         return buff
 
     cpdef get_grid_nodes_per_face(self, gid, np.ndarray[int, ndim=1] buff):
         self._bmi.GetGridNodesPerFace(gid, &buff[0])
+        return buff
+
+    cpdef get_grid_edge_nodes(self, gid, np.ndarray[int, ndim=1] buff):
+        self._bmi.GetGridEdgeNodes(gid, &buff[0])
         return buff
 {% endfor %}
