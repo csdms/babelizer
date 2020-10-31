@@ -1,7 +1,7 @@
 Changelog for babelizer
 =======================
 
-0.3.3 (unreleased)
+0.3.3 (2020-10-31)
 ------------------
 
 - Added missing methods, primarily for unstructured grids, to C and C++
