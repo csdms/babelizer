@@ -1,4 +1,4 @@
-.. image:: https://travis-ci.com/csdms/babelizer.svg?branch=master
+.. image:: https://travis-ci.com/csdms/babelizer.svg?branch=develop
         :target: https://travis-ci.com/csdms/babelizer
 
 .. image:: https://readthedocs.org/projects/babelizer/badge/?version=latest

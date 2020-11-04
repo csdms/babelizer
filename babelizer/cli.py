@@ -66,6 +66,9 @@ def babelize(cd):
     type=click.Path(file_okay=False, dir_okay=True, writable=True, resolve_path=True),
 )
 def init(meta, output, template, quiet, verbose, package_version):
+
+    """Initialize a repository with babelized project files."""
+
     template = template or pkg_resources.resource_filename("babelizer", "data")
 
     if not quiet:
@@ -120,6 +123,9 @@ def init(meta, output, template, quiet, verbose, package_version):
     help="Location of cookiecutter template",
 )
 def update(template, quiet, verbose):
+
+    """Update an existing babelized project."""
+
     package_path = pathlib.Path(".").resolve()
 
     for fname in ("babel.toml", "babel.yaml", "plugin.yaml"):
