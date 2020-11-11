@@ -31,7 +31,7 @@ class BabelizerAbort(click.Abort):
     "--cd",
     default=".",
     type=click.Path(exists=True, file_okay=False, dir_okay=True, readable=True),
-    help="chage to directory, then execute",
+    help="Change to directory, then execute.",
 )
 def babelize(cd):
     os.chdir(cd)
