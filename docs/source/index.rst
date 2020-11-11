@@ -26,6 +26,10 @@ and programmatically through Python scripts;
 they can also use Python-based BMI tools such as
 the `bmi-tester`_, `pymt`_, and `Landlab`_.
 
+The *babelizer* is an element of the `CSDMS Workbench`_,
+an integrated system of software tools, technologies, and standards
+for building and coupling models.
+
 	 
 User Guide
 ==========
@@ -79,4 +83,5 @@ Miscellaneous Pages
 .. _bmi-tester: https://github.com/csdms/bmi-tester
 .. _pymt: https://pymt.readthedocs.io/
 .. _Landlab: https://landlab.github.io/
+.. _CSDMS Workbench: https://csdms.colorado.edu/wiki/Workbench
 .. _CSDMS Help Desk: https://github.com/csdms/help-desk
