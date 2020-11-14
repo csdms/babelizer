@@ -214,6 +214,15 @@ at the end of which you'll hopefully see:
   Successfully installed pymt-heatc
 
 Pause a moment to see what we've done.
+Change back to the initial ``build`` directory,
+make a new ``test`` directory,
+and change to it:
+
+.. code:: bash
+
+  $ cd ~/build
+  $ mkdir test && cd test
+
 Start a Python session and try the following commands:
 
 .. code:: python
@@ -271,10 +280,12 @@ to the directory ``pymt_heatc``.
 Under this directory,
 the *babelizer* created a directory for *heat* model metadata,
 ``meta/HeatModel``.
-The contents of this directory are currently:
+Change back to the ``pymt_heatc`` directory
+and view the current metadata:
 
 .. code:: bash
 
+  $ cd ~/build/pymt_heatc
   $ ls meta/HeatModel/
   api.yaml
 
