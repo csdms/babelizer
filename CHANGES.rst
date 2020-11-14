@@ -6,6 +6,8 @@ Changelog for babelizer
 
 - Minor edits to README and CLI help strings (#29)
 
+- Added text on the CSDMS Workbench to the README and docs (#30)
+
 
 0.3.3 (2020-10-31)
 ------------------
