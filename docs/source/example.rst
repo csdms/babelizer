@@ -48,7 +48,8 @@ and create the new environment with:
   $ conda env create --file=environment.yml
 
 When this command completes,
-activate the environment:
+activate the environment
+(on Linux and macOS, you may have to use ``source`` instead of ``conda``):
 
 .. code:: bash
 
