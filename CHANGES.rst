@@ -8,6 +8,8 @@ Changelog for babelizer
 
 - Added text on the CSDMS Workbench to the README and docs (#30)
 
+- Clarified text in docs example (#31)
+
 
 0.3.3 (2020-10-31)
 ------------------
