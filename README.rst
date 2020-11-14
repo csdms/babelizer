@@ -30,6 +30,11 @@ Supported languages:
 *  C++
 *  Fortran
 
+The *babelizer* is an element of the `CSDMS Workbench`_,
+an integrated system of software tools, technologies, and standards
+for building and coupling models.
+
+
 ************
 Requirements
 ************
@@ -336,4 +341,7 @@ to wrap a C library exposing a BMI,
 see the User Guide of the `documentation`_.
 
 
+.. Links:
+
+.. _CSDMS Workbench: https://csdms.colorado.edu/wiki/Workbench
 .. _documentation: https://babelizer.readthedocs.io/
