@@ -12,9 +12,9 @@ from .lib import {{ classes|join(', ') }}
 {%- else %}
 import pkg_resources
 
-{% for babelized_class, component in cookiecutter.components %}
+{% for babelized_class, component in cookiecutter.components|dictsort %}
 
-from {{ component.library }} import {{ component.class }} as {{ babelized_class }}
+from {{ component.library }} import {{ component.entry_point }} as {{ babelized_class }}
 
     {%- endfor %}
 
