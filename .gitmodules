@@ -7,3 +7,6 @@
 [submodule "external/bmi-example-cxx"]
 	path = external/bmi-example-cxx
 	url = https://github.com/csdms/bmi-example-cxx
+[submodule "external/bmi-example-python"]
+	path = external/bmi-example-python
+	url = https://github.com/csdms/bmi-example-python
