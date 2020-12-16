@@ -1,7 +1,7 @@
 Changelog for babelizer
 =======================
 
-0.3.4 (unreleased)
+0.3.4 (2020-12-16)
 ------------------
 
 - Minor edits to README and CLI help strings (#29)
