@@ -17,6 +17,7 @@ Supported languages include:
 * C
 * C++
 * Fortran
+* Python
 
 Within Python, these models, regardless of their core language,
 appear as classes that expose a BMI.

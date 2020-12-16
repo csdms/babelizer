@@ -29,6 +29,7 @@ Supported languages:
 *  C
 *  C++
 *  Fortran
+*  Python
 
 The *babelizer* is an element of the `CSDMS Workbench`_,
 an integrated system of software tools, technologies, and standards
