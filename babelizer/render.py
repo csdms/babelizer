@@ -6,7 +6,7 @@ import black as blk
 import git
 import isort
 import pkg_resources
-import toml
+import tomlkit as toml
 from cookiecutter.exceptions import OutputDirExistsException
 from cookiecutter.main import cookiecutter
 
@@ -107,7 +107,7 @@ def blacken_file(filepath):
 def prettify_python(path_to_repo):
     path_to_repo = pathlib.Path(path_to_repo)
     with open(path_to_repo / "babel.toml") as fp:
-        meta = toml.load(fp)
+        meta = toml.parse(fp.read())
     module_name = meta["package"]["name"]
 
     files_to_fix = [

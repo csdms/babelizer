@@ -5,6 +5,7 @@ os:
 env:
   matrix:
   - PYTHON="3.8"
+  - PYTHON="3.9"
 sudo: false
 
 jobs:
