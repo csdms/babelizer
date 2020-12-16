@@ -7,13 +7,16 @@ exclude .readthedocs.yaml
 exclude external/bmi-example-c/.git
 exclude external/bmi-example-cxx/.git
 exclude external/bmi-example-fortran/.git
+exclude external/bmi-example-python/.git
 recursive-include babelizer/data *
 recursive-exclude docs *
 recursive-include external/bmi-example-c *
 recursive-include external/bmi-example-cxx *
 recursive-include external/bmi-example-fortran *
+recursive-include external/bmi-example-python *
 recursive-include tests *.py
 recursive-include tests *.toml
 recursive-include tests *.txt
 recursive-include tests *.cfg
+recursive-include tests *.yaml
 recursive-exclude recipe *
