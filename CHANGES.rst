@@ -1,7 +1,7 @@
 Changelog for babelizer
 =======================
 
-0.3.5 (unreleased)
+0.3.5 (2020-12-16)
 ------------------
 
 - Removed use of the toml package, instead use tomlkit (#34)
