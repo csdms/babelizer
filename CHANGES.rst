@@ -4,14 +4,7 @@ Changelog for babelizer
 0.3.5 (unreleased)
 ------------------
 
-- Removed toml, instead use tomlkit (#34)
-
-- Fixed a templating issue when building Python (#33)
-
-- Added additional tests for build Python that uses the bmi-example-python
-  repository (#33)
-
-- Updated documentation (#30, #31)
+- Removed use of the toml package, instead use tomlkit (#34)
 
 
 0.3.4 (2020-12-16)
