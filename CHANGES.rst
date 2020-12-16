@@ -10,6 +10,9 @@ Changelog for babelizer
 
 - Clarified text in docs example (#31)
 
+- Fixed a templating problem that caused Python BMIs to fail to build.
+  Included the Python BMI example in the test suite. (#33)
+
 
 0.3.3 (2020-10-31)
 ------------------
