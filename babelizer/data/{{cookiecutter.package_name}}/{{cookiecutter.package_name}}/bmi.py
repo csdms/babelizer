@@ -20,7 +20,7 @@ from {{ component.library }} import {{ component.entry_point }} as {{ babelized_
 
     {%- for cls in classes %}
 {{ cls }}.__name__ = "{{ cls }}"
-{{ cls }}.METADATA = pkg_resources.resource_filename(__name__ , "meta/{{ cls }}")
+{{ cls }}.METADATA = pkg_resources.resource_filename(__name__ , "data/{{ cls }}")
     {%- endfor %}
 
 {%- endif %}
