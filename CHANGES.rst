@@ -1,7 +1,7 @@
 Changelog for babelizer
 =======================
 
-0.3.6 (unreleased)
+0.3.6 (2021-01-13)
 ------------------
 
 - Fixed issue with metadata install path for Python components (#36)
