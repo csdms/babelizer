@@ -33,6 +33,8 @@ def test_babelize_init_python(tmpdir, datadir):
             assert err.output is None, err.output
 
         assert result.returncode == 0
+        assert pathlib.Path("pymt_heatpy/pymt_heatpy/data/HeatPy").exists()
+        assert pathlib.Path("pymt_heatpy/pymt_heatpy/data/HeatPy/api.yaml").is_file()
 
         os.mkdir("_test")
         shutil.copy(datadir / "heat.yaml", "_test/")
