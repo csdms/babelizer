@@ -20,7 +20,7 @@ About
 *****
 
 The *babelizer* is a utility for wrapping libraries, from a variety of
-languages, that expose a Basic Model Interface (BMI) so that they can be
+languages, that expose a `Basic Model Interface`_ (BMI) so that they can be
 imported as a Python package.
 
 
@@ -59,10 +59,10 @@ in *requirements-testing.txt*.
 Installation
 ************
 
-To install the *babelizer*, first create a new environment in
-which *babelizer* will be installed. This, although not necessary, will
-isolate the installation so that there won't be conflicts with your
-base *Python* installation. This can be done with *conda* as,
+To install the *babelizer*, first create a new environment.
+Although this isn't strictly necessary, it
+isolates the installation to avoid conflicts with your
+base Python installation. This can be done with *conda*:
 
 .. code:: bash
 
@@ -72,7 +72,7 @@ base *Python* installation. This can be done with *conda* as,
 Stable Release
 ==============
 
-The *babelizer*, and its dependencies, is best installed with *conda*,
+The *babelizer* and its dependencies are best installed with *conda*:
 
 .. code:: bash
 
@@ -82,8 +82,8 @@ From Source
 ===========
 
 After downloading the the *babelizer* source code, run the following from
-*babelizer*'s top-level folder (the one that contains *setup.py*) to
-install *babelizer* into the current environment::
+*babelizer*'s top-level directory (the one that contains *setup.py*) to
+install *babelizer* into the current environment:
 
   $ pip install -e .
 
@@ -92,9 +92,9 @@ install *babelizer* into the current environment::
 Input file
 **********
 
-The *babelizer* requires a single, *toml*-formatted, input file that describes
-the library you would like to wrap. This file is typically named *babel.toml*.
-An example of a blank *babel.toml* file,
+The *babelizer* requires a single *toml*-formatted input file that describes
+the library to wrap. This file is typically named *babel.toml*.
+An example of a blank *babel.toml* file:
 
 .. code:: toml
 
@@ -125,7 +125,7 @@ An example of a blank *babel.toml* file,
     summary = ""
 
 You can generate *babel.toml* files using the *babelize generate* command.
-For example, the above *babel.toml* was generated with,
+For example, the above *babel.toml* was generated with:
 
 .. code:: bash
 
@@ -344,5 +344,6 @@ see the User Guide of the `documentation`_.
 
 .. Links:
 
+.. _Basic Model Interface: https://bmi.readthedocs.io/
 .. _CSDMS Workbench: https://csdms.colorado.edu/wiki/Workbench
 .. _documentation: https://babelizer.readthedocs.io/
