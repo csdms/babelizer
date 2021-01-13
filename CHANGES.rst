@@ -4,7 +4,9 @@ Changelog for babelizer
 0.3.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed issue with metadata install path for Python components (#36)
+
+- Minor edits to README
 
 
 0.3.5 (2020-12-16)
