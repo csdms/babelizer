@@ -35,7 +35,7 @@ bibliography: paper.bib
 
 The babelizer is a command-line utility that generates Python code
 to bring libraries from other languages into Python. Target libraries
-must expose a Basic Model Interface (BMI; REF) and be written in
+must expose a Basic Model Interface (BMI; @peckham:2013, @hutton:2020) and be written in
 C, C++, or Fortran. We have made the babelizer extendable and so
 additional languages can be added in the future. This provides a
 streamlined way to bring scientific models into a common language
