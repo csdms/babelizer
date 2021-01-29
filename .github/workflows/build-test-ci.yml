@@ -1,0 +1,61 @@
+name: Build/Test CI
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.8]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Show submodule listings
+        run: |
+          ls -1 -F external/bmi-example-c
+          ls -1 -F external/bmi-example-cxx
+          ls -1 -F external/bmi-example-fortran
+          ls -1 -F external/bmi-example-python
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Lint
+        run: |
+          pip install flake8
+          make lint
+
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Build docs
+        run: |
+          pip install -r requirements.txt -r requirements-docs.txt
+          pip install -e .
+          make -C docs clean html
