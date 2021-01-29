@@ -61,7 +61,7 @@ community can develop model components. This allows for
 more innovation and experimentation, driven
 from the bottom up by a community. It reduces redundancy--rather
 than reinventing software, scientists can find and
-use models that suit their needs--and allows scientists
+use models that suit their needs--and it allows scientists
 to focus on new, unsolved, problems. 
 
 There are disadvantages, however.
@@ -127,7 +127,7 @@ The user provides metadata describing his or her model through a
 *toml*-formatted file (see Figure 2 for an example). The `babelizer` uses
 the metadata to fill a set of *jinja*-formatted template files to construct
 the new repository (or update an existing repository). The entire
-repository is almost completely auto-generated--and so can easily
+repository is almost completely auto-generated, which means it can easily
 be regenerated. The only files a user need edit are the main
 configuration file, `babel.toml`, and any optional model data files,
 which are installed along with the new component.
