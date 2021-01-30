@@ -20,12 +20,20 @@ jobs:
         with:
           submodules: true
 
-      - name: Show submodule listings
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+          mamba-version: "*"
+          channels: conda-forge
+          channel-priority: true
+
+      - name: Install dependencies
         run: |
-          ls -1 -F external/bmi-example-c
-          ls -1 -F external/bmi-example-cxx
-          ls -1 -F external/bmi-example-fortran
-          ls -1 -F external/bmi-example-python
+          mamba install --file=requirements.txt --file=requirements-testing.txt
+          conda list
+
+
 
   lint:
     runs-on: ubuntu-latest
