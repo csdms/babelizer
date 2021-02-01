@@ -50,7 +50,30 @@ jobs:
       - name: Make C example
         run: |
           mkdir buildc && pushd buildc
-          echo $CONDA_PREFIX
           cmake ../external/bmi-example-c -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
           make install
           popd
+
+      - name: Make C++ example
+        run: |
+          mkdir buildcxx && pushd buildcxx
+          cmake ../external/bmi-example-cxx -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+          make install
+          popd
+
+      - name: Make Fortran example
+        run: |
+          mkdir buildf && pushd buildf
+          cmake ../external/bmi-example-fortran -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+          make install
+          popd
+
+      - name: Make Python example
+        run: |
+          pushd ./external/bmi-example-python
+          make install
+          popd
+
+      - name: Test language examples
+        run: |
+          pytest -vvv
