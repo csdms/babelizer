@@ -4,7 +4,7 @@ Changelog for babelizer
 0.3.7 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Use GitHub Actions for continuous integration (#39)
 
 
 0.3.6 (2021-01-13)

@@ -1,0 +1,112 @@
+name: Build/Test CI
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: [3.8, 3.9]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+          mamba-version: "*"
+          channels: conda-forge
+          channel-priority: true
+
+      - name: Install dependencies
+        run: |
+          mamba install --file=requirements.txt --file=requirements-testing.txt
+          conda list
+
+      - name: Install babelizer
+        run: |
+          pip install .
+
+      - name: Run diagnostics
+        run: |
+          babelize --version
+          babelize --help
+          babelize init --help
+          babelize update --help
+          babelize generate --help
+          babelize generate - --no-input
+          python -c 'import babelizer; print(babelizer.__version__)'
+
+      - name: Make C example
+        run: |
+          mkdir buildc && pushd buildc
+          cmake ../external/bmi-example-c -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+          make install
+          popd
+
+      - name: Make C++ example
+        run: |
+          mkdir buildcxx && pushd buildcxx
+          cmake ../external/bmi-example-cxx -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+          make install
+          popd
+
+      - name: Make Fortran example
+        run: |
+          mkdir buildf && pushd buildf
+          cmake ../external/bmi-example-fortran -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+          make install
+          popd
+
+      - name: Make Python example
+        run: |
+          pushd ./external/bmi-example-python
+          make install
+          popd
+
+      - name: Test language examples
+        run: |
+          pytest -vvv
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Lint
+        run: |
+          pip install flake8
+          make lint
+
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Build docs
+        run: |
+          pip install -r requirements.txt -r requirements-docs.txt
+          pip install -e .
+          make -C docs clean html
