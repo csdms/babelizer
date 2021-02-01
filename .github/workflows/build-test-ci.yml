@@ -46,3 +46,11 @@ jobs:
           babelize generate --help
           babelize generate - --no-input
           python -c 'import babelizer; print(babelizer.__version__)'
+
+      - name: Make C example
+        run: |
+          mkdir buildc && pushd buildc
+          echo $CONDA_PREFIX
+          cmake ../external/bmi-example-c -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+          make install
+          popd
