@@ -19,8 +19,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [3.7, 3.8, 3.9]
+        os: [{{ cookiecutter.ci.os | join(", ") }}]
+        python-version: [{{ cookiecutter.ci.python_version | join(", ") }}]
 
     steps:
       - uses: actions/checkout@v2

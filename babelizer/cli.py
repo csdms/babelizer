@@ -229,6 +229,10 @@ def update(template, quiet, verbose):
     "--entry-point", help="Name of the BMI entry point into the library", default=None
 )
 @click.option("--requirement", help="Requirement", multiple=True, default=None)
+@click.option("--python-version", help="supported Python versions", default="3.9")
+@click.option(
+    "--os-name", help="Supported operating systems", default="linux,mac,windows"
+)
 def generate(
     no_input,
     package,
@@ -243,6 +247,8 @@ def generate(
     header,
     entry_point,
     requirement,
+    python_version,
+    os_name,
 ):
     """Generate babelizer config file, FILENAME."""
 
@@ -260,6 +266,8 @@ def generate(
         header=header,
         entry_point=entry_point,
         requirement=requirement,
+        python_version=python_version,
+        os_name=os_name,
     )
 
     print(BabelMetadata(**meta).format(fmt="toml"))
@@ -279,6 +287,8 @@ def _gather_input(
     header=None,
     entry_point=None,
     requirement=None,
+    python_version=None,
+    os_name=None,
 ):
     """Gather input either from command-line option, default, or user prompt.
 
@@ -295,6 +305,12 @@ def _gather_input(
 
     else:
         ask = partial(click.prompt, show_default=True, err=True)
+
+    def _split_if_str(val, sep=","):
+        return val.split(sep) if isinstance(val, str) else val
+
+    python_version = _split_if_str(python_version)
+    os_name = _split_if_str(os_name)
 
     def ask_until_done(text):
         answers = []
@@ -326,6 +342,21 @@ def _gather_input(
         show_choices=["c", "c++", "fortran", "python"],
         default="c",
     )
+
+    ci = {
+        "os": os_name
+        or ask_until_done(
+            "Supported operating system",
+            show_choices=["linux", "mac", "windows", "all"],
+            default="all",
+        ),
+        "python_version": python_version
+        or ask_until_done(
+            "Supported python version",
+            show_choices=["3.7", "3.8", "3.9"],
+            default="3.9",
+        ),
+    }
 
     libraries = {}
     if no_input or any([x is not None for x in (name, library, header, entry_point)]):
@@ -362,7 +393,13 @@ def _gather_input(
             if not yes("Add another library?", default=False):
                 break
 
-    return {"library": libraries, "package": package, "info": info, "build": {}}
+    return {
+        "library": libraries,
+        "package": package,
+        "info": info,
+        "build": {},
+        "ci": {},
+    }
 
 
 def _get_dir_contents(base, trunk=None):
