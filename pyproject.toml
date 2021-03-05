@@ -26,3 +26,10 @@ combine_as_imports = true
 line_length = 88
 skip = ["babelizer/data"]
 
+[tool.black]
+exclude = '''
+(
+  babelizer/data
+  | external
+)
+'''
