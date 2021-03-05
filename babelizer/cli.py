@@ -61,14 +61,10 @@ def babelize(cd):
     help="The initial version of the babelized package",
 )
 @click.argument("meta", type=click.File(mode="r"))
-@click.argument(
-    "output",
-    type=click.Path(file_okay=False, dir_okay=True, writable=True, resolve_path=True),
-)
-def init(meta, output, template, quiet, verbose, package_version):
+def init(meta, template, quiet, verbose, package_version):
 
     """Initialize a repository with babelized project files."""
-
+    output = pathlib.Path(".")
     template = template or pkg_resources.resource_filename("babelizer", "data")
 
     if not quiet:
@@ -233,7 +229,6 @@ def update(template, quiet, verbose):
     "--entry-point", help="Name of the BMI entry point into the library", default=None
 )
 @click.option("--requirement", help="Requirement", multiple=True, default=None)
-@click.argument("file_", metavar="FILENAME", type=click.File(mode="w", lazy=True))
 def generate(
     no_input,
     package,
@@ -248,7 +243,6 @@ def generate(
     header,
     entry_point,
     requirement,
-    file_,
 ):
     """Generate babelizer config file, FILENAME."""
 
@@ -268,7 +262,7 @@ def generate(
         requirement=requirement,
     )
 
-    print(BabelMetadata(**meta).format(fmt="toml"), file=file_)
+    print(BabelMetadata(**meta).format(fmt="toml"))
 
 
 def _gather_input(
@@ -341,9 +335,13 @@ def _gather_input(
             "library": library
             or ask(f"[{babelized_class}] Name of library to babelize", default=""),
             "header": header
-            or ask(
-                f"[{babelized_class}] Name of header file containing BMI class ",
-                default="",
+            or (
+                ask(
+                    f"[{babelized_class}] Name of header file containing BMI class ",
+                    default="",
+                )
+                if language != "python"
+                else "__UNUSED__"
             ),
             "entry_point": entry_point
             or ask(f"[{babelized_class}] Name of BMI class ", default=""),
@@ -356,7 +354,9 @@ def _gather_input(
                 "library": ask(f"[{babelized_class}] Name of library to babelize"),
                 "header": ask(
                     f"[{babelized_class}] Name of header file containing BMI class "
-                ),
+                )
+                if language != "python"
+                else "__UNUSED__",
                 "entry_point": ask(f"[{babelized_class}] Name of BMI class "),
             }
             if not yes("Add another library?", default=False):
