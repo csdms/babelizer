@@ -398,7 +398,7 @@ def _gather_input(
         "package": package,
         "info": info,
         "build": {},
-        "ci": {},
+        "ci": ci,
     }
 
 

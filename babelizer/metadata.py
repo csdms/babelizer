@@ -218,6 +218,8 @@ class BabelMetadata:
         )
         validate_dict(config["package"], required=("name", "requirements"), optional={})
         validate_dict(config["ci"], required=("python_version", "os"), optional={})
+        if "all" in config["ci"]["os"]:
+            config["ci"] = ["linux", "mac", "windows"]
         config["ci"]["os"] = [_norm_os(name) for name in config["ci"]["os"]]
 
         try:
