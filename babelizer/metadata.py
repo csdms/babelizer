@@ -276,12 +276,12 @@ class BabelMetadata:
             },
             "package": {
                 "name": config["package"]["name"],
-                "requirements": list(config["package"]["requirements"]),
+                "requirements": sorted(config["package"]["requirements"]),
             },
             "info": info,
             "ci": {
-                "python_version": list(config["ci"]["python_version"]),
-                "os": list(config["ci"]["os"]),
+                "python_version": sorted(config["ci"]["python_version"]),
+                "os": sorted(config["ci"]["os"]),
             },
         }
 
