@@ -44,7 +44,7 @@ jobs:
           babelize init --help
           babelize update --help
           babelize generate --help
-          babelize generate - --no-input
+          babelize generate
           python -c 'import babelizer; print(babelizer.__version__)'
 
       - name: Make C example
