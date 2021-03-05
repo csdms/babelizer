@@ -124,12 +124,16 @@ An example of a blank *babel.toml* file:
     package_license = "MIT"
     summary = ""
 
+    [ci]
+    python_version = ["3.9"]
+    os = ["linux", "mac", "windows"]
+
 You can generate *babel.toml* files using the *babelize generate* command.
 For example, the above *babel.toml* was generated with:
 
 .. code:: bash
 
-  $ babelize generate --no-input -
+  $ babelize generate > babel.toml
 
 Library section
 ===============
@@ -256,7 +260,7 @@ Email
 -----
 
 Contact email to use for the wrapped package.
-				  
+
 License
 -------
 
@@ -268,6 +272,28 @@ Summary
 
 A short description of the wrapped library.
 
+Ci section
+==========
+
+Information about how to set up continuous integration.
+
+.. code:: toml
+
+[ci]
+python_version = ["3.7", "3.8", "3.9"]
+os = ["linux", "mac", "windows"]
+
+
+Python version
+--------------
+
+A list of Python versions to build and test the generated project with.
+
+Operating system
+----------------
+
+A list of operating systems to build the generate project on. Supported values are
+*linux*, *mac*, and *windows*.
 
 Example babel.toml
 ==================
@@ -305,12 +331,16 @@ called *hydrotrend*.
     package_license = "MIT"
     summary = "PyMT plugin for hydrotrend"
 
+    [ci]
+    python_version = ["3.7", "3.8", "3.9"]
+    os = ["linux", "mac", "windows"]
+
 You can use the ``babelize generate`` command to generate *babel.toml* files.
 For example the above *babel.toml* can be generated with the following,
 
 .. code:: bash
 
-    $ babelize generate babel.toml \
+    $ babelize generate \
 	  --package=pymt_hydrotrend \
 	  --summary="PyMT plugin for hydrotrend" \
 	  --language=c \
@@ -318,7 +348,9 @@ For example the above *babel.toml* can be generated with the following,
 	  --header=bmi_hydrotrend.h \
 	  --entry-point=register_bmi_hydrotrend \
 	  --name=Hydrotrend \
-	  --requirement=hydrotrend
+	  --requirement=hydrotrend \
+    --os-name=linux,mac,windows \
+    --python-version=3.7,3.8,3.9 > babel.toml
 
 ***
 Use
@@ -329,7 +361,7 @@ sending output to the current directory
 
 .. code:: bash
 
-  $ babelize init babel.toml .
+  $ babelize init babel.toml
 
 Update an existing repository
 
