@@ -187,9 +187,9 @@ def update(template, quiet, verbose):
 
 @babelize.command()
 @click.option(
-    "--no-input",
+    "--prompt",
     is_flag=True,
-    help="Don’t ask questions, just use the default values",
+    help="Prompt the user for values",
 )
 @click.option(
     "--package",
@@ -234,7 +234,7 @@ def update(template, quiet, verbose):
     "--os-name", help="Supported operating systems", default="linux,mac,windows"
 )
 def generate(
-    no_input,
+    prompt,
     package,
     name,
     email,
@@ -253,7 +253,7 @@ def generate(
     """Generate babelizer config file, FILENAME."""
 
     meta = _gather_input(
-        no_input=no_input,
+        prompt=prompt,
         package=package,
         name=name,
         email=email,
@@ -274,7 +274,7 @@ def generate(
 
 
 def _gather_input(
-    no_input=False,
+    prompt=False,
     package=None,
     name=None,
     email=None,
@@ -298,13 +298,12 @@ def _gather_input(
     the user will be prompted for a value.
     """
 
-    if no_input:
+    if prompt:
+        ask = partial(click.prompt, show_default=True, err=True)
+    else:
 
         def ask(text, default=None, **kwds):
             return default
-
-    else:
-        ask = partial(click.prompt, show_default=True, err=True)
 
     def _split_if_str(val, sep=","):
         return val.split(sep) if isinstance(val, str) else val
@@ -359,7 +358,9 @@ def _gather_input(
     }
 
     libraries = {}
-    if no_input or any([x is not None for x in (name, library, header, entry_point)]):
+    if (not prompt) or any(
+        [x is not None for x in (name, library, header, entry_point)]
+    ):
         babelized_class = name or ask("Name of babelized class", default="<name>")
         libraries[babelized_class] = {
             "language": language,
