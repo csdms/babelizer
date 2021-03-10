@@ -34,7 +34,7 @@ bibliography: paper.bib
 
 The `babelizer` is a Python utility that generates code
 to import libraries from other languages into Python. Target libraries
-must expose a Basic Model Interface (BMI; @hutton:2020b, @peckham:2013) and be written in
+must expose a Basic Model Interface (BMI) [@hutton:2020b; @peckham:2013] and be written in
 C, C++, or Fortran, although the `babelizer` is extendable, so
 other languages can be added in the future. The `babelizer` provides a
 streamlined mechanism for bringing scientific models into a common language
@@ -46,7 +46,7 @@ where they can communicate with one another as components of an integrated model
 With an integrated multicomponent approach to modeling, scientific
 modelers--not just software developers--connect components
 to form integrated models, where plug-and-play
-components can easily be added or removed (@tucker:2021, @david:2013, gregersen:2007, @collins:2005).
+components can easily be added or removed [@tucker:2021; @david:2013; @gregersen:2007; @collins:2005].
 This is in contrast to older methods, where a single modeling group would construct
 a monolithic model built on the tight integration of software written
 within an isolated framework. A single person or group would
@@ -161,7 +161,7 @@ summary = "PRMS6 surface water process component"
 *Figure 2:
 The `babelizer` configuration file (`babel.toml`)
 for the Precipitation-Runoff Modeling System v6
-surface water component, `PRMSSurface` (@piper:2020).
+surface water component, `PRMSSurface` [@piper:2020].
 Running the `babelizer` on this file produces most of
 the repository https://github.com/pymt-lab/pymt_prms_surface.*
 
