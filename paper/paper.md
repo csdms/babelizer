@@ -35,18 +35,17 @@ bibliography: paper.bib
 The `babelizer` is a Python utility that generates code
 to import libraries from other languages into Python. Target libraries
 must expose a Basic Model Interface (BMI; @peckham:2013, @hutton:2020b) and be written in
-C, C++, or Fortran, although the `babelizer` is extendable so
-additional languages can be added in the future. The `babelizer` provides a
+C, C++, or Fortran, although the `babelizer` is extendable, so
+other languages can be added in the future. The `babelizer` provides a
 streamlined mechanism for bringing scientific models into a common language
 where they can communicate with one another as components of an integrated model.
 
 
 # Statement of need
 
-Scientific modeling has increasingly moved to an integrated
-multicomponent approach (#REF?). With this approach, scientific
-modelers--not just software developers--connect model components
-to form integrated models where plug-and-play
+With an integrated multicomponent approach to modeling, scientific
+modelers--not just software developers--connect components
+to form integrated models, where plug-and-play
 components can easily be added or removed. This is in
 contrast to older methods, where a single modeling group would construct
 a monolithic model built on the tight integration of software written
@@ -56,9 +55,9 @@ a gatekeeper to ensure compatibility. The software elements
 that made up the model would be tied to the larger model and,
 generally, not used outside of the framework.
 
-Component modeling democratizes model building. The larger scientific
-community can develop model components. This allows for
-more innovation and experimentation, driven
+Component modeling democratizes model building by empowering the larger scientific
+community to develop model components. This allows for
+more innovation and experimentation driven
 from the bottom up by a community. It reduces redundancy--rather
 than reinventing software, scientists can find and
 use models that suit their needs--and it allows scientists
@@ -72,8 +71,8 @@ isolation, there is a greater likelihood models will be written with
 idiosyncratic designs, incompatible grids, incompatible time steps,
 and even in different programming languages. The Earth-system modeling
 community has developed tools to help solve some of these problems.
-For example, the Basic Model Interface (BMI) defines an interface that
-standardizes model design. The Earth System Modeling Framework (ESMF) [@collins:2005]
+For example, the Basic Model Interface
+standardizes model interactions. The Earth System Modeling Framework (ESMF) [@collins:2005]
 grid mappers are able to map quantities from one grid to another.
 The Python Modeling Toolkit `pymt` [@hutton:2020a] performs time
 interpolation, grid mapping, and unit coversion.
@@ -111,7 +110,7 @@ only a thin wrapper layer.
 # Design of the babelizer
 
 The `babelizer` is a command-line utility that generates the glue code
-to bring a model that exposes a BMI from another language into Python.
+to bring a model exposing a BMI from another language into Python.
 Because the BMI is a well-defined standard, the `babelizer` requires
 only a small amount of metadata to generate the glue code. The metadata
 depends somewhat on the language being wrapped, but includes the name
