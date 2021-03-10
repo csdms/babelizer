@@ -122,7 +122,7 @@ model, documentation, and sets up continuous integrations and a test
 suite for the model’s BMI. The model can then be imported and run
 through Python.
 
-The user provides metadata describing his or her model through a
+The user provides metadata describing their model through a
 *toml*-formatted file (see Figure 2 for an example). The `babelizer` uses
 the metadata to fill a set of *jinja*-formatted template files to construct
 the new repository (or update an existing repository). The entire
@@ -130,6 +130,40 @@ repository is almost completely auto-generated, which means it can easily
 be regenerated. The only files a user need edit are the main
 configuration file, `babel.toml`, and any optional model data files,
 which are installed along with the new component.
+
+```toml
+[library]
+[library.PRMSSurface]
+language = "fortran"
+library = "bmiprmssurface"
+header = ""
+entry_point = "bmi_prms_surface"
+
+[build]
+undef_macros = []
+define_macros = []
+libraries = []
+library_dirs = []
+include_dirs = []
+extra_compile_args = []
+
+[package]
+name = "pymt_prms_surface"
+requirements = ["prms", "prms_surface"]
+
+[info]
+github_username = "csdms"
+package_author = "Community Surface Dynamics Modeling System"
+package_author_email = "csdms@colorado.edu"
+package_license = "MIT"
+summary = "PRMS6 surface water process component"
+```
+*Figure 2:
+The `babelizer` configuration file (`babel.toml`)
+for the Precipitation-Runoff Modeling System v6
+surface water component, `PRMSSurface` (@piper:2020).
+Running the `babelizer` on this file produces most of
+the repository https://github.com/pymt-lab/pymt_prms_surface.*
 
 Data files provided to a babelized component are intended to
 be used either by a user of the new component or by a separate
