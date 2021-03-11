@@ -40,8 +40,7 @@ jobs:
       - name: Install requirements
         run: |
           conda install mamba
-          mamba install --file=requirements-build.txt
-          mamba install --file=requirements-library.txt
+          mamba install --file=requirements-build.txt --file=requirements-library.txt
           mamba list
 
       - name: Build and install package
