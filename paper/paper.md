@@ -152,11 +152,15 @@ name = "pymt_prms_surface"
 requirements = ["prms", "prms_surface"]
 
 [info]
-github_username = "csdms"
+github_username = "pymt-lab"
 package_author = "Community Surface Dynamics Modeling System"
 package_author_email = "csdms@colorado.edu"
 package_license = "MIT"
 summary = "PRMS6 surface water process component"
+
+[ci]
+python_version = ["3.9"]
+os = ["linux", "mac", "windows"]
 ```
 *Figure 2:
 The `babelizer` configuration file (`babel.toml`)
