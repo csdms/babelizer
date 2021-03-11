@@ -12,16 +12,18 @@
 .. image:: https://img.shields.io/badge/recipe-{{ cookiecutter.package_name }}-green.svg
         :target: https://anaconda.org/conda-forge/{{ cookiecutter.package_name }}
 
-.. image:: https://img.shields.io/travis/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}.svg
-        :target: https://travis-ci.org/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}
-
 .. image:: https://readthedocs.org/projects/{{ cookiecutter.package_name | replace("_", "-") }}/badge/?version=latest
         :target: https://{{ cookiecutter.package_name | replace("_", "-") }}.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-        :target: https://github.com/csdms/pymt
-        :alt: Code style: black
+.. image:: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/actions/workflows/test.yml/badge.svg
+        :target: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/actions/workflows/test.yml
+
+.. image:: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/actions/workflows/flake8.yml/badge.svg
+        :target: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/actions/workflows/flake8.yml
+
+.. image:: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/actions/workflows/black.yml/badge.svg
+        :target: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/actions/workflows/black.yml
 {%- endif %}
 
 
