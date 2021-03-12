@@ -34,21 +34,20 @@ bibliography: paper.bib
 
 The `babelizer` is a Python utility that generates code
 to import libraries from other languages into Python. Target libraries
-must expose a Basic Model Interface (BMI; @peckham:2013, @hutton:2020b) and be written in
-C, C++, or Fortran, although the `babelizer` is extendable so
-additional languages can be added in the future. The `babelizer` provides a
+must expose a Basic Model Interface (BMI) [@hutton:2020b; @peckham:2013] and be written in
+C, C++, or Fortran, although the `babelizer` is extendable, so
+other languages can be added in the future. The `babelizer` provides a
 streamlined mechanism for bringing scientific models into a common language
 where they can communicate with one another as components of an integrated model.
 
 
 # Statement of need
 
-Scientific modeling has increasingly moved to an integrated
-multicomponent approach (#REF?). With this approach, scientific
-modelers--not just software developers--connect model components
-to form integrated models where plug-and-play
-components can easily be added or removed. This is in
-contrast to older methods, where a single modeling group would construct
+With an integrated multicomponent approach to modeling, scientific
+modelers--not just software developers--connect components
+to form integrated models, where plug-and-play
+components can easily be added or removed [@tucker:2021; @david:2013; @gregersen:2007; @collins:2005].
+This is in contrast to older methods, where a single modeling group would construct
 a monolithic model built on the tight integration of software written
 within an isolated framework. A single person or group would
 control model development. Outside contributors would go through
@@ -56,9 +55,9 @@ a gatekeeper to ensure compatibility. The software elements
 that made up the model would be tied to the larger model and,
 generally, not used outside of the framework.
 
-Component modeling democratizes model building. The larger scientific
-community can develop model components. This allows for
-more innovation and experimentation, driven
+Component modeling democratizes model building by empowering the larger scientific
+community to develop model components. This allows for
+more innovation and experimentation driven
 from the bottom up by a community. It reduces redundancy--rather
 than reinventing software, scientists can find and
 use models that suit their needs--and it allows scientists
@@ -72,8 +71,8 @@ isolation, there is a greater likelihood models will be written with
 idiosyncratic designs, incompatible grids, incompatible time steps,
 and even in different programming languages. The Earth-system modeling
 community has developed tools to help solve some of these problems.
-For example, the Basic Model Interface (BMI) defines an interface that
-standardizes model design. The Earth System Modeling Framework (ESMF) [@collins:2005]
+For example, the Basic Model Interface
+standardizes model interactions. The Earth System Modeling Framework (ESMF) [@collins:2005]
 grid mappers are able to map quantities from one grid to another.
 The Python Modeling Toolkit `pymt` [@hutton:2020a] performs time
 interpolation, grid mapping, and unit coversion.
@@ -111,7 +110,7 @@ only a thin wrapper layer.
 # Design of the babelizer
 
 The `babelizer` is a command-line utility that generates the glue code
-to bring a model that exposes a BMI from another language into Python.
+to bring a model exposing a BMI from another language into Python.
 Because the BMI is a well-defined standard, the `babelizer` requires
 only a small amount of metadata to generate the glue code. The metadata
 depends somewhat on the language being wrapped, but includes the name
@@ -123,7 +122,7 @@ model, documentation, and sets up continuous integrations and a test
 suite for the model’s BMI. The model can then be imported and run
 through Python.
 
-The user provides metadata describing his or her model through a
+The user provides metadata describing their model through a
 *toml*-formatted file (see Figure 2 for an example). The `babelizer` uses
 the metadata to fill a set of *jinja*-formatted template files to construct
 the new repository (or update an existing repository). The entire
@@ -131,6 +130,44 @@ repository is almost completely auto-generated, which means it can easily
 be regenerated. The only files a user need edit are the main
 configuration file, `babel.toml`, and any optional model data files,
 which are installed along with the new component.
+
+```toml
+[library]
+[library.PRMSSurface]
+language = "fortran"
+library = "bmiprmssurface"
+header = ""
+entry_point = "bmi_prms_surface"
+
+[build]
+undef_macros = []
+define_macros = []
+libraries = []
+library_dirs = []
+include_dirs = []
+extra_compile_args = []
+
+[package]
+name = "pymt_prms_surface"
+requirements = ["prms", "prms_surface"]
+
+[info]
+github_username = "pymt-lab"
+package_author = "Community Surface Dynamics Modeling System"
+package_author_email = "csdms@colorado.edu"
+package_license = "MIT"
+summary = "PRMS6 surface water process component"
+
+[ci]
+python_version = ["3.9"]
+os = ["linux", "mac", "windows"]
+```
+*Figure 2:
+The `babelizer` configuration file (`babel.toml`)
+for the Precipitation-Runoff Modeling System v6
+surface water component, `PRMSSurface` [@piper:2020].
+Running the `babelizer` on this file produces most of
+the repository https://github.com/pymt-lab/pymt_prms_surface.*
 
 Data files provided to a babelized component are intended to
 be used either by a user of the new component or by a separate
