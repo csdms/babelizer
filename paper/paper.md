@@ -106,6 +106,7 @@ are compiled and run in their native language, which is where
 the bulk of the computation takes place, with the `babelizer` providing
 only a thin wrapper layer.
 
+![The distribution of programming languages used in the models in the CSDMS model repository. (Data from https://csdms.colorado.edu/wiki/CSDMS_models_by_numbers.)](language_fig.svg)
 
 # Design of the babelizer
 
@@ -131,43 +132,7 @@ be regenerated. The only files a user need edit are the main
 configuration file, `babel.toml`, and any optional model data files,
 which are installed along with the new component.
 
-```toml
-[library]
-[library.PRMSSurface]
-language = "fortran"
-library = "bmiprmssurface"
-header = ""
-entry_point = "bmi_prms_surface"
-
-[build]
-undef_macros = []
-define_macros = []
-libraries = []
-library_dirs = []
-include_dirs = []
-extra_compile_args = []
-
-[package]
-name = "pymt_prms_surface"
-requirements = ["prms", "prms_surface"]
-
-[info]
-github_username = "pymt-lab"
-package_author = "Community Surface Dynamics Modeling System"
-package_author_email = "csdms@colorado.edu"
-package_license = "MIT"
-summary = "PRMS6 surface water process component"
-
-[ci]
-python_version = ["3.9"]
-os = ["linux", "mac", "windows"]
-```
-*Figure 2:
-The `babelizer` configuration file (`babel.toml`)
-for the Precipitation-Runoff Modeling System v6
-surface water component, `PRMSSurface` [@piper:2020].
-Running the `babelizer` on this file produces most of
-the repository https://github.com/pymt-lab/pymt_prms_surface.*
+![The `babelizer` configuration file (`babel.toml`) for the Precipitation-Runoff Modeling System v6 surface water component, `PRMSSurface` [@piper:2020]. Running the `babelizer` on this file produces most of the repository https://github.com/pymt-lab/pymt_prms_surface.](babel.toml.md.pdf)
 
 Data files provided to a babelized component are intended to
 be used either by a user of the new component or by a separate
