@@ -106,7 +106,7 @@ are compiled and run in their native language, which is where
 the bulk of the computation takes place, with the `babelizer` providing
 only a thin wrapper layer.
 
-![The distribution of programming languages used in the models in the CSDMS model repository. (Data from https://csdms.colorado.edu/wiki/CSDMS_models_by_numbers.)](language_fig.svg)
+![The distribution of programming languages used in the models in the CSDMS model repository. (Data from https://csdms.colorado.edu/wiki/CSDMS_models_by_numbers.)](language_fig.png)
 
 # Design of the babelizer
 
