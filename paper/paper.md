@@ -84,7 +84,7 @@ To get an idea of the range of programming languages used in Earth-system
 modeling, we can look to the Community Surface Dynamics Modeling System (CSDMS)
 model repository. As of June 2020, the repository holds over 370 open source
 models and tools submitted by the community. These contributions span a range of languages, with Python, C, and Fortran
-being the most popular (Figure 1).
+being the most popular (\autoref{fig:languages}).
 The mix of languages raises
 an interesting challenge in creating an interoperable modeling framework.
 Our solution is to use a hub-and-spoke approach, where Python is the hub language that
@@ -106,7 +106,7 @@ are compiled and run in their native language, which is where
 the bulk of the computation takes place, with the `babelizer` providing
 only a thin wrapper layer.
 
-![The distribution of programming languages used in the models in the CSDMS model repository. (Data from https://csdms.colorado.edu/wiki/CSDMS_models_by_numbers.)](language_fig.png)
+![The distribution of programming languages used in the models in the CSDMS model repository. (Data from https://csdms.colorado.edu/wiki/CSDMS_models_by_numbers.)\label{fig:languages}](language_fig.png)
 
 # Design of the babelizer
 
@@ -124,7 +124,7 @@ suite for the model’s BMI. The model can then be imported and run
 through Python.
 
 The user provides metadata describing their model through a
-*toml*-formatted file (see Figure 2 for an example). The `babelizer` uses
+*toml*-formatted file (see \autoref{fig:configuration} for an example). The `babelizer` uses
 the metadata to fill a set of *jinja*-formatted template files to construct
 the new repository (or update an existing repository). The entire
 repository is almost completely auto-generated, which means it can easily
@@ -132,7 +132,7 @@ be regenerated. The only files a user need edit are the main
 configuration file, `babel.toml`, and any optional model data files,
 which are installed along with the new component.
 
-![The `babelizer` configuration file (`babel.toml`) for the Precipitation-Runoff Modeling System v6 surface water component, `PRMSSurface` [@piper:2020]. Running the `babelizer` on this file produces most of the repository https://github.com/pymt-lab/pymt_prms_surface.](babel.toml.md.pdf)
+![The `babelizer` configuration file (`babel.toml`) for the Precipitation-Runoff Modeling System v6 surface water component, `PRMSSurface` [@piper:2020]. Running the `babelizer` on this file produces most of the repository https://github.com/pymt-lab/pymt_prms_surface.\label{fig:configuration}](babel.toml.md.pdf)
 
 Data files provided to a babelized component are intended to
 be used either by a user of the new component or by a separate
