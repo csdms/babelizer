@@ -3,7 +3,7 @@ Changelog for babelizer
 =======================
 
 ******************
-0.3.7 (unreleased)
+0.3.7 (2021-03-19)
 ******************
 
 - Render GitHub Actions for continuous integration of the generated
