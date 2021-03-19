@@ -64,39 +64,6 @@ def _setup_yaml_with_canonical_dict():
 _setup_yaml_with_canonical_dict()
 
 
-def validate_meta(meta):
-    missing_sections = set(BabelMetadata.REQUIRED) - set(meta)
-    if missing_sections:
-        raise ValidationError(
-            "missing required sections {0}".format(", ".join(missing_sections))
-        )
-
-    for section, values in BabelMetadata.REQUIRED.items():
-        missing_values = set(values) - set(meta[section])
-        if missing_values:
-            raise ValidationError(
-                "missing required values {0}".format(", ".join(missing_values))
-            )
-
-    def _is_iterable_of_strings(value):
-        if isinstance(value, str):
-            return False
-        for item in value:
-            if not isinstance(item, str):
-                return False
-        return True
-
-    for key, value in meta["build"].items():
-        if not _is_iterable_of_strings(value):
-            raise ValidationError("not an iterable of strings: build->{0}".format(key))
-
-    for value in meta["build"]["define_macros"]:
-        if len(value.split("=")) != 2:
-            raise ValidationError(
-                "build->define_macros must be of the form 'key=value'"
-            )
-
-
 def validate_dict(meta, required=None, optional=None):
     actual = set(meta)
     required = set() if required is None else set(required)
@@ -118,16 +85,23 @@ def validate_dict(meta, required=None, optional=None):
         )
 
 
+def _norm_os(name):
+    if name == "linux":
+        name = "ubuntu"
+    elif name == "mac":
+        name = "macos"
+    if not name.endswith("-latest"):
+        name += "-latest"
+    return name
+
+
 class BabelMetadata:
-    REQUIRED = {
-        "library": ("language", "entry_point"),
-        "package": ("name", "requirements"),
-        "info": ("github_username", "package_license", "summary"),
-    }
 
     LOADERS = {"yaml": yaml.safe_load, "toml": toml.parse}
 
-    def __init__(self, library=None, build=None, package=None, info=None, plugin=None):
+    def __init__(
+        self, library=None, build=None, package=None, info=None, plugin=None, ci=None
+    ):
         if plugin is not None:
             warnings.warn("use 'package' instead of 'plugin'", DeprecationWarning)
             if package is not None:
@@ -139,6 +113,7 @@ class BabelMetadata:
             "build": build or {},
             "package": package or {},
             "info": info or {},
+            "ci": ci or {},
         }
 
         BabelMetadata.validate(config)
@@ -204,6 +179,8 @@ class BabelMetadata:
             ),
         )
         validate_dict(config["package"], required=("name", "requirements"), optional={})
+        validate_dict(config["ci"], required=("python_version", "os"), optional={})
+
         try:
             validate_dict(
                 config["info"],
@@ -284,6 +261,9 @@ class BabelMetadata:
         else:
             info = config["info"]
 
+        if "all" in config["ci"]["os"]:
+            config["ci"] = ["linux", "mac", "windows"]
+
         return {
             "library": libraries,
             "build": {
@@ -296,9 +276,13 @@ class BabelMetadata:
             },
             "package": {
                 "name": config["package"]["name"],
-                "requirements": list(config["package"]["requirements"]),
+                "requirements": sorted(config["package"]["requirements"]),
             },
             "info": info,
+            "ci": {
+                "python_version": sorted(config["ci"]["python_version"]),
+                "os": sorted(config["ci"]["os"]),
+            },
         }
 
     def dump(self, fp, fmt="yaml"):
@@ -360,6 +344,7 @@ class BabelMetadata:
     def as_cookiecutter_context(self):
         languages = [lib["language"] for lib in self._meta["library"].values()]
         language = languages[0]
+        platforms = [_norm_os(name) for name in self._meta["ci"]["os"]]
 
         return {
             "components": self._meta["library"],
@@ -376,6 +361,10 @@ class BabelMetadata:
                 "email": self._meta["info"]["package_author_email"],
                 "github_username": self._meta["info"]["github_username"],
                 "project_short_description": self._meta["info"]["summary"],
+            },
+            "ci": {
+                "os": platforms,
+                "python_version": self._meta["ci"]["python_version"],
             },
             "package_name": self._meta["package"]["name"],
             "package_requirements": ",".join(self._meta["package"]["requirements"]),

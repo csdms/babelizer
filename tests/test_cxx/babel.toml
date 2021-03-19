@@ -22,3 +22,7 @@ entry_point = "BmiHeat"
 [package]
 name = "pymt_heat"
 requirements = []
+
+[ci]
+python_version = ["3.9"]
+os = ["linux", "mac", "windows"]

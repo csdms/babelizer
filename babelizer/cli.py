@@ -61,14 +61,10 @@ def babelize(cd):
     help="The initial version of the babelized package",
 )
 @click.argument("meta", type=click.File(mode="r"))
-@click.argument(
-    "output",
-    type=click.Path(file_okay=False, dir_okay=True, writable=True, resolve_path=True),
-)
-def init(meta, output, template, quiet, verbose, package_version):
+def init(meta, template, quiet, verbose, package_version):
 
     """Initialize a repository with babelized project files."""
-
+    output = pathlib.Path(".")
     template = template or pkg_resources.resource_filename("babelizer", "data")
 
     if not quiet:
@@ -191,9 +187,9 @@ def update(template, quiet, verbose):
 
 @babelize.command()
 @click.option(
-    "--no-input",
+    "--prompt",
     is_flag=True,
-    help="Don’t ask questions, just use the default values",
+    help="Prompt the user for values",
 )
 @click.option(
     "--package",
@@ -233,9 +229,12 @@ def update(template, quiet, verbose):
     "--entry-point", help="Name of the BMI entry point into the library", default=None
 )
 @click.option("--requirement", help="Requirement", multiple=True, default=None)
-@click.argument("file_", metavar="FILENAME", type=click.File(mode="w", lazy=True))
+@click.option("--python-version", help="supported Python versions", default="3.9")
+@click.option(
+    "--os-name", help="Supported operating systems", default="linux,mac,windows"
+)
 def generate(
-    no_input,
+    prompt,
     package,
     name,
     email,
@@ -248,12 +247,13 @@ def generate(
     header,
     entry_point,
     requirement,
-    file_,
+    python_version,
+    os_name,
 ):
     """Generate babelizer config file, FILENAME."""
 
     meta = _gather_input(
-        no_input=no_input,
+        prompt=prompt,
         package=package,
         name=name,
         email=email,
@@ -266,13 +266,15 @@ def generate(
         header=header,
         entry_point=entry_point,
         requirement=requirement,
+        python_version=python_version,
+        os_name=os_name,
     )
 
-    print(BabelMetadata(**meta).format(fmt="toml"), file=file_)
+    print(BabelMetadata(**meta).format(fmt="toml"))
 
 
 def _gather_input(
-    no_input=False,
+    prompt=False,
     package=None,
     name=None,
     email=None,
@@ -285,6 +287,8 @@ def _gather_input(
     header=None,
     entry_point=None,
     requirement=None,
+    python_version=None,
+    os_name=None,
 ):
     """Gather input either from command-line option, default, or user prompt.
 
@@ -294,13 +298,18 @@ def _gather_input(
     the user will be prompted for a value.
     """
 
-    if no_input:
+    if prompt:
+        ask = partial(click.prompt, show_default=True, err=True)
+    else:
 
         def ask(text, default=None, **kwds):
             return default
 
-    else:
-        ask = partial(click.prompt, show_default=True, err=True)
+    def _split_if_str(val, sep=","):
+        return val.split(sep) if isinstance(val, str) else val
+
+    python_version = _split_if_str(python_version)
+    os_name = _split_if_str(os_name)
 
     def ask_until_done(text):
         answers = []
@@ -333,17 +342,38 @@ def _gather_input(
         default="c",
     )
 
+    ci = {
+        "os": os_name
+        or ask_until_done(
+            "Supported operating system",
+            show_choices=["linux", "mac", "windows", "all"],
+            default="all",
+        ),
+        "python_version": python_version
+        or ask_until_done(
+            "Supported python version",
+            show_choices=["3.7", "3.8", "3.9"],
+            default="3.9",
+        ),
+    }
+
     libraries = {}
-    if no_input or any([x is not None for x in (name, library, header, entry_point)]):
+    if (not prompt) or any(
+        [x is not None for x in (name, library, header, entry_point)]
+    ):
         babelized_class = name or ask("Name of babelized class", default="<name>")
         libraries[babelized_class] = {
             "language": language,
             "library": library
             or ask(f"[{babelized_class}] Name of library to babelize", default=""),
             "header": header
-            or ask(
-                f"[{babelized_class}] Name of header file containing BMI class ",
-                default="",
+            or (
+                ask(
+                    f"[{babelized_class}] Name of header file containing BMI class ",
+                    default="",
+                )
+                if language != "python"
+                else "__UNUSED__"
             ),
             "entry_point": entry_point
             or ask(f"[{babelized_class}] Name of BMI class ", default=""),
@@ -356,13 +386,21 @@ def _gather_input(
                 "library": ask(f"[{babelized_class}] Name of library to babelize"),
                 "header": ask(
                     f"[{babelized_class}] Name of header file containing BMI class "
-                ),
+                )
+                if language != "python"
+                else "__UNUSED__",
                 "entry_point": ask(f"[{babelized_class}] Name of BMI class "),
             }
             if not yes("Add another library?", default=False):
                 break
 
-    return {"library": libraries, "package": package, "info": info, "build": {}}
+    return {
+        "library": libraries,
+        "package": package,
+        "info": info,
+        "build": {},
+        "ci": ci,
+    }
 
 
 def _get_dir_contents(base, trunk=None):
