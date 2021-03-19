@@ -279,9 +279,9 @@ Information about how to set up continuous integration.
 
 .. code:: toml
 
-[ci]
-python_version = ["3.7", "3.8", "3.9"]
-os = ["linux", "mac", "windows"]
+    [ci]
+    python_version = ["3.7", "3.8", "3.9"]
+    os = ["linux", "mac", "windows"]
 
 
 Python version
