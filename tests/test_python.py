@@ -14,7 +14,7 @@ def test_babelize_init_python(tmpdir, datadir):
 
     with tmpdir.as_cwd():
         shutil.copy(datadir / "babel.toml", ".")
-        result = runner.invoke(babelize, ["init", "babel.toml", "."])
+        result = runner.invoke(babelize, ["init", "babel.toml"])
 
         assert result.exit_code == 0
         assert pathlib.Path("pymt_heatpy").exists()
@@ -33,6 +33,8 @@ def test_babelize_init_python(tmpdir, datadir):
             assert err.output is None, err.output
 
         assert result.returncode == 0
+        assert pathlib.Path("pymt_heatpy/pymt_heatpy/data/HeatPy").exists()
+        assert pathlib.Path("pymt_heatpy/pymt_heatpy/data/HeatPy/api.yaml").is_file()
 
         os.mkdir("_test")
         shutil.copy(datadir / "heat.yaml", "_test/")

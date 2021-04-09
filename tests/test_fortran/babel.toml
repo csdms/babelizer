@@ -24,3 +24,6 @@ package_author_email = "csdms@colorado.edu"
 package_license = "MIT"
 summary = "PyMT plugin for heatf model"
 
+[ci]
+python_version = ["3.9"]
+os = ["linux", "mac", "windows"]

@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.com/csdms/babelizer.svg?branch=develop
-        :target: https://travis-ci.com/csdms/babelizer
+.. image:: https://github.com/csdms/babelizer/workflows/Build/Test%20CI/badge.svg
+    :target: https://github.com/csdms/babelizer/actions?query=workflow%3A%22Build%2FTest+CI%22
 
 .. image:: https://readthedocs.org/projects/babelizer/badge/?version=latest
         :target: https://babelizer.readthedocs.io/en/latest/?badge=latest
@@ -20,7 +20,7 @@ About
 *****
 
 The *babelizer* is a utility for wrapping libraries, from a variety of
-languages, that expose a Basic Model Interface (BMI) so that they can be
+languages, that expose a `Basic Model Interface`_ (BMI) so that they can be
 imported as a Python package.
 
 
@@ -59,10 +59,10 @@ in *requirements-testing.txt*.
 Installation
 ************
 
-To install the *babelizer*, first create a new environment in
-which *babelizer* will be installed. This, although not necessary, will
-isolate the installation so that there won't be conflicts with your
-base *Python* installation. This can be done with *conda* as,
+To install the *babelizer*, first create a new environment.
+Although this isn't strictly necessary, it
+isolates the installation to avoid conflicts with your
+base Python installation. This can be done with *conda*:
 
 .. code:: bash
 
@@ -72,7 +72,7 @@ base *Python* installation. This can be done with *conda* as,
 Stable Release
 ==============
 
-The *babelizer*, and its dependencies, is best installed with *conda*,
+The *babelizer* and its dependencies are best installed with *conda*:
 
 .. code:: bash
 
@@ -82,8 +82,8 @@ From Source
 ===========
 
 After downloading the the *babelizer* source code, run the following from
-*babelizer*'s top-level folder (the one that contains *setup.py*) to
-install *babelizer* into the current environment::
+*babelizer*'s top-level directory (the one that contains *setup.py*) to
+install *babelizer* into the current environment:
 
   $ pip install -e .
 
@@ -92,9 +92,9 @@ install *babelizer* into the current environment::
 Input file
 **********
 
-The *babelizer* requires a single, *toml*-formatted, input file that describes
-the library you would like to wrap. This file is typically named *babel.toml*.
-An example of a blank *babel.toml* file,
+The *babelizer* requires a single *toml*-formatted input file that describes
+the library to wrap. This file is typically named *babel.toml*.
+An example of a blank *babel.toml* file:
 
 .. code:: toml
 
@@ -124,12 +124,16 @@ An example of a blank *babel.toml* file,
     package_license = "MIT"
     summary = ""
 
+    [ci]
+    python_version = ["3.9"]
+    os = ["linux", "mac", "windows"]
+
 You can generate *babel.toml* files using the *babelize generate* command.
-For example, the above *babel.toml* was generated with,
+For example, the above *babel.toml* was generated with:
 
 .. code:: bash
 
-  $ babelize generate --no-input -
+  $ babelize generate > babel.toml
 
 Library section
 ===============
@@ -256,7 +260,7 @@ Email
 -----
 
 Contact email to use for the wrapped package.
-				  
+
 License
 -------
 
@@ -268,6 +272,28 @@ Summary
 
 A short description of the wrapped library.
 
+Ci section
+==========
+
+Information about how to set up continuous integration.
+
+.. code:: toml
+
+    [ci]
+    python_version = ["3.7", "3.8", "3.9"]
+    os = ["linux", "mac", "windows"]
+
+
+Python version
+--------------
+
+A list of Python versions to build and test the generated project with.
+
+Operating system
+----------------
+
+A list of operating systems to build the generate project on. Supported values are
+*linux*, *mac*, and *windows*.
 
 Example babel.toml
 ==================
@@ -305,12 +331,16 @@ called *hydrotrend*.
     package_license = "MIT"
     summary = "PyMT plugin for hydrotrend"
 
+    [ci]
+    python_version = ["3.7", "3.8", "3.9"]
+    os = ["linux", "mac", "windows"]
+
 You can use the ``babelize generate`` command to generate *babel.toml* files.
 For example the above *babel.toml* can be generated with the following,
 
 .. code:: bash
 
-    $ babelize generate babel.toml \
+    $ babelize generate \
 	  --package=pymt_hydrotrend \
 	  --summary="PyMT plugin for hydrotrend" \
 	  --language=c \
@@ -318,7 +348,9 @@ For example the above *babel.toml* can be generated with the following,
 	  --header=bmi_hydrotrend.h \
 	  --entry-point=register_bmi_hydrotrend \
 	  --name=Hydrotrend \
-	  --requirement=hydrotrend
+	  --requirement=hydrotrend \
+    --os-name=linux,mac,windows \
+    --python-version=3.7,3.8,3.9 > babel.toml
 
 ***
 Use
@@ -329,7 +361,7 @@ sending output to the current directory
 
 .. code:: bash
 
-  $ babelize init babel.toml .
+  $ babelize init babel.toml
 
 Update an existing repository
 
@@ -344,5 +376,6 @@ see the User Guide of the `documentation`_.
 
 .. Links:
 
+.. _Basic Model Interface: https://bmi.readthedocs.io/
 .. _CSDMS Workbench: https://csdms.colorado.edu/wiki/Workbench
 .. _documentation: https://babelizer.readthedocs.io/
