@@ -43,7 +43,7 @@ Requirements
 The *babelizer* requires Python >=3.8.
 
 
-Apart from Python, the *babelzer* has a number of other requirements, all of which
+Apart from Python, the *babelizer* has a number of other requirements, all of which
 can be obtained through either *pip* or *conda*, that will be automatically
 installed when you install the *babelizer*.
 
@@ -242,7 +242,7 @@ for the package.
 Info section
 ============
 
-Descriptive infomation about the package.
+Descriptive information about the package.
 
 Github username
 ---------------
