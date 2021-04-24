@@ -133,7 +133,7 @@ Return to our initial ``build`` directory and call ``babelize generate`` with:
 .. code:: bash
 
   $ cd ~/build
-  $ babelize generate babel_heatc.toml \
+  $ babelize generate \
       --package=pymt_heatc \
       --summary="PyMT plugin for heat model" \
       --language=c \
@@ -141,12 +141,11 @@ Return to our initial ``build`` directory and call ``babelize generate`` with:
       --header=bmi_heat.h \
       --entry-point=register_bmi_heat \
       --name=HeatModel \
-      --requirement=""
+      --requirement="" > babel_heatc.toml
 
 In this call,
-the *babelizer* will also interactively prompt for author name, author email,
-GitHub username, and license.
-These can be optionally be filled in, or the defaults can be used.
+the *babelizer* will also fill in default values
+for author name, author email, GitHub username, and license.
 
 The resulting file, :download:`babel_heatc.toml`,
 will look something like this:
@@ -165,7 +164,7 @@ Generate Python bindings for the model with the ``babelize init`` subcommand:
 
 .. code:: bash
 
-  $ babelize init babel_heatc.toml .
+  $ babelize init babel_heatc.toml
 
 The results are placed in a new directory, ``pymt_heatc``,
 under the current directory.
@@ -173,14 +172,14 @@ under the current directory.
 .. code:: bash
 
   $ ls -aF pymt_heatc
-  ./                        MANIFEST.in               pyproject.toml
-  ../                       Makefile                  recipe/
-  .git/                     README.py                 requirements-build.txt
-  .gitignore                README.rst                requirements-library.txt
-  .travis.yml               babel.toml                requirements-testing.txt
-  CHANGES.rst               docs/                     requirements.txt
-  CREDITS.rst               meta/                     setup.cfg
-  LICENSE                   pymt_heatc/               setup.py
+  ./                        MANIFEST.in               recipe/
+  ../                       Makefile                  requirements-build.txt
+  .git/                     README.rst                requirements-library.txt
+  .github/                  babel.toml                requirements-testing.txt
+  .gitignore                docs/                     requirements.txt
+  CHANGES.rst               meta/                     setup.cfg
+  CREDITS.rst               pymt_heatc/               setup.py
+  LICENSE                   pyproject.toml
 
 Before we can build the Python bindings,
 we must ensure that the dependencies required by the toolchain,

@@ -44,7 +44,7 @@ User Guide
 
 
 API Reference
--------------
+=============
 
 If you are looking for information on a specific function, class, or
 method, this part of the documentation is for you.
@@ -55,17 +55,8 @@ method, this part of the documentation is for you.
    api/index
 
 
-Help
-====
-
-Adding a BMI to a model and babelizing it can be a daunting task.
-If you'd like assistance, CSDMS can help.
-Depending on your need, we can provide advice or consulting services.
-Feel free to contact us through the `CSDMS Help Desk`_.
-
-
-Miscellaneous Pages
--------------------
+Additional Information
+======================
 
 .. toctree::
    :maxdepth: 2
@@ -74,6 +65,28 @@ Miscellaneous Pages
    changelog
    contributing
    license
+
+Help
+----
+
+Adding a BMI to a model and babelizing it can be a daunting task.
+If you'd like assistance, CSDMS can help.
+Depending on your need, we can provide advice or consulting services.
+Feel free to contact us through the `CSDMS Help Desk`_.
+
+Acknowledgments
+---------------
+
+This work is supported by the National Science Foundation
+under Award No. `1831623 <https://nsf.gov/awardsearch/showAward?AWD_ID=1831623>`_,
+*Community Facility Support: The Community Surface Dynamics Modeling System (CSDMS)*.
+
+Indices and tables
+------------------
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 
 
 ..
