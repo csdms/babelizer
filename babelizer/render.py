@@ -114,6 +114,7 @@ def prettify_python(path_to_repo):
         path_to_repo / "setup.py",
         path_to_repo / module_name / "bmi.py",
         path_to_repo / module_name / "__init__.py",
+        path_to_repo / "docs" / "conf.py",
     ]
 
     config = isort.Config(quiet=True)
