@@ -1,6 +1,9 @@
 .. image:: https://github.com/csdms/babelizer/workflows/Build/Test%20CI/badge.svg
     :target: https://github.com/csdms/babelizer/actions?query=workflow%3A%22Build%2FTest+CI%22
 
+.. image:: https://anaconda.org/conda-forge/babelizer/badges/version.svg
+    :target: https://anaconda.org/conda-forge/babelizer
+
 .. image:: https://readthedocs.org/projects/babelizer/badge/?version=latest
         :target: https://babelizer.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
