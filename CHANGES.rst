@@ -7,6 +7,7 @@ Changelog for babelizer
 ******************
 
 - Update docs for API changes (#47)
+- Fix minor formatting issues in rendered output (#49)
 
 
 ******************
