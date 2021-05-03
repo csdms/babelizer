@@ -10,7 +10,7 @@ from .errors import ScanError, ValidationError
 
 
 def _setup_yaml_with_canonical_dict():
-    """ https://stackoverflow.com/a/8661021 """
+    """https://stackoverflow.com/a/8661021"""
     yaml.add_representer(
         OrderedDict,
         lambda self, data: self.represent_mapping(
