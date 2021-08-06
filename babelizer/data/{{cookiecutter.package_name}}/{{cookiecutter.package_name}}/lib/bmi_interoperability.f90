@@ -17,7 +17,7 @@ module bmi_interoperability
 
   implicit none
 
-  integer, parameter :: N_MODELS = 2048
+  integer, parameter :: N_MODELS = 1
   type ({{ component.entry_point }}) :: model_array(N_MODELS)
   logical :: model_avail(N_MODELS) = .true.
 
