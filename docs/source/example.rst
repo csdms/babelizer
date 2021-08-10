@@ -28,6 +28,16 @@ create a directory to hold our work:
 
   $ mkdir build && cd build
 
+This directory is a starting point;
+we'll make new directories under it as we proceed through the example.
+In the end,
+the directory structure under ``build`` should look like that in Figure 1.
+
+.. figure:: _static/babelizer-bmi-example-c.png
+    :align: center
+    :alt: Directory structure after completing example
+
+    Figure 1: Directory structure after completing example.
 
 Set up a conda environment
 --------------------------
@@ -86,7 +96,6 @@ use these commands to build and install the *heat* model:
   $ cd bmi-example-c
   $ mkdir _build && cd _build
   $ cmake .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-  $ make
   $ make install
 
 Verify the install by testing for the existence of the header
@@ -94,7 +103,9 @@ of the library containing the compiled *heat* model:
 
 .. code:: bash
 
-  $ test -f $CONDA_PREFIX/include/bmi_heat.h
+  $ test -f $CONDA_PREFIX/include/bmi_heat.h ; echo $?
+
+A return of zero indicates success.
 
 Windows
 .......
@@ -132,10 +143,10 @@ Return to our initial ``build`` directory and call ``babelize generate`` with:
 
 .. code:: bash
 
-  $ cd ~/build
+  $ cd ../..
   $ babelize generate \
       --package=pymt_heatc \
-      --summary="PyMT plugin for heat model" \
+      --summary="PyMT plugin for the C heat model" \
       --language=c \
       --library=bmiheatc \
       --header=bmi_heat.h \
@@ -144,8 +155,8 @@ Return to our initial ``build`` directory and call ``babelize generate`` with:
       --requirement="" > babel_heatc.toml
 
 In this call,
-the *babelizer* will also fill in default values
-for author name, author email, GitHub username, and license.
+the *babelizer* will also fill in default values;
+e.g., author name, author email, GitHub username, and license.
 
 The resulting file, :download:`babel_heatc.toml`,
 will look something like this:
@@ -219,7 +230,7 @@ and change to it:
 
 .. code:: bash
 
-  $ cd ~/build
+  $ cd ..
   $ mkdir test && cd test
 
 Start a Python session and try the following commands:
@@ -234,6 +245,7 @@ Start a Python session and try the following commands:
 We've imported the *heat* model,
 written in C,
 into Python!
+Exit the Python session.
 
 At this point,
 it's a good idea to run the *bmi-tester* (`GitHub repo <bmi-tester>`_)
@@ -244,9 +256,16 @@ However, before running the *bmi-tester*,
 one last piece of information is needed.
 Like all models equipped with a BMI,
 *heat* uses a :term:`configuration file` to specify initial parameter values.
-Download the file :download:`config.txt <examples/config.txt>` for use here.
+Create a configuration file for *heat* at the command line with:
 
-Run the *bmi-tester* with:
+.. code:: bash
+
+  $ echo "1.5, 8.0, 6, 5" > config.txt
+
+or download the file :download:`config.txt <examples/config.txt>`
+(making sure to place it in the ``test`` directory).
+
+Run the *bmi-tester*:
 
 .. code:: bash
 
@@ -284,7 +303,7 @@ and view the current metadata:
 
 .. code:: bash
 
-  $ cd ~/build/pymt_heatc
+  $ cd ../pymt_heatc
   $ ls meta/HeatModel/
   api.yaml
 
