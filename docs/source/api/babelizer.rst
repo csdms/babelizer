@@ -1,9 +1,6 @@
 babelizer package
 =================
 
-Submodules
-----------
-
 babelizer.cli module
 --------------------
 
@@ -52,15 +49,6 @@ babelizer.wrap module
 ---------------------
 
 .. automodule:: babelizer.wrap
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: babelizer
    :members:
    :undoc-members:
    :show-inheritance:
