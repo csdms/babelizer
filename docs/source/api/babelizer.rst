@@ -12,6 +12,10 @@ babelizer.cli module
    :undoc-members:
    :show-inheritance:
 
+.. click:: babelizer.cli:babelize
+   :prog: babelize
+   :nested: full
+
 babelizer.errors module
 -----------------------
 
