@@ -22,6 +22,7 @@ yes = partial(click.confirm, show_default=True, err=True)
 
 class BabelizerAbort(click.Abort):
     """Exception raised when a user interrupts the babelizer."""
+
     def __init__(self, message):
         err(str(message))
 
