@@ -21,6 +21,7 @@ yes = partial(click.confirm, show_default=True, err=True)
 
 
 class BabelizerAbort(click.Abort):
+    """Exception raised when a user interrupts the babelizer."""
     def __init__(self, message):
         err(str(message))
 
@@ -34,6 +35,7 @@ class BabelizerAbort(click.Abort):
     help="Change to directory, then execute.",
 )
 def babelize(cd):
+    """Wrap BMI libraries with Python bindings."""
     os.chdir(cd)
 
 
@@ -44,11 +46,11 @@ def babelize(cd):
     is_flag=True,
     help=(
         "Don't emit non-error messages to stderr. Errors are still emitted, "
-        "silence those with 2>/dev/null."
+        "silence those with 2>/dev/null"
     ),
 )
 @click.option(
-    "-v", "--verbose", is_flag=True, help="Also emit status messages to stderr."
+    "-v", "--verbose", is_flag=True, help="Also emit status messages to stderr"
 )
 @click.option(
     "--template",
@@ -62,8 +64,10 @@ def babelize(cd):
 )
 @click.argument("meta", type=click.File(mode="r"))
 def init(meta, template, quiet, verbose, package_version):
+    """Initialize a repository with babelized project files.
 
-    """Initialize a repository with babelized project files."""
+    META is babelizer configuration information, usually saved to a file.
+    """
     output = pathlib.Path(".")
     template = template or pkg_resources.resource_filename("babelizer", "data")
 
@@ -228,8 +232,8 @@ def update(template, quiet, verbose):
 @click.option(
     "--entry-point", help="Name of the BMI entry point into the library", default=None
 )
-@click.option("--requirement", help="Requirement", multiple=True, default=None)
-@click.option("--python-version", help="supported Python versions", default="3.9")
+@click.option("--requirement", help="Required libraries", multiple=True, default=None)
+@click.option("--python-version", help="Supported Python versions", default="3.9")
 @click.option(
     "--os-name", help="Supported operating systems", default="linux,mac,windows"
 )
@@ -250,7 +254,7 @@ def generate(
     python_version,
     os_name,
 ):
-    """Generate babelizer config file, FILENAME."""
+    """Generate the babelizer configuration file."""
 
     meta = _gather_input(
         prompt=prompt,
