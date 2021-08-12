@@ -45,11 +45,3 @@ babelizer.utils module
    :members:
    :undoc-members:
    :show-inheritance:
-
-babelizer.wrap module
----------------------
-
-.. automodule:: babelizer.wrap
-   :members:
-   :undoc-members:
-   :show-inheritance:
