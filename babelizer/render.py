@@ -14,6 +14,21 @@ from .errors import OutputDirExistsError, RenderError
 
 
 def render(plugin_metadata, output, template=None, clobber=False, version="0.1"):
+    """Generate a babelized library.
+
+    Args:
+        plugin_metadata (BabelMetadata obj): The metadata used to babelize the library.
+        output (str): Name of the directory that will be the new repository.
+        template (str, optional): Path (or URL) to the cookiecutter template to use. Defaults to None.
+        clobber (bool, optional): If a like-named repository already exists, overwrite it. Defaults to False.
+        version (str, optional): Version of babelized library. Defaults to "0.1".
+
+    Raises:
+        OutputDirExistsError: Raised if output directory exists and clobber is not set.
+
+    Returns:
+        [str]: Path to babelized library
+    """
     if template is None:
         template = pkg_resources.resource_filename("babelizer", "data")
 
@@ -42,12 +57,12 @@ def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
 
     Parameters
     ----------
-    template: bool
+    template: str
         Path (or URL) to the cookiecutter template to use.
     context: dict, optional
         Context for the new repository.
     output_dir : str, optional
-        Name of the folder that will be the new repository.
+        Name of the directory that will be the new repository.
     clobber: bool, optional
         If a like-named repository already exists, overwrite it.
 
@@ -85,6 +100,11 @@ def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
 
 @contextlib.contextmanager
 def as_cwd(path):
+    """Change directory context.
+
+    Args:
+        path (str): Path-like object to a directory.
+    """
     prev_cwd = os.getcwd()
     os.chdir(path)
     yield
@@ -92,6 +112,11 @@ def as_cwd(path):
 
 
 def blacken_file(filepath):
+    """Format a Python file with ``black``.
+
+    Args:
+        filepath (str): Path-like object to a Python file.
+    """
     with open(filepath, "r") as fp:
         try:
             new_contents = blk.format_file_contents(
@@ -105,6 +130,11 @@ def blacken_file(filepath):
 
 
 def prettify_python(path_to_repo):
+    """Format files in babelized project with ``black``.
+
+    Args:
+        path_to_repo (str): Path-like object to babelized project.
+    """
     path_to_repo = pathlib.Path(path_to_repo)
     with open(path_to_repo / "babel.toml") as fp:
         meta = toml.parse(fp.read())

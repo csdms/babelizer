@@ -7,14 +7,35 @@ from .errors import SetupPyError
 
 
 def execute(args):
+    """Run a command through the ``subprocess`` module.
+
+    Args:
+        args (list): Command and arguments to command.
+
+    Returns:
+        results from ``subprocess.run``.
+    """
     return subprocess.run(args, capture_output=True, check=True)
 
 
 def setup_py(*args):
+    """Format the command to build/install the babelized package.
+
+    Returns:
+        list of str: The build/install command.
+    """
     return [sys.executable, "setup.py"] + list(args)
 
 
 def get_setup_py_version():
+    """Get babelized package version.
+
+    Raises:
+        SetupPyError: if calling ``python setup.py`` raises an exception.
+
+    Returns:
+        str or None: Package version.
+    """
     if pathlib.Path("setup.py").exists():
         try:
             execute(setup_py("egg_info"))
@@ -31,6 +52,14 @@ def get_setup_py_version():
 
 @contextmanager
 def save_files(files):
+    """[summary]
+
+    Args:
+        files ([type]): [description]
+
+    Yields:
+        [type]: [description]
+    """
     contents = {}
     for file_ in files:
         try:
