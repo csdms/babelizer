@@ -77,3 +77,8 @@ jobs:
       - name: Test language examples
         run: |
           pytest -vvv
+
+      - name: Coverage
+        run: |
+          coverage run --source babelizer --omit */babelizer/data/* -m pytest
+          coverage report
