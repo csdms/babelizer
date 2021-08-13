@@ -3,16 +3,23 @@ import os
 import pathlib
 import shutil
 import subprocess
+import pytest
 
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
 
 
-def test_babelize_init_python(tmpdir, datadir):
+@pytest.fixture(scope="session")
+def sessiondir(tmpdir_factory):
+    sdir = tmpdir_factory.mktemp("tmp")
+    return sdir
+
+
+def test_babelize_init_python(sessiondir, datadir):
     runner = CliRunner()
 
-    with tmpdir.as_cwd():
+    with sessiondir.as_cwd():
         shutil.copy(datadir / "babel.toml", ".")
         result = runner.invoke(babelize, ["init", "babel.toml"])
 
@@ -58,3 +65,14 @@ def test_babelize_init_python(tmpdir, datadir):
             assert err.output is None, err.output
 
         assert result.returncode == 0
+
+
+def test_babelize_update_python(sessiondir, datadir):
+    runner = CliRunner()
+
+    with sessiondir.as_cwd():
+        result = runner.invoke(babelize, ["--cd", "pymt_heatpy", "update"])
+
+        assert result.exit_code == 0
+        assert pathlib.Path("pymt_heatpy").exists()
+        assert "re-rendering" in result.output
