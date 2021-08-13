@@ -74,11 +74,7 @@ jobs:
           make install
           popd
 
-      - name: Test language examples
+      - name: Test babelizer + language examples and generate coverage report
         run: |
-          pytest -vvv
-
-      - name: Coverage
-        run: |
-          coverage run --source babelizer --omit */babelizer/data/* -m pytest
-          coverage report
+          coverage run --source babelizer --omit */babelizer/data/* -m pytest tests external/tests
+          coverage report -m
