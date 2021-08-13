@@ -9,17 +9,6 @@ from click.testing import CliRunner
 from babelizer.cli import babelize
 
 
-def test_babelize_init():
-    """Test the CLI."""
-    runner = CliRunner()
-    result = runner.invoke(babelize, ["init", "--help"])
-    assert result.exit_code == 0
-
-    result = runner.invoke(babelize, ["--version"])
-    assert result.exit_code == 0
-    assert "version" in result.output
-
-
 def test_babelize_init_c(tmpdir, datadir):
     runner = CliRunner()
 
