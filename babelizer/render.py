@@ -27,7 +27,7 @@ def render(plugin_metadata, output, template=None, clobber=False, version="0.1")
         OutputDirExistsError: Raised if output directory exists and clobber is not set.
 
     Returns:
-        [str]: Path to babelized library
+        str: Path to babelized library
     """
     if template is None:
         template = pkg_resources.resource_filename("babelizer", "data")

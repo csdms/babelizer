@@ -52,13 +52,13 @@ def get_setup_py_version():
 
 @contextmanager
 def save_files(files):
-    """[summary]
+    """Generate repository files through a context.
 
     Args:
-        files ([type]): [description]
+        files (list of str): List of path-like objects.
 
     Yields:
-        [type]: [description]
+        Generator for repository files.
     """
     contents = {}
     for file_ in files:
