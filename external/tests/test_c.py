@@ -9,7 +9,7 @@ from click.testing import CliRunner
 from babelizer.cli import babelize
 
 
-def test_babelize_init_python(tmpdir, datadir):
+def test_babelize_init_c(tmpdir, datadir):
     runner = CliRunner()
 
     with tmpdir.as_cwd():
@@ -17,13 +17,13 @@ def test_babelize_init_python(tmpdir, datadir):
         result = runner.invoke(babelize, ["init", "babel.toml"])
 
         assert result.exit_code == 0
-        assert pathlib.Path("pymt_heatpy").exists()
-        assert (pathlib.Path("pymt_heatpy") / "babel.toml").is_file()
+        assert pathlib.Path("pymt_heat").exists()
+        assert (pathlib.Path("pymt_heat") / "babel.toml").is_file()
 
         try:
             result = subprocess.run(
                 ["pip", "install", "-e", "."],
-                cwd="pymt_heatpy",
+                cwd="pymt_heat",
                 check=True,
                 text=True,
                 stdout=subprocess.PIPE,
@@ -33,19 +33,17 @@ def test_babelize_init_python(tmpdir, datadir):
             assert err.output is None, err.output
 
         assert result.returncode == 0
-        assert pathlib.Path("pymt_heatpy/pymt_heatpy/data/HeatPy").exists()
-        assert pathlib.Path("pymt_heatpy/pymt_heatpy/data/HeatPy/api.yaml").is_file()
 
         os.mkdir("_test")
-        shutil.copy(datadir / "heat.yaml", "_test/")
+        shutil.copy(datadir / "config.txt", "_test/")
 
         try:
             result = subprocess.run(
                 [
                     "bmi-test",
-                    "--config-file=heat.yaml",
+                    "--config-file=config.txt",
                     "--root-dir=.",
-                    "pymt_heatpy:HeatPy",
+                    "pymt_heat:HeatBMI",
                     "-vvv",
                 ],
                 cwd="_test",
