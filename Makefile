@@ -56,7 +56,7 @@ lint: ## check style with flake8
 
 pretty: ## reformat files to make them look pretty
 	isort babelizer tests
-	black setup.py babelizer tests --exclude=babelizer/data
+	black setup.py babelizer tests docs/source/conf.py --exclude=babelizer/data
 
 test: ## run tests quickly with the default Python
 	pytest tests --disable-warnings -vvv
@@ -77,9 +77,9 @@ coverage: ## check code coverage quickly with the default Python
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
+	sphinx-apidoc -o docs/source/api babelizer --separate
 	rm -f docs/source/api/babelizer.rst
 	rm -f docs/source/api/modules.rst
-	sphinx-apidoc -o docs/source/api babelizer
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/build/html/index.html
