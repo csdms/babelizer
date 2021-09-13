@@ -197,23 +197,31 @@ def update(template, quiet, verbose):
     help="Prompt the user for values",
 )
 @click.option(
-    "--package",
-    help="Name to use for the babelized package",
-)
-@click.option(
     "--name",
     help="Name of the babelized class",
-)
-@click.option(
-    "--email",
-    help="Contact email to use for the babelized package",
 )
 @click.option(
     "--language",
     help="Programming language of the library being babelized",
     type=click.Choice(["c", "c++", "fortran", "python"], case_sensitive=False),
 )
+@click.option("--library", help="Name of the BMI library to wrap", default=None)
+@click.option(
+    "--header", help="Name of the header file declaring the BMI class", default=None
+)
+@click.option(
+    "--entry-point", help="Name of the BMI entry point into the library", default=None
+)
+@click.option(
+    "--package",
+    help="Name to use for the babelized package",
+)
+@click.option("--requirement", help="Required libraries", multiple=True, default=None)
 @click.option("--author", help="Babelizing author")
+@click.option(
+    "--email",
+    help="Contact email to use for the babelized package",
+)
 @click.option(
     "--username",
     help="GitHub username or organization that will host the project",
@@ -226,14 +234,6 @@ def update(template, quiet, verbose):
     "--summary",
     help="Brief description of what the library does",
 )
-@click.option("--library", help="Name of the BMI library to wrap", default=None)
-@click.option(
-    "--header", help="Name of the header file declaring the BMI class", default=None
-)
-@click.option(
-    "--entry-point", help="Name of the BMI entry point into the library", default=None
-)
-@click.option("--requirement", help="Required libraries", multiple=True, default=None)
 @click.option("--python-version", help="Supported Python versions", default="3.9")
 @click.option(
     "--os-name", help="Supported operating systems", default="linux,mac,windows"
