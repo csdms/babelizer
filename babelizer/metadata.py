@@ -245,7 +245,9 @@ class BabelMetadata:
                     "package_license",
                     "summary",
                 ),
-                optional={},
+                optional=(
+                    "github_branch",
+                ),
             )
         except ValidationError:
             validate_dict(
@@ -322,6 +324,9 @@ class BabelMetadata:
             info = BabelMetadata._handle_old_style_info(config["info"])
         else:
             info = config["info"]
+
+        if "github_branch" not in info:
+            info["github_branch"] = "main"
 
         if "all" in config["ci"]["os"]:
             config["ci"] = ["linux", "mac", "windows"]
@@ -451,6 +456,7 @@ class BabelMetadata:
                 "full_name": self._meta["info"]["package_author"],
                 "email": self._meta["info"]["package_author_email"],
                 "github_username": self._meta["info"]["github_username"],
+                "github_branch": self._meta["info"]["github_branch"],
                 "project_short_description": self._meta["info"]["summary"],
             },
             "ci": {
