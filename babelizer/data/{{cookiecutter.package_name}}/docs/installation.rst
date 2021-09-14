@@ -45,7 +45,7 @@ Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl  -OL https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/tarball/master
+    $ curl  -OL https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/tarball/{{ cookiecutter.info.github_branch }}
 
 Once you have a copy of the source, you can install it with:
 
@@ -56,4 +56,4 @@ Once you have a copy of the source, you can install it with:
 
 
 .. _Github repo: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}
-.. _tarball: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/tarball/master
+.. _tarball: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/tarball/{{ cookiecutter.info.github_branch }}
