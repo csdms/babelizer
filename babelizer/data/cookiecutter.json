@@ -12,6 +12,7 @@
     "full_name": "CSDMS",
     "email": "csdms@colorado.edu",
     "github_username": "csdms",
+    "github_branch": "main",
     "project_short_description": "PyMT plugin for {{cookiecutter.package_name}}"
   },
   "ci": {
