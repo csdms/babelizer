@@ -227,6 +227,12 @@ def update(template, quiet, verbose):
     help="GitHub username or organization that will host the project",
 )
 @click.option(
+    "--branch",
+    help="Default branch name for the project",
+    default="main",
+    show_default=True,
+)
+@click.option(
     "--license",
     help="License to use for the babelized project",
 )
@@ -246,6 +252,7 @@ def generate(
     language,
     author,
     username,
+    branch,
     license,
     summary,
     library,
@@ -265,6 +272,7 @@ def generate(
         language=language,
         author=author,
         username=username,
+        branch=branch,
         license=license,
         summary=summary,
         library=library,
@@ -286,6 +294,7 @@ def _gather_input(
     language=None,
     author=None,
     username=None,
+    branch=None,
     license=None,
     summary=None,
     library=None,
@@ -331,6 +340,11 @@ def _gather_input(
         or ask(
             "GitHub username or organization that will host the project",
             default="pymt-lab",
+        ),
+        "github_branch": branch
+        or ask(
+            "Default branch name for the project",
+            default="main",
         ),
         "package_author": author or ask("Babelizing author", default="csdms"),
         "package_author_email": email
