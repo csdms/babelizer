@@ -62,3 +62,17 @@ def test_update_noargs():
     runner = CliRunner()
     result = runner.invoke(babelize, ["update"])
     assert result.exit_code != 0
+
+
+def test_default_branch():
+    runner = CliRunner()
+    result = runner.invoke(babelize, ["generate"])
+    assert result.exit_code == 0
+    assert "main" in result.output
+
+
+def test_set_branch():
+    runner = CliRunner()
+    result = runner.invoke(babelize, ["generate", "--branch", "coffee/cup"])
+    assert result.exit_code == 0
+    assert "coffee/cup" in result.output
