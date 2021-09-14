@@ -170,6 +170,7 @@ An example of a blank *babel.toml* file:
 
     [info]
     github_username = "pymt-lab"
+    github_branch = "main"
     package_author = "csdms"
     package_author_email = "csdms@colorado.edu"
     package_license = "MIT"
@@ -295,11 +296,17 @@ Info section
 
 Descriptive information about the package.
 
-Github username
+GitHub username
 ---------------
 
 The GitHub username or organization where this package will be hosted. This
 is used in generating links to the CI, docs, etc.
+
+GitHub branch
+---------------
+
+The name of the initial branch in the package's repository.
+The default is "main".
 
 Author
 ------
@@ -323,7 +330,7 @@ Summary
 
 A short description of the wrapped library.
 
-Ci section
+CI section
 ==========
 
 Information about how to set up continuous integration.
@@ -377,6 +384,7 @@ called *hydrotrend*.
 
     [info]
     github_username = "pymt-lab"
+    github_branch = "main"
     package_author = "csdms"
     package_author_email = "csdms@colorado.edu"
     package_license = "MIT"
