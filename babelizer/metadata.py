@@ -245,9 +245,7 @@ class BabelMetadata:
                     "package_license",
                     "summary",
                 ),
-                optional=(
-                    "github_branch",
-                ),
+                optional=("github_branch",),
             )
         except ValidationError:
             validate_dict(
