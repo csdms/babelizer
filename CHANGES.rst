@@ -6,6 +6,9 @@ Changelog for babelizer
 0.3.9 (unreleased)
 ******************
 
+- Allow user to set default branch name (#60)
+- Improve the readme docs (#57)
+- Update tests and generate coverage (#56)
 - Complete API documentation (#55)
 
 
