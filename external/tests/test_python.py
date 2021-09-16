@@ -3,9 +3,9 @@ import os
 import pathlib
 import shutil
 import subprocess
-import pytest
-import git
 
+import git
+import pytest
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
@@ -30,7 +30,7 @@ def test_babelize_init_python_with_user_branch(tmpdir, datadir):
 
         repo = git.Repo("pymt_heatpy")
 
-        assert repo.bare == False
+        assert not repo.bare
         assert repo.active_branch.name == "coffee"
 
 
@@ -47,15 +47,12 @@ def test_babelize_init_python_with_default_branch(sessiondir, datadir):
 
         repo = git.Repo("pymt_heatpy")
 
-        assert repo.bare == False
+        assert not repo.bare
         assert repo.active_branch.name == "main"
 
 
 def test_babelize_build_python_example(sessiondir, datadir):
-    runner = CliRunner()
-
     with sessiondir.as_cwd():
-
         try:
             result = subprocess.run(
                 ["pip", "install", "-e", "."],
