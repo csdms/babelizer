@@ -52,11 +52,11 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
-	flake8 babelizer tests
+	flake8 babelizer tests external/tests
 
 pretty: ## reformat files to make them look pretty
-	isort babelizer tests
-	black setup.py babelizer tests docs/source/conf.py --exclude=babelizer/data
+	isort babelizer tests external/tests
+	black setup.py babelizer tests external/tests docs/source/conf.py --exclude=babelizer/data
 
 test: ## run tests quickly with the default Python
 	pytest tests --disable-warnings -vvv
