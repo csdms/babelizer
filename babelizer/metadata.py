@@ -315,7 +315,7 @@ class BabelMetadata:
             pass
 
         if "max_instances" not in build:
-            build["max_instances"] = 3
+            build["max_instances"] = 8
 
         if "entry_point" in config["library"]:
             libraries = BabelMetadata._handle_old_style_entry_points(config["library"])
