@@ -230,6 +230,7 @@ class BabelMetadata:
                 "library_dirs",
                 "include_dirs",
                 "extra_compile_args",
+                "max_instances",
             ),
         )
         validate_dict(config["package"], required=("name", "requirements"), optional={})
@@ -313,6 +314,9 @@ class BabelMetadata:
         except KeyError:
             pass
 
+        if "max_instances" not in build:
+            build["max_instances"] = 3
+
         if "entry_point" in config["library"]:
             libraries = BabelMetadata._handle_old_style_entry_points(config["library"])
         else:
@@ -335,6 +339,7 @@ class BabelMetadata:
                 "library_dirs": build["library_dirs"],
                 "include_dirs": build["include_dirs"],
                 "extra_compile_args": build["extra_compile_args"],
+                "max_instances": build["max_instances"],
             },
             "package": {
                 "name": config["package"]["name"],
@@ -446,6 +451,7 @@ class BabelMetadata:
                 "library_dirs": self._meta["build"]["library_dirs"],
                 "include_dirs": self._meta["build"]["include_dirs"],
                 "extra_compile_args": self._meta["build"]["extra_compile_args"],
+                "max_instances": self._meta["build"]["max_instances"],
             },
             "info": {
                 "full_name": self._meta["info"]["package_author"],
