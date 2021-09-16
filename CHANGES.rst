@@ -7,6 +7,7 @@ Changelog for babelizer
 ******************
 
 - Complete API documentation (#55)
+-  Configure max number of model instances (#61)
 
 
 ******************
