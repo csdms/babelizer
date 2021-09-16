@@ -4,6 +4,7 @@ import pathlib
 import shutil
 import subprocess
 import pytest
+import git
 
 from click.testing import CliRunner
 
@@ -16,7 +17,24 @@ def sessiondir(tmpdir_factory):
     return sdir
 
 
-def test_babelize_init_python(sessiondir, datadir):
+def test_babelize_init_python_with_user_branch(tmpdir, datadir):
+    runner = CliRunner()
+
+    with tmpdir.as_cwd():
+        shutil.copy(datadir / "user-branch.toml", ".")
+        result = runner.invoke(babelize, ["init", "user-branch.toml"])
+
+        assert result.exit_code == 0
+        assert pathlib.Path("pymt_heatpy").exists()
+        assert (pathlib.Path("pymt_heatpy") / "babel.toml").is_file()
+
+        repo = git.Repo("pymt_heatpy")
+
+        assert repo.bare == False
+        assert repo.active_branch.name == "coffee"
+
+
+def test_babelize_init_python_with_default_branch(sessiondir, datadir):
     runner = CliRunner()
 
     with sessiondir.as_cwd():
@@ -26,6 +44,17 @@ def test_babelize_init_python(sessiondir, datadir):
         assert result.exit_code == 0
         assert pathlib.Path("pymt_heatpy").exists()
         assert (pathlib.Path("pymt_heatpy") / "babel.toml").is_file()
+
+        repo = git.Repo("pymt_heatpy")
+
+        assert repo.bare == False
+        assert repo.active_branch.name == "main"
+
+
+def test_babelize_build_python_example(sessiondir, datadir):
+    runner = CliRunner()
+
+    with sessiondir.as_cwd():
 
         try:
             result = subprocess.run(
