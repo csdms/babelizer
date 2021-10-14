@@ -6,6 +6,7 @@ import subprocess
 
 import git
 import pytest
+import toml
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
@@ -17,30 +18,24 @@ def sessiondir(tmpdir_factory):
     return sdir
 
 
-def test_babelize_init_python_with_user_branch(tmpdir, datadir):
-    runner = CliRunner()
+@pytest.mark.parametrize("branch", ["main", "master", "coffee", None])
+def test_babelize_init_python_with_branch(tmpdir, datadir, branch):
+    runner = CliRunner(mix_stderr=False)
+
+    babel_toml = toml.load(datadir / "babel.toml")
+    babel_toml["info"]["github_branch"] = branch
+
+    if branch is None:
+        babel_toml["info"].pop("github_branch", None)
+        branch = "main"
 
     with tmpdir.as_cwd():
-        shutil.copy(datadir / "user-branch.toml", ".")
-        result = runner.invoke(babelize, ["init", "user-branch.toml"])
+        with open("babel.toml", "w") as fp:
+            toml.dump(babel_toml, fp)
 
-        assert result.exit_code == 0
-        assert pathlib.Path("pymt_heatpy").exists()
-        assert (pathlib.Path("pymt_heatpy") / "babel.toml").is_file()
-
-        repo = git.Repo("pymt_heatpy")
-
-        assert not repo.bare
-        assert repo.active_branch.name == "coffee"
-
-
-def test_babelize_init_python_with_default_branch(sessiondir, datadir):
-    runner = CliRunner()
-
-    with sessiondir.as_cwd():
-        shutil.copy(datadir / "babel.toml", ".")
         result = runner.invoke(babelize, ["init", "babel.toml"])
 
+        assert result.stdout.strip() == str(tmpdir / "pymt_heatpy")
         assert result.exit_code == 0
         assert pathlib.Path("pymt_heatpy").exists()
         assert (pathlib.Path("pymt_heatpy") / "babel.toml").is_file()
@@ -48,7 +43,7 @@ def test_babelize_init_python_with_default_branch(sessiondir, datadir):
         repo = git.Repo("pymt_heatpy")
 
         assert not repo.bare
-        assert repo.active_branch.name == "main"
+        assert repo.active_branch.name == branch
 
 
 def test_babelize_build_python_example(sessiondir, datadir):
