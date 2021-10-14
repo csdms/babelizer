@@ -10,4 +10,5 @@ fortran-compiler
 pkg-config
 pytest
 pytest-datadir
+pytest-dependency
 coverage
