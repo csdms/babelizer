@@ -6,7 +6,7 @@ import subprocess
 
 import git
 import pytest
-import tomlkit as toml
+import toml
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
@@ -51,8 +51,7 @@ def test_babelize_init_fortran_with_user_instances(tmpdir, datadir, max_instance
         assert pathlib.Path("pymt_heatf").exists()
         assert (pathlib.Path("pymt_heatf") / "babel.toml").is_file()
 
-        with open("pymt_heatf/babel.toml", "r") as fp:
-            meta = toml.parse(fp.read())
+        meta = toml.load("pymt_heatf/babel.toml")
 
         assert "max_instances" in meta["build"]
         assert meta["build"]["max_instances"] == max_instances
