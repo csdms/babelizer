@@ -3,9 +3,10 @@ import os
 import pathlib
 import shutil
 import subprocess
-import tomlkit as toml
-import pytest
 
+import git
+import pytest
+import tomlkit as toml
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
