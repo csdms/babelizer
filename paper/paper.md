@@ -106,6 +106,30 @@ are compiled and run in their native language, which is where
 the bulk of the computation takes place, with the `babelizer` providing
 only a thin wrapper layer.
 
+### The Common Component Architecture
+
+The `babelizer` is, in part, inspired by the work of [@epperly:2012] and
+their development of the Common Component Architecture (CCA) tools and, in
+particular, the multi-language compiler, *babel*. *Babel* is not a compiler *per se*
+but, rather, a code generator that produces glue code to provide cross-language
+interoperability. The generated code is then passed to a traditional compiler
+to build libraries.
+
+Whereas the `babelizer` uses Python as a hub language that connects it’s
+supported languages, babel itself acts as the hub, generating spokes to each
+supported language so that languages talk directly to one another. That is,
+babel is capable of generating bridges from each of its supported languages
+directly to every other supported language. Babel also supports arbitrary
+interfaces while the *babelizer* is only able to wrap libraries that expose a BMI.
+
+### Grpc4BMI
+
+Several other groups have adopted an alternative solution to the language
+interoperability problem that treats models as web services that expose a BMI.
+In this framework, models are built on a server or within a software container
+(e.g. Docker) and interact with clients through network ports.
+
+
 ![The distribution of programming languages used in the models in the CSDMS model repository. (Data from https://csdms.colorado.edu/wiki/CSDMS_models_by_numbers.)\label{fig:languages}](language_fig.png)
 
 # Design of the babelizer
