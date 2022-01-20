@@ -1,6 +1,9 @@
 .. image:: https://github.com/csdms/babelizer/workflows/Build/Test%20CI/badge.svg
     :target: https://github.com/csdms/babelizer/actions?query=workflow%3A%22Build%2FTest+CI%22
 
+.. image:: https://anaconda.org/conda-forge/babelizer/badges/version.svg
+    :target: https://anaconda.org/conda-forge/babelizer
+
 .. image:: https://readthedocs.org/projects/babelizer/badge/?version=latest
         :target: https://babelizer.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
@@ -8,32 +11,80 @@
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
         :target: https://github.com/csdms/babelizer
 
-=============
-The Babelizer
-=============
-
-Wrap BMI libraries with Python bindings
+======================================================
+The Babelizer: Wrap BMI libraries with Python bindings
+======================================================
 
 
-*****
-About
-*****
-
-The *babelizer* is a utility for wrapping libraries, from a variety of
-languages, that expose a `Basic Model Interface`_ (BMI) so that they can be
+The *babelizer* is a utility for wrapping a library that exposes a `Basic Model Interface`_ (BMI) so that it can be
 imported as a Python package.
 
-
-Supported languages:
+Supported languages include:
 
 *  C
 *  C++
 *  Fortran
 *  Python
 
+
+********************************************
+The Babelizer is part of the CSDMS Workbench
+********************************************
+
 The *babelizer* is an element of the `CSDMS Workbench`_,
 an integrated system of software tools, technologies, and standards
-for building and coupling models.
+for building and coupling models. The Workbench provides two Python
+frameworks for model coupling, *pymt* and *landlab*.
+The *babelizer* was written to bring models written in other languages into
+these frameworks.
+However, as long as your model
+satisfies the requirements below, you can use the *babelizer*
+to bring your model into Python without having to use any of the
+other tools in the Workbench.
+
+
+***************************
+Should I use the babelizer?
+***************************
+
+To determine if the
+*babelizer* is right for you, first be aware of a few requirements.
+
+1. Your model must be written in C, C++, Fortran, or Python
+2. Your model must provide a shared library
+3. Your model must expose a `Basic Model Interface`_ through this library
+
+The most difficult of the three requirements is the last--implementing a BMI. This
+involves adding a series of functions with prescribed names,
+arguments, and return values for querying and controlling your model. We have created
+several resources to help you understand the BMI and to guide you
+through the implementation process.
+
+BMI resources
+=============
+
+* The `Basic Model Interface`_ documentation provides an overview of the BMI as well
+  as a detailed description of all of the BMI functions.
+* The following provide a BMI specification for each of the supported languages:
+
+  * `C spec <https://github.com/csdms/bmi-c/>`_
+  * `C++ spec <https://github.com/csdms/bmi-cxx/>`_
+  * `Fortran spec <https://github.com/csdms/bmi-fortran/>`_
+  * `Python spec <https://github.com/csdms/bmi-python/>`_
+
+* The following give examples of a BMI implementation for each of the supported languages:
+
+  * `C example <https://github.com/csdms/bmi-example-c/>`_
+  * `C++ example <https://github.com/csdms/bmi-example-cxx/>`_
+  * `Fortran example <https://github.com/csdms/bmi-example-fortran/>`_
+  * `Python example <https://github.com/csdms/bmi-example-python/>`_
+
+Note
+====
+
+There are lots of other good reasons to create a BMI for
+your model--not just so you can bring it into Python with the *babelizer*!
+Read all about them in the `Basic Model Interface`_ documentation.
 
 
 ************
@@ -43,7 +94,7 @@ Requirements
 The *babelizer* requires Python >=3.8.
 
 
-Apart from Python, the *babelzer* has a number of other requirements, all of which
+Apart from Python, the *babelizer* has a number of other requirements, all of which
 can be obtained through either *pip* or *conda*, that will be automatically
 installed when you install the *babelizer*.
 
@@ -242,7 +293,7 @@ for the package.
 Info section
 ============
 
-Descriptive infomation about the package.
+Descriptive information about the package.
 
 Github username
 ---------------
@@ -379,3 +430,12 @@ see the User Guide of the `documentation`_.
 .. _Basic Model Interface: https://bmi.readthedocs.io/
 .. _CSDMS Workbench: https://csdms.colorado.edu/wiki/Workbench
 .. _documentation: https://babelizer.readthedocs.io/
+.. _BMI C: https://github.com/csdms/bmi-c/
+.. _BMI C++: https://github.com/csdms/bmi-cxx/
+.. _BMI Fortran: https://github.com/csdms/bmi-fortran/
+.. _BMI Python: https://github.com/csdms/bmi-python/
+.. _BMI example C: https://github.com/csdms/bmi-example-c/
+.. _BMI example C++: https://github.com/csdms/bmi-example-cxx/
+.. _BMI example Fortran: https://github.com/csdms/bmi-example-fortran/
+.. _BMI example Python: https://github.com/csdms/bmi-example-python/
+
