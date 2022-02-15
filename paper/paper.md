@@ -112,7 +112,7 @@ only a thin wrapper layer.
 
 ### The Common Component Architecture
 
-The `babelizer` is, in part, inspired by the work of [@epperly:2012] and
+The `babelizer` is, in part, inspired by the work of @epperly:2012 and
 their development of the Common Component Architecture (CCA) tools and, in
 particular, the multi-language compiler, *babel*. *Babel* is not a compiler *per se*
 but, rather, a code generator that produces glue code to provide cross-language
@@ -128,7 +128,7 @@ interfaces while the `babelizer` is only able to wrap libraries that expose a BM
 ### Grpc4BMI
 
 Another alternative solution to the language interoperability problem is to treat
-models as web services that expose a BMI (e.g. Grpc4BMI as described by [@hut:2021]).
+models as web services that expose a BMI; e.g., Grpc4BMI [@hut:2021].
 In such a framework, models are built on separate servers or within their own
 software container (e.g. Docker) and interact with clients through network ports.
 Isolating models within environments eliminates the potential of dependency
