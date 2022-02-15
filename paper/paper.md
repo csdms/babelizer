@@ -160,8 +160,6 @@ be regenerated. The only files a user need edit are the main
 configuration file, `babel.toml`, and any optional model data files,
 which are installed along with the new component.
 
-![The `babelizer` configuration file (`babel.toml`) for the Precipitation-Runoff Modeling System v6 surface water component, `PRMSSurface` [@piper:2020]. Running the `babelizer` with this file produces most of the repository https://github.com/pymt-lab/pymt_prms_surface. \label{fig:configuration}](babel.toml.md.pdf)
-
 Data files provided to a babelized component are intended to
 be used either by a user of the new component or by a separate
 framework that imports the component. There is little restriction
@@ -181,6 +179,7 @@ therefore, a user is given model components with a standardized way
 to create input files, as well as a common Python interface to
 run and interact with the model.
 
+![The `babelizer` configuration file (`babel.toml`) for the Precipitation-Runoff Modeling System v6 surface water component, `PRMSSurface` [@piper:2020]. Running the `babelizer` with this file produces most of the repository https://github.com/pymt-lab/pymt_prms_surface. \label{fig:configuration}](babel.toml.md.pdf)
 
 # Acknowledgements
 
