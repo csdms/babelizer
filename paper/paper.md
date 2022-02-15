@@ -43,8 +43,7 @@ where they can communicate with one another as components of an integrated model
 
 # Statement of need
 
-With an integrated multicomponent approach to modeling, scientific
-modelers--not just software developers--connect components
+With an integrated multicomponent approach to modeling, scientists--not just software developers--connect components
 to form integrated models, where plug-and-play
 components can easily be added or removed [@tucker:2021; @david:2013; @gregersen:2007; @collins:2005].
 This is in contrast to older methods, where a single modeling group would construct
@@ -69,7 +68,7 @@ greater risk that community-developed models will become incompatible
 with one another. With hundreds of scientists developing models in
 isolation, there is a greater likelihood models will be written with
 idiosyncratic designs, incompatible grids, incompatible time steps,
-and even in different programming languages. The Earth-system modeling
+and in different programming languages. The Earth-surface modeling
 community has developed tools to help solve some of these problems.
 For example, the Basic Model Interface
 standardizes model interactions. The Earth System Modeling Framework (ESMF) [@collins:2005]
@@ -80,7 +79,7 @@ In this paper, we present a solution to the language incompatibility problem.
 
 ## Overcoming the language incompatibility problem
 
-To get an idea of the range of programming languages used in Earth-system
+To get an idea of the range of programming languages used in Earth-surface
 modeling, we can look to the Community Surface Dynamics Modeling System (CSDMS)
 model repository. As of June 2020, the repository holds over 370 open source
 models and tools submitted by the community. These contributions span a range of languages, with Python, C, and Fortran
@@ -95,6 +94,11 @@ its extensive collection of third-party libraries (including model
 coupling frameworks such as the `pymt`), and its existing ability to
 communicate with other programming languages.
 We have built the `babelizer` to generate the spokes that connect Python to other languages.
+
+
+![The distribution of programming languages used in the models in the CSDMS model repository. (Data from https://csdms.colorado.edu/wiki/CSDMS_models_by_numbers.)\label{fig:languages}](language_fig.png)
+
+
 Using the CSDMS model repository as a
 guide, if we build translators for the open
 source languages C, C++, Fortran, and Python, we will cover 80 percent of
@@ -114,13 +118,12 @@ particular, the multi-language compiler, *babel*. *Babel* is not a compiler *per
 but, rather, a code generator that produces glue code to provide cross-language
 interoperability. The generated code is then passed to a traditional compiler
 to build libraries.
-
-Whereas the `babelizer` uses Python as a hub language that connects its
-supported languages, babel itself acts as the hub, generating spokes to each
+Whereas the `babelizer` uses Python as the hub language to connects its
+supported languages, *babel* itself acts as the hub, generating spokes to each
 supported language so that languages talk directly to one another. That is,
-babel is capable of generating bridges from each of its supported languages
-directly to every other supported language. Babel also supports arbitrary
-interfaces while the *babelizer* is only able to wrap libraries that expose a BMI.
+*babel* is capable of generating bridges from each of its supported languages
+directly to every other supported language. *Babel* also supports arbitrary
+interfaces while the `babelizer` is only able to wrap libraries that expose a BMI.
 
 ### Grpc4BMI
 
@@ -129,11 +132,9 @@ models as web services that expose a BMI (e.g. Grpc4BMI as described by [@hut:20
 In such a framework, models are built on separate servers or within their own
 software container (e.g. Docker) and interact with clients through network ports.
 Isolating models within environments eliminates the potential of dependency
-conflicts between models and requires them to only be built within on specific
+conflicts between models and requires them to only be built within one specific
 environment or operating system.
 
-
-![The distribution of programming languages used in the models in the CSDMS model repository. (Data from https://csdms.colorado.edu/wiki/CSDMS_models_by_numbers.)\label{fig:languages}](language_fig.png)
 
 # Design of the babelizer
 
