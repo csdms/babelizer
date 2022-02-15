@@ -1,7 +1,14 @@
 Developer Documentation
 -----------------------
 
-.. toctree::
-   :maxdepth: 2
+API documentation for each *babelizer* module is listed on a separate page.
 
-   modules
+.. toctree::
+   :maxdepth: 4
+
+   babelizer.cli
+   babelizer.errors
+   babelizer.metadata
+   babelizer.render
+   babelizer.utils
+   babelizer.wrap

@@ -3,12 +3,21 @@ Changelog for babelizer
 =======================
 
 ******************
-0.3.8 (unreleased)
+0.3.9 (unreleased)
 ******************
 
-- Nothing changed yet.
+- Complete API documentation (#55)
 
 
+******************
+0.3.8 (2021-05-03)
+******************
+
+- Update docs for API changes (#47)
+- Fix minor formatting issues in rendered output (#49)
+
+
+******************
 0.3.7 (2021-03-19)
 ******************
 

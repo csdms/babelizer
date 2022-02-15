@@ -49,7 +49,7 @@
 {{ '=' * max_width }} {{ '=' * width_col_2 }}
 {{ fmt | format("Component",) }} PyMT
 {{ '=' * max_width }} {{ '=' * width_col_2 }}
-{% for babelized_class, component in cookiecutter.components|dictsort %}
+{% for babelized_class, component in cookiecutter.components|dictsort -%}
 {{ fmt | format(babelized_class) }} `from pymt.models import {{ babelized_class }}`
 {% endfor -%}
 {{ '=' * max_width }} {{ '=' * width_col_2 }}
