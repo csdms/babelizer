@@ -32,11 +32,11 @@ bibliography: paper.bib
 
 # Summary
 
-The `babelizer` is a Python utility that generates code
+The *babelizer* is a Python utility that generates code
 to import libraries from other languages into Python. Target libraries
 must expose a Basic Model Interface (BMI) [@hutton:2020b; @peckham:2013] and be written in
-C, C++, or Fortran, although the `babelizer` is extendable, so
-other languages can be added in the future. The `babelizer` provides a
+C, C++, or Fortran, although the *babelizer* is extendable, so
+other languages can be added in the future. The *babelizer* provides a
 streamlined mechanism for bringing scientific models into a common language
 where they can communicate with one another as components of an integrated model.
 
@@ -73,7 +73,7 @@ community has developed tools to help solve some of these problems.
 For example, the Basic Model Interface
 standardizes model interactions. The Earth System Modeling Framework (ESMF) [@collins:2005]
 grid mappers are able to map quantities from one grid to another.
-The Python Modeling Toolkit `pymt` [@hutton:2020a] performs time
+The Python Modeling Toolkit *pymt* [@hutton:2020a] performs time
 interpolation, grid mapping, and unit coversion.
 In this paper, we present a solution to the language incompatibility problem.
 
@@ -91,9 +91,9 @@ connects to other languages.
 We chose Python as
 the hub because of its popularity in the scientific community,
 its extensive collection of third-party libraries (including model
-coupling frameworks such as the `pymt`), and its existing ability to
+coupling frameworks such as the *pymt*), and its existing ability to
 communicate with other programming languages.
-We have built the `babelizer` to generate the spokes that connect Python to other languages.
+We have built the *babelizer* to generate the spokes that connect Python to other languages.
 
 
 ![The distribution of programming languages used in the models in the CSDMS model repository. (Data from https://csdms.colorado.edu/wiki/CSDMS_models_by_numbers.)\label{fig:languages}](language_fig.png)
@@ -107,28 +107,28 @@ A drawback of using
 Python is that it can be relatively slow compared to compiled
 languages like C and Fortran; however, the models being wrapped
 are compiled and run in their native language, which is where
-the bulk of the computation takes place, with the `babelizer` providing
+the bulk of the computation takes place, with the *babelizer* providing
 only a thin wrapper layer.
 
 ### The Common Component Architecture
 
-The `babelizer` is, in part, inspired by the work of @epperly:2012 and
+The *babelizer* is, in part, inspired by the work of @epperly:2012 and
 their development of the Common Component Architecture (CCA) tools and, in
 particular, the multi-language compiler, *babel*. *Babel* is not a compiler *per se*
 but, rather, a code generator that produces glue code to provide cross-language
 interoperability. The generated code is then passed to a traditional compiler
 to build libraries.
-Whereas the `babelizer` uses Python as the hub language to connects its
+Whereas the *babelizer* uses Python as the hub language to connects its
 supported languages, *babel* itself acts as the hub, generating spokes to each
 supported language so that languages talk directly to one another. That is,
 *babel* is capable of generating bridges from each of its supported languages
 directly to every other supported language. *Babel* also supports arbitrary
-interfaces while the `babelizer` is only able to wrap libraries that expose a BMI.
+interfaces while the *babelizer* is only able to wrap libraries that expose a BMI.
 
 ### Grpc4BMI
 
 Another alternative solution to the language interoperability problem is to treat
-models as web services that expose a BMI; e.g., Grpc4BMI [@hut:2021].
+models as web services that expose a BMI; e.g., *Grpc4BMI* [@hut:2021].
 In such a framework, models are built on separate servers or within their own
 software container (e.g. Docker) and interact with clients through network ports.
 Isolating models within environments eliminates the potential of dependency
@@ -138,21 +138,21 @@ environment or operating system.
 
 # Design of the babelizer
 
-The `babelizer` is a command-line utility that generates the glue code
+The *babelizer* is a command-line utility that generates the glue code
 to bring a model exposing a BMI from another language into Python.
-Because the BMI is a well-defined standard, the `babelizer` requires
+Because the BMI is a well-defined standard, the *babelizer* requires
 only a small amount of metadata to generate the glue code. The metadata
 depends somewhat on the language being wrapped, but includes the name
 of the library providing the BMI, the name of an entry point into the
 library, the language the library was written in, and any necessary
-compiler flags. With this metadata, the `babelizer` creates a new `git`
+compiler flags. With this metadata, the *babelizer* creates a new *git*
 repository, a Python package containing the Python interface to the
 model, documentation, and sets up continuous integrations and a test
 suite for the model’s BMI. The model can then be imported and run
 through Python.
 
 The user provides metadata describing their model through a
-*toml*-formatted file (see \autoref{fig:configuration} for an example). The `babelizer` uses
+*toml*-formatted file (see \autoref{fig:configuration} for an example). The *babelizer* uses
 the metadata to fill a set of *jinja*-formatted template files to construct
 the new repository (or update an existing repository). The entire
 repository is almost completely auto-generated, which means it can easily
@@ -167,11 +167,11 @@ on the contents of the files, but typically they are sample input
 files that a user of the component can use to run the model.
 Another use-case is where the component will be used within a
 separate modeling framework and that framework may require additional
-metadata. As an example, the `pymt` is a
+metadata. As an example, the *pymt* is a
 modeling framework able to work with generic BMI models. In addition
-to the BMI, the `pymt` requires descriptive information about the model
+to the BMI, the *pymt* requires descriptive information about the model
 (e.g. authors, license, references, summary of what it does, etc.)
-as well as *jinja*-formatted sample input files. The `pymt` uses the
+as well as *jinja*-formatted sample input files. The *pymt* uses the
 template input files as part of a utility for a user to programmatically
 generate model input files without having to know anything about the
 idiosyncratic details of those model input files. Within such a framework,
@@ -179,7 +179,7 @@ therefore, a user is given model components with a standardized way
 to create input files, as well as a common Python interface to
 run and interact with the model.
 
-![The `babelizer` configuration file (`babel.toml`) for the Precipitation-Runoff Modeling System v6 surface water component, `PRMSSurface` [@piper:2020]. Running the `babelizer` with this file produces most of the repository https://github.com/pymt-lab/pymt_prms_surface. \label{fig:configuration}](babel.toml.md.pdf)
+![The *babelizer* configuration file (`babel.toml`) for the Precipitation-Runoff Modeling System v6 surface water component, *PRMSSurface* [@piper:2020]. Running the `babelizer` with this file produces most of the repository https://github.com/pymt-lab/pymt_prms_surface. \label{fig:configuration}](babel.toml.md.pdf)
 
 # Acknowledgements
 
