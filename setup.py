@@ -11,7 +11,7 @@ def read_requirements(filename):
     return [line.strip() for line in read(filename).splitlines()]
 
 
-long_description = u"\n\n".join(
+long_description = "\n\n".join(
     [read("README.rst"), read("CREDITS.rst"), read("CHANGES.rst")]
 )
 
