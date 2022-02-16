@@ -83,5 +83,8 @@ jobs:
 
       - name: Test babelizer + language examples and generate coverage report
         run: |
-          coverage run --source babelizer --omit */babelizer/data/* -m pytest tests external/tests
-          coverage report -m
+          pytest --cov=babelizer --cov-report=xml:./coverage.xml -vvv
+
+      - name: Coveralls
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+        uses: AndreMiras/coveralls-python-action@v20201129
