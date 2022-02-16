@@ -7,9 +7,20 @@ def read(filename):
         return fp.read()
 
 
-long_description = u"\n\n".join(
+def read_requirements(filename):
+    return [line.strip() for line in read(filename).splitlines()]
+
+
+long_description = "\n\n".join(
     [read("README.rst"), read("CREDITS.rst"), read("CHANGES.rst")]
 )
+
+install_requires = read_requirements("requirements.txt")
+extras_require = {
+    "tests": read_requirements("requirements-testing.txt"),
+    "docs": read_requirements("requirements-docs.txt"),
+    "dev": read_requirements("requirements-dev.txt"),
+}
 
 
 setup(
@@ -17,6 +28,7 @@ setup(
     version="0.3.9.dev0",
     description="Wrap bmi libraries with Python bindings",
     long_description=long_description,
+    python_requires=">=3.9",
     author="Eric Hutton",
     author_email="huttone@colorado.edu",
     url="https://github.com/csdms",
@@ -28,11 +40,13 @@ setup(
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Topic :: Software Development :: Code Generators",
     ],
     keywords=["bmi", "pymt"],
-    install_requires=open("requirements.txt", "r").read().splitlines(),
+    install_requires=install_requires,
+    extras_require=extras_require,
     packages=find_packages(),
     include_package_data=True,
     entry_points={"console_scripts": ["babelize=babelizer.cli:babelize"]},
