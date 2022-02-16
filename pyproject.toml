@@ -19,7 +19,7 @@ doctest_optionflags = [
 ]
 
 [tool.coverage.run]
-omit = "*/babelizer/data/*"
+omit = ["*/babelizer/data/*"]
 
 [tool.isort]
 multi_line_output = 3
