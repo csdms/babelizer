@@ -9,5 +9,7 @@ cxx-compiler
 fortran-compiler
 pkg-config
 pytest
+pytest-cov
 pytest-datadir
 coverage
+coveralls
