@@ -11,6 +11,10 @@
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
         :target: https://github.com/csdms/babelizer
 
+.. image:: https://coveralls.io/repos/github/csdms/babelizer/badge.svg?branch=develop
+    :target: https://coveralls.io/github/csdms/babelizer?branch=develop
+
+
 ======================================================
 The Babelizer: Wrap BMI libraries with Python bindings
 ======================================================
