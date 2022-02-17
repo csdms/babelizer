@@ -18,10 +18,6 @@ doctest_optionflags = [
     "ALLOW_UNICODE"
 ]
 
-[tool.coverage.run]
-omit = ["*/babelizer/data/*"]
-relative_files = true
-
 [tool.isort]
 multi_line_output = 3
 include_trailing_comma = true
