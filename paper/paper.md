@@ -45,7 +45,7 @@ where they can communicate with one another as components of an integrated model
 
 With an integrated multicomponent approach to modeling, scientists--not just software developers--connect components
 to form integrated models, where plug-and-play
-components can easily be added or removed [@tucker:2021; @david:2013; @gregersen:2007; @collins:2005].
+components can easily be added or removed [@tucker:2022; @david:2013; @gregersen:2007; @collins:2005].
 This is in contrast to older methods, where a single modeling group would construct
 a monolithic model built on the tight integration of software written
 within an isolated framework. A single person or group would
