@@ -37,6 +37,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pip install coverage[toml]
           mamba install --file=requirements.txt --file=requirements-testing.txt
           conda list
 
