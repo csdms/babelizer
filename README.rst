@@ -95,7 +95,7 @@ Read all about them in the `Basic Model Interface`_ documentation.
 Requirements
 ************
 
-The *babelizer* requires Python >=3.8.
+The *babelizer* requires Python >=3.9.
 
 
 Apart from Python, the *babelizer* has a number of other requirements, all of which
@@ -140,8 +140,15 @@ After downloading the the *babelizer* source code, run the following from
 *babelizer*'s top-level directory (the one that contains *setup.py*) to
 install *babelizer* into the current environment:
 
-  $ pip install -e .
+.. code:: bash
 
+    $ pip install -e .
+
+or using *conda*:
+
+.. code:: bash
+
+    $ conda install --file=requirements.txt -c conda-forge
 
 **********
 Input file
