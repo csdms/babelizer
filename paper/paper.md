@@ -60,7 +60,7 @@ more innovation and experimentation driven
 from the bottom up by a community. It reduces redundancy--rather
 than reinventing software, scientists can find and
 use models that suit their needs--and it allows scientists
-to focus on new, unsolved, problems. 
+to focus on new and unsolved problems. 
 
 There are disadvantages, however.
 Without a single group to guide model development, there is a
