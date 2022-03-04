@@ -3,6 +3,50 @@ Changelog
 
 .. towncrier release notes start
 
+0.3.9 (2022-03-04)
+------------------
+
+Features
+^^^^^^^^
+
+- Render GitHub Actions for continuous integration of the generated projects.
+  (`#41 <https://github.com/csdms/babelizer/issues/41>`_)
+
+
+Bugfixes
+^^^^^^^^
+
+- Fix minor formatting issues in rendered output. (`#49
+  <https://github.com/csdms/babelizer/issues/49>`_)
+
+
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Added paper for the Journal of Open Source Software (JOSS). (`#44
+  <https://github.com/csdms/babelizer/issues/44>`_)
+- Update docs for API changes. (`#47
+  <https://github.com/csdms/babelizer/issues/47>`_)
+- Update and clarify babelizer usage example. (`#54
+  <https://github.com/csdms/babelizer/issues/54>`_)
+- Complete API documentation. (`#55
+  <https://github.com/csdms/babelizer/issues/55>`_)
+- Improved the README documentation. (`#57
+  <https://github.com/csdms/babelizer/issues/57>`_)
+- Add coverage badge to the README file. (`#66
+  <https://github.com/csdms/babelizer/issues/66>`_)
+
+
+Misc
+^^^^
+
+- `#39 <https://github.com/csdms/babelizer/issues/39>`_, `#56
+  <https://github.com/csdms/babelizer/issues/56>`_, `#65
+  <https://github.com/csdms/babelizer/issues/65>`_, `#67
+  <https://github.com/csdms/babelizer/issues/67>`_, `#68
+  <https://github.com/csdms/babelizer/issues/68>`_
+
+
 0.3.8 (2021-05-03)
 ------------------
 

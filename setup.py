@@ -25,7 +25,7 @@ extras_require = {
 
 setup(
     name="babelizer",
-    version="0.3.9.dev0",
+    version="0.3.9",
     description="Wrap bmi libraries with Python bindings",
     long_description=long_description,
     python_requires=">=3.9",
