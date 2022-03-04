@@ -37,7 +37,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          mamba install --file=requirements.txt --file=requirements-testing.txt
+          pip install coverage[toml]
+          mamba install --file=requirements.txt --file=requirements-testing.txt --file=external/requirements.txt
           conda list
 
       - name: Install babelizer
@@ -83,5 +84,8 @@ jobs:
 
       - name: Test babelizer + language examples and generate coverage report
         run: |
-          coverage run --source babelizer --omit */babelizer/data/* -m pytest tests external/tests
-          coverage report -m
+          pytest --cov=babelizer --cov-report=xml:./coverage.xml -vvv babelizer tests external/tests
+
+      - name: Coveralls
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+        uses: AndreMiras/coveralls-python-action@v20201129

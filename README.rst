@@ -11,6 +11,10 @@
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
         :target: https://github.com/csdms/babelizer
 
+.. image:: https://coveralls.io/repos/github/csdms/babelizer/badge.svg?branch=develop
+    :target: https://coveralls.io/github/csdms/babelizer?branch=develop
+
+
 ======================================================
 The Babelizer: Wrap BMI libraries with Python bindings
 ======================================================
@@ -91,7 +95,7 @@ Read all about them in the `Basic Model Interface`_ documentation.
 Requirements
 ************
 
-The *babelizer* requires Python >=3.8.
+The *babelizer* requires Python >=3.9.
 
 
 Apart from Python, the *babelizer* has a number of other requirements, all of which
@@ -136,8 +140,15 @@ After downloading the the *babelizer* source code, run the following from
 *babelizer*'s top-level directory (the one that contains *setup.py*) to
 install *babelizer* into the current environment:
 
-  $ pip install -e .
+.. code:: bash
 
+    $ pip install -e .
+
+or using *conda*:
+
+.. code:: bash
+
+    $ conda install --file=requirements.txt -c conda-forge
 
 **********
 Input file
