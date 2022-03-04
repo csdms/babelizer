@@ -7,14 +7,14 @@ Changelog
 ------------------
 
 Bugfixes
-""""""""
+^^^^^^^^
 
 - Fix minor formatting issues in rendered output. (`#49
   <https://github.com/csdms/babelizer/issues/49>`_)
 
 
 Improved Documentation
-""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^
 
 - Update docs for API changes. (`#47
   <https://github.com/csdms/babelizer/issues/47>`_)
@@ -24,14 +24,14 @@ Improved Documentation
 ------------------
 
 Features
-""""""""
+^^^^^^^^
 
 - Render GitHub Actions for continuous integration of the generated projects.
   (`#41 <https://github.com/csdms/babelizer/issues/41>`_)
 
 
 Misc
-""""
+^^^^
 
 - Use GitHub Actions for continuous integration. (`#39
   <https://github.com/csdms/babelizer/issues/39>`_)
@@ -41,7 +41,7 @@ Misc
 ------------------
 
 Bugfixes
-""""""""
+^^^^^^^^
 
 - Fixed issue with metadata install path for Python components. (`#36
   <https://github.com/csdms/babelizer/issues/36>`_)
@@ -51,7 +51,7 @@ Bugfixes
 ------------------
 
 Misc
-""""
+^^^^
 
 - Removed use of the toml package, instead use tomlkit. (`#34
   <https://github.com/csdms/babelizer/issues/34>`_)
@@ -61,14 +61,14 @@ Misc
 ------------------
 
 Bugfixes
-""""""""
+^^^^^^^^
 
 - Fixed a templating problem that caused Python BMIs to fail to build. (`#33
   <https://github.com/csdms/babelizer/issues/33>`_)
 
 
 Improved Documentation
-""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^
 
 - Minor edits to README and CLI help strings. (`#29
   <https://github.com/csdms/babelizer/issues/29>`_)
@@ -79,7 +79,7 @@ Improved Documentation
 
 
 Misc
-""""
+^^^^
 
 - Included the Python BMI example in the test suite.. (`#33
   <https://github.com/csdms/babelizer/issues/33>`_)
@@ -89,14 +89,14 @@ Misc
 ------------------
 
 Features
-""""""""
+^^^^^^^^
 
 - Added missing methods, primarily for unstructured grids, to C and C++
   implementation. (`#28 <https://github.com/csdms/babelizer/issues/28>`_)
 
 
 Bugfixes
-""""""""
+^^^^^^^^
 
 - Fixed a rendering error that caused import lines to run together when
   wrapping multiple components (`#28
@@ -104,7 +104,7 @@ Bugfixes
 
 
 Misc
-""""
+^^^^
 
 - Removed Python 3.6 builds. (`#28 <https://github.com/csdms/babelizer/issues/28>`_)
 
@@ -113,7 +113,7 @@ Misc
 ------------------
 
 Bugfixes
-""""""""
+^^^^^^^^
 
 - Fix babelizing C++ libraries and added tests for C++ babelizing.  This fix
   necessitated a change to the "library" section of the babel.toml
@@ -125,7 +125,7 @@ Bugfixes
 ------------------
 
 Improved Documentation
-""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^
 
 - Automatically set version in docs from the package version. (`#23 <https://github.com/csdms/babelizer/issues/23>`_)
 
@@ -134,7 +134,7 @@ Improved Documentation
 ------------------
 
 Improved Documentation
-""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^
 
 - Added a user guide and API documentation (`#21 <https://github.com/csdms/babelizer/issues/21>`_)
 

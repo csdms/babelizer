@@ -15,7 +15,6 @@
     :target: https://coveralls.io/github/csdms/babelizer?branch=develop
 
 
-======================================================
 The Babelizer: Wrap BMI libraries with Python bindings
 ======================================================
 
@@ -31,9 +30,8 @@ Supported languages include:
 *  Python
 
 
-********************************************
 The Babelizer is part of the CSDMS Workbench
-********************************************
+--------------------------------------------
 
 The *babelizer* is an element of the `CSDMS Workbench`_,
 an integrated system of software tools, technologies, and standards
@@ -47,9 +45,8 @@ to bring your model into Python without having to use any of the
 other tools in the Workbench.
 
 
-***************************
 Should I use the babelizer?
-***************************
+---------------------------
 
 To determine if the
 *babelizer* is right for you, first be aware of a few requirements.
@@ -65,7 +62,7 @@ several resources to help you understand the BMI and to guide you
 through the implementation process.
 
 BMI resources
-=============
+^^^^^^^^^^^^^
 
 * The `Basic Model Interface`_ documentation provides an overview of the BMI as well
   as a detailed description of all of the BMI functions.
@@ -84,16 +81,15 @@ BMI resources
   * `Python example <https://github.com/csdms/bmi-example-python/>`_
 
 Note
-====
+^^^^
 
 There are lots of other good reasons to create a BMI for
 your model--not just so you can bring it into Python with the *babelizer*!
 Read all about them in the `Basic Model Interface`_ documentation.
 
 
-************
 Requirements
-************
+------------
 
 The *babelizer* requires Python >=3.9.
 
@@ -110,9 +106,9 @@ additional dependencies for running the *babelizer*'s tests to make sure
 that things are working as they should. These dependencies are listed
 in *requirements-testing.txt*.
 
-************
+
 Installation
-************
+------------
 
 To install the *babelizer*, first create a new environment.
 Although this isn't strictly necessary, it
@@ -125,7 +121,7 @@ base Python installation. This can be done with *conda*:
     $ conda activate babelizer
 
 Stable Release
-==============
+^^^^^^^^^^^^^^
 
 The *babelizer* and its dependencies are best installed with *conda*:
 
@@ -134,7 +130,7 @@ The *babelizer* and its dependencies are best installed with *conda*:
     $ conda install babelizer -c conda-forge
 
 From Source
-===========
+^^^^^^^^^^^
 
 After downloading the the *babelizer* source code, run the following from
 *babelizer*'s top-level directory (the one that contains *setup.py*) to
@@ -150,9 +146,9 @@ or using *conda*:
 
     $ conda install --file=requirements.txt -c conda-forge
 
-**********
+
 Input file
-**********
+----------
 
 The *babelizer* requires a single *toml*-formatted input file that describes
 the library to wrap. This file is typically named *babel.toml*.
@@ -198,19 +194,19 @@ For example, the above *babel.toml* was generated with:
   $ babelize generate > babel.toml
 
 Library section
-===============
+^^^^^^^^^^^^^^^
 
 The *library* section specifies information about the library being babelized.
 
 Name
-----
+""""
 
 The name of the babelized class.
 This will be a Python class,
 so it should follow Python naming conventions such as camel-case typing.
 
 Language
---------
+""""""""
 
 The programming language of the library (possible values are "c", "c++",
 "fortran", and "python").
@@ -221,20 +217,20 @@ The programming language of the library (possible values are "c", "c++",
   language = "c"
 
 Library
--------
+"""""""
 
 The name of the BMI library to wrap.
 This is the text passed to the linker through the `-l` option;
 for example, use "foo" for a library *libfoo.a*.
 
 Header
-------
+""""""
 
 The name of the header file (*.h*, *.hxx*) declaring the BMI class.
 This option is only needed when wrapping C and C++ libraries.
 
 Entry point
------------
+"""""""""""
 
 The name of the BMI entry point into the library.
 For object-oriented languages,
@@ -267,18 +263,18 @@ implements a BMI) might look like:
    entry_point = "register_bmi_cem"
 
 Build section
-=============
+^^^^^^^^^^^^^
 
 In the build section the user can specify flags to pass to the compiler
 when building the extension.
 
 Package section
-===============
+^^^^^^^^^^^^^^^
 
 Name and extra requirements needed to build the babelized library.
 
 Name
-----
+""""
 
 Name to use for the wrapped package. This is used when creating the new
 package *<package_name>*. For example, the following will create
@@ -290,7 +286,7 @@ a new package, *pymt_foo*.
   name = "pymt_foo"
 
 Requirements
-------------
+""""""""""""
 
 List of packages required by the library being wrapped. For example, the
 following indicates that the packages *foo* and *bar* are dependencies
@@ -302,40 +298,40 @@ for the package.
   requirements = [ "foo", "bar",]
 
 Info section
-============
+^^^^^^^^^^^^
 
 Descriptive information about the package.
 
 Github username
----------------
+"""""""""""""""
 
 The GitHub username or organization where this package will be hosted. This
 is used in generating links to the CI, docs, etc.
 
 Author
-------
+""""""
 
 Author of the wrapped package. Note that this is not the author of the
 library being wrapped, just the code generated by the *babelizer*.
 
 Email
------
+"""""
 
 Contact email to use for the wrapped package.
 
 License
--------
+"""""""
 
 Specify the Open Source license for the wrapped package. Note that this is not the
 license for the library being wrapped, just for the code generated by the *babelizer*.
 
 Summary
--------
+"""""""
 
 A short description of the wrapped library.
 
 Ci section
-==========
+^^^^^^^^^^
 
 Information about how to set up continuous integration.
 
@@ -347,18 +343,18 @@ Information about how to set up continuous integration.
 
 
 Python version
---------------
+""""""""""""""
 
 A list of Python versions to build and test the generated project with.
 
 Operating system
-----------------
+""""""""""""""""
 
 A list of operating systems to build the generate project on. Supported values are
 *linux*, *mac*, and *windows*.
 
 Example babel.toml
-==================
+^^^^^^^^^^^^^^^^^^
 
 Below is an example of a *babel.toml* file that describes a shared library,
 written in C. In this example, the library, *bmi_hydrotrend*, exposes the
@@ -414,9 +410,9 @@ For example the above *babel.toml* can be generated with the following,
     --os-name=linux,mac,windows \
     --python-version=3.7,3.8,3.9 > babel.toml
 
-***
+
 Use
-***
+---
 
 Generate Python bindings for a library that implements a BMI,
 sending output to the current directory
