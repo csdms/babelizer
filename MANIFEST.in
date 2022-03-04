@@ -10,6 +10,7 @@ exclude external/bmi-example-fortran/.git
 exclude external/bmi-example-python/.git
 recursive-include babelizer/data *
 recursive-exclude docs *
+recursive-exclude paper *
 recursive-include external/bmi-example-c *
 recursive-include external/bmi-example-cxx *
 recursive-include external/bmi-example-fortran *
