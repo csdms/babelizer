@@ -1,12 +1,19 @@
 #!/usr/bin/env python
 import os
 import pathlib
+import platform
 import shutil
 import subprocess
+import sys
 
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
+
+
+extra_opts = []
+if sys.platform.startswith("linux") and platform.python_version_tuple()[1] <= 8:
+    extra_opts += ["--no-build-isolation"]
 
 
 def test_babelize_init_fortran(tmpdir, datadir):
@@ -22,7 +29,7 @@ def test_babelize_init_fortran(tmpdir, datadir):
 
         try:
             result = subprocess.run(
-                ["pip", "install", "-e", ".", "--no-build-isolation"],
+                ["pip", "install", "-e", "."] + extra_opts,
                 cwd="pymt_heatf",
                 check=True,
                 text=True,

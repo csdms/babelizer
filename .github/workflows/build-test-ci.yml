@@ -42,6 +42,7 @@ jobs:
           conda list
 
       - name: Install build system
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.8'
         run: |
           mamba install cython numpy setuptools wheel
 
