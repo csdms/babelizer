@@ -28,7 +28,7 @@ setup(
     version="0.3.10.dev0",
     description="Wrap bmi libraries with Python bindings",
     long_description=long_description,
-    python_requires=">=3.9",
+    python_requires=">=3.8",
     author="Eric Hutton",
     author_email="huttone@colorado.edu",
     url="https://github.com/csdms",

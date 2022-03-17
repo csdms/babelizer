@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: ["3.9", "3.10"]
+        python-version: ["3.8", "3.9", "3.10"]
 
     steps:
       - uses: actions/checkout@v2
@@ -40,6 +40,11 @@ jobs:
           pip install coverage[toml]
           mamba install --file=requirements.txt --file=requirements-testing.txt --file=external/requirements.txt
           conda list
+
+      - name: Install build system
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.8'
+        run: |
+          mamba install cython numpy setuptools wheel
 
       - name: Install babelizer
         run: |
