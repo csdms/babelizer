@@ -12,7 +12,7 @@ from babelizer.cli import babelize
 
 
 extra_opts = []
-if sys.platform.startswith("linux") and platform.python_version_tuple()[1] <= 8:
+if sys.platform.startswith("linux") and int(platform.python_version_tuple()[1]) <= 8:
     extra_opts += ["--no-build-isolation"]
 
 
