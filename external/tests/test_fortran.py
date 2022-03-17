@@ -22,7 +22,7 @@ def test_babelize_init_fortran(tmpdir, datadir):
 
         try:
             result = subprocess.run(
-                ["pip", "install", "-e", "."],
+                ["pip", "install", "-e", ".", "--no-build-isolation"],
                 cwd="pymt_heatf",
                 check=True,
                 text=True,

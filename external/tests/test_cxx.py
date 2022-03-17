@@ -22,7 +22,7 @@ def test_babelize_init_cxx(tmpdir, datadir):
 
         try:
             result = subprocess.run(
-                ["pip", "install", "-e", "."],
+                ["pip", "install", "-e", ".", "--no-build-isolation"],
                 cwd="pymt_heat",
                 check=True,
                 text=True,
