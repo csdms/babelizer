@@ -1,3 +1,6 @@
+.. image:: https://joss.theoj.org/papers/10.21105/joss.03344/status.svg
+    :target: https://doi.org/10.21105/joss.03344
+
 .. image:: https://github.com/csdms/babelizer/workflows/Build/Test%20CI/badge.svg
     :target: https://github.com/csdms/babelizer/actions?query=workflow%3A%22Build%2FTest+CI%22
 
