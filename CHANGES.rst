@@ -1,102 +1,196 @@
-=======================
-Changelog for babelizer
-=======================
+Changelog
+=========
 
-******************
-0.3.9 (unreleased)
-******************
+.. towncrier release notes start
 
-- Complete API documentation (#55)
--  Configure max number of model instances (#61)
+0.3.10 (unreleased)
+-------------------
+
+- Nothing changed yet.
 
 
-******************
+0.3.9 (2022-03-04)
+------------------
+
+Features
+^^^^^^^^
+
+- Render GitHub Actions for continuous integration of the generated projects.
+  (`#41 <https://github.com/csdms/babelizer/issues/41>`_)
+
+
+Bugfixes
+^^^^^^^^
+
+- Fix minor formatting issues in rendered output. (`#49
+  <https://github.com/csdms/babelizer/issues/49>`_)
+
+
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Added paper for the Journal of Open Source Software (JOSS). (`#44
+  <https://github.com/csdms/babelizer/issues/44>`_)
+- Update docs for API changes. (`#47
+  <https://github.com/csdms/babelizer/issues/47>`_)
+- Update and clarify babelizer usage example. (`#54
+  <https://github.com/csdms/babelizer/issues/54>`_)
+- Complete API documentation. (`#55
+  <https://github.com/csdms/babelizer/issues/55>`_)
+- Improved the README documentation. (`#57
+  <https://github.com/csdms/babelizer/issues/57>`_)
+- Add coverage badge to the README file. (`#66
+  <https://github.com/csdms/babelizer/issues/66>`_)
+
+
+Misc
+^^^^
+
+- `#39 <https://github.com/csdms/babelizer/issues/39>`_, `#56
+  <https://github.com/csdms/babelizer/issues/56>`_, `#65
+  <https://github.com/csdms/babelizer/issues/65>`_, `#67
+  <https://github.com/csdms/babelizer/issues/67>`_, `#68
+  <https://github.com/csdms/babelizer/issues/68>`_
+
+
 0.3.8 (2021-05-03)
-******************
+------------------
 
-- Update docs for API changes (#47)
-- Fix minor formatting issues in rendered output (#49)
+Bugfixes
+^^^^^^^^
+
+- Fix minor formatting issues in rendered output. (`#49
+  <https://github.com/csdms/babelizer/issues/49>`_)
 
 
-******************
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Update docs for API changes. (`#47
+  <https://github.com/csdms/babelizer/issues/47>`_)
+
+
 0.3.7 (2021-03-19)
-******************
+------------------
 
-- Render GitHub Actions for continuous integration of the generated
-  projects (#41)
+Features
+^^^^^^^^
 
-- Use GitHub Actions for continuous integration (#39)
+- Render GitHub Actions for continuous integration of the generated projects.
+  (`#41 <https://github.com/csdms/babelizer/issues/41>`_)
 
 
-******************
+Misc
+^^^^
+
+- Use GitHub Actions for continuous integration. (`#39
+  <https://github.com/csdms/babelizer/issues/39>`_)
+
+
 0.3.6 (2021-01-13)
-******************
+------------------
 
-- Fixed issue with metadata install path for Python components (#36)
+Bugfixes
+^^^^^^^^
 
-- Minor edits to README
+- Fixed issue with metadata install path for Python components. (`#36
+  <https://github.com/csdms/babelizer/issues/36>`_)
 
 
-******************
 0.3.5 (2020-12-16)
-******************
+------------------
 
-- Removed use of the toml package, instead use tomlkit (#34)
+Misc
+^^^^
+
+- Removed use of the toml package, instead use tomlkit. (`#34
+  <https://github.com/csdms/babelizer/issues/34>`_)
 
 
-******************
 0.3.4 (2020-12-16)
-******************
+------------------
 
-- Minor edits to README and CLI help strings (#29)
+Bugfixes
+^^^^^^^^
 
-- Added text on the CSDMS Workbench to the README and docs (#30)
-
-- Clarified text in docs example (#31)
-
-- Fixed a templating problem that caused Python BMIs to fail to build.
-  Included the Python BMI example in the test suite. (#33)
+- Fixed a templating problem that caused Python BMIs to fail to build. (`#33
+  <https://github.com/csdms/babelizer/issues/33>`_)
 
 
-******************
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Minor edits to README and CLI help strings. (`#29
+  <https://github.com/csdms/babelizer/issues/29>`_)
+- Added text on the CSDMS Workbench to the README and docs. (`#30
+  <https://github.com/csdms/babelizer/issues/30>`_)
+- Clarified text in docs example. (`#31
+  <https://github.com/csdms/babelizer/issues/31>`_)
+
+
+Misc
+^^^^
+
+- Included the Python BMI example in the test suite.. (`#33
+  <https://github.com/csdms/babelizer/issues/33>`_)
+
+
 0.3.3 (2020-10-31)
-******************
+------------------
+
+Features
+^^^^^^^^
 
 - Added missing methods, primarily for unstructured grids, to C and C++
-  implementation (#28)
-
-- Fixed a rendering error that caused import lines to run together
-  when wrapping multiple components (#28)
-
-- Removed Python 3.6 builds (#28)
+  implementation. (`#28 <https://github.com/csdms/babelizer/issues/28>`_)
 
 
-******************
+Bugfixes
+^^^^^^^^
+
+- Fixed a rendering error that caused import lines to run together when
+  wrapping multiple components (`#28
+  <https://github.com/csdms/babelizer/issues/28>`_)
+
+
+Misc
+^^^^
+
+- Removed Python 3.6 builds. (`#28 <https://github.com/csdms/babelizer/issues/28>`_)
+
+
 0.3.2 (2020-10-08)
-******************
+------------------
 
-- Fix babelizing C++ libraries and added tests for C++ babelizing.
-  This fix necessitated a change to the "library" section
-  of the babel.toml configuration file. (#26)
+Bugfixes
+^^^^^^^^
+
+- Fix babelizing C++ libraries and added tests for C++ babelizing.  This fix
+  necessitated a change to the "library" section of the babel.toml
+  configuration file. (`#26
+  <https://github.com/csdms/babelizer/issues/26>`_)
 
 
-******************
 0.3.1 (2020-09-25)
-******************
+------------------
 
-- Automatically set version in docs from the package version. (#23)
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Automatically set version in docs from the package version. (`#23 <https://github.com/csdms/babelizer/issues/23>`_)
 
 
-******************
 0.3.0 (2020-09-24)
-******************
+------------------
 
-- Added user guide and API documentation (#21)
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Added a user guide and API documentation (`#21 <https://github.com/csdms/babelizer/issues/21>`_)
 
 
-******************
 0.2.0 (2020-09-10)
-******************
+------------------
 
 - Improved testing of the babelizer and added the bmi_heat C library to use for
   testing babelizing a package. (#20)
@@ -122,34 +216,30 @@ Changelog for babelizer
   zest.releaser.
 
 
-******************
 0.1.3 (2018-10-28)
-******************
+------------------
 
 - Added new ``bmi-render`` command. The old ``bmi-wrap`` command is still available
   but will be removed in future releases.
 
 
-******************
 0.1.2 (2018-06-28)
-******************
+------------------
 
 - Added update_until BMI method for C++.
 
 - Fixed BMI return values for C.
 
 
-******************
 0.1.1 (2018-04-09)
-******************
+------------------
 
 - Added continuous integration with Travis-CI. Build on Linux/MacOS with
   Python 2.7, 3.4, 3.5, 3.6.
 
 
-******************
 0.1.0 (2018-04-05)
-******************
+------------------
 
 - Initial release
 

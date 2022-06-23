@@ -24,8 +24,8 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 
-
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
+PY_PATH := "$(shell python -c 'import sys; print(sys.prefix)')"
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -97,3 +97,29 @@ dist: clean ## builds source and wheel package
 
 install: clean ## install the package to the active Python's site-packages
 	python setup.py install
+
+joss: ## make the paper
+	docker run --rm \
+    --volume $(shell pwd)/paper:/data \
+    --user $(shell id -u):$(shell id -g) \
+    --env JOURNAL=joss \
+    openjournals/paperdraft
+	open paper/paper.pdf
+
+examples: c-example cxx-example fortran-example python-example ## build the language examples
+
+c-example:
+	cmake -S external/bmi-example-c -B external/build/c -DCMAKE_INSTALL_PREFIX=$(PY_PATH)
+	make -C external/build/c install
+
+cxx-example:
+	cmake -S external/bmi-example-cxx -B external/build/cxx -DCMAKE_INSTALL_PREFIX=$(PY_PATH)
+	make -C external/build/cxx install
+
+fortran-example:
+	export
+	cmake -S external/bmi-example-fortran -B external/build/fortran -DCMAKE_INSTALL_PREFIX=$(PY_PATH)
+	make -C external/build/fortran install
+
+python-example:
+	make -C external/bmi-example-python install

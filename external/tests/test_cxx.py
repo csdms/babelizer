@@ -1,12 +1,19 @@
 #!/usr/bin/env python
 import os
 import pathlib
+import platform
 import shutil
 import subprocess
+import sys
 
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
+
+
+extra_opts = []
+if sys.platform.startswith("linux") and int(platform.python_version_tuple()[1]) <= 8:
+    extra_opts += ["--no-build-isolation"]
 
 
 def test_babelize_init_cxx(tmpdir, datadir):
@@ -22,7 +29,7 @@ def test_babelize_init_cxx(tmpdir, datadir):
 
         try:
             result = subprocess.run(
-                ["pip", "install", "-e", "."],
+                ["pip", "install", "-e", "."] + extra_opts,
                 cwd="pymt_heat",
                 check=True,
                 text=True,
