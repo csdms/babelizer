@@ -10,7 +10,7 @@ undef_macros = []
 github_username = "mcflugen"
 plugin_author = "Eric Hutton"
 plugin_author_email = "eric.hutton@colorado.edu"
-plugin_license = "MIT"
+plugin_license = "MIT License"
 summary = "PyMT plugin for heat model"
 
 [library.HeatBMI]
