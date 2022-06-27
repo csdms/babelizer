@@ -21,7 +21,7 @@ requirements = []
 github_username = "csdms"
 package_author = "CSDMS"
 package_author_email = "csdms@colorado.edu"
-package_license = "MIT"
+package_license = "MIT License"
 summary = "PyMT component for the heatpy model"
 
 [ci]
