@@ -64,12 +64,6 @@ test: ## run tests quickly with the default Python
 test-languages: ## run tests on babelizer languages
 	pytest external/tests --disable-warnings -vvv
 
-benchmark: ## run benchmarks only
-	pytest --benchmark-only --benchmark-autosave
-
-test-all: ## run tests on every Python version with tox
-	tox
-
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source babelizer --omit */babelizer/data/* -m pytest tests external/tests
 	coverage report -m
