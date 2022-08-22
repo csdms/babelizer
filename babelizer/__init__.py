@@ -1,3 +1,3 @@
-import pkg_resources
+from ._version import __version__
 
-__version__ = pkg_resources.get_distribution("babelizer").version
+__all__ = ["__version__"]
