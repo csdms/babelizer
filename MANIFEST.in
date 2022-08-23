@@ -1,23 +1,19 @@
 include *.rst
 include requirements*.txt
 include Makefile
-exclude appveyor.yml
 exclude .gitmodules
 exclude .readthedocs.yaml
-exclude external/bmi-example-c/.git
-exclude external/bmi-example-cxx/.git
-exclude external/bmi-example-fortran/.git
-exclude external/bmi-example-python/.git
 recursive-include babelizer/data *
 recursive-exclude docs *
 recursive-exclude paper *
+recursive-include tests *
 recursive-include external/bmi-example-c *
 recursive-include external/bmi-example-cxx *
 recursive-include external/bmi-example-fortran *
 recursive-include external/bmi-example-python *
-recursive-include tests *.py
-recursive-include tests *.toml
-recursive-include tests *.txt
-recursive-include tests *.cfg
-recursive-include tests *.yaml
-recursive-exclude recipe *
+recursive-include external/tests *
+include external/requirements.txt
+exclude external/bmi-example-c/.git*
+exclude external/bmi-example-cxx/.git*
+exclude external/bmi-example-fortran/.git*
+exclude external/bmi-example-python/.git*
