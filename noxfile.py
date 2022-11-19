@@ -84,7 +84,7 @@ def build_docs(session: nox.Session) -> None:
             "-b",
             "html",
             # "-W",
-            "docs",
+            "docs/source",
             "build/html",
         )
 
@@ -184,6 +184,6 @@ def clean_docs(session: nox.Session) -> None:
         if os.path.exists("html"):
             shutil.rmtree("html")
 
-    with session.chdir(ROOT / "source" / "docs"):
+    with session.chdir(ROOT / "docs" / "source"):
         for p in pathlib.Path("api").rglob("babelizer*.rst"):
             p.unlink()
