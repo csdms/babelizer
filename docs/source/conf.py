@@ -4,16 +4,17 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+# If extensions (or modules to document with autodoc) are in another directory,
+# add these directories to sys.path here. If the directory is relative to the
+# documentation root, use os.path.abspath to make it absolute, like shown here.
 import datetime
+import os
+import sys
+
 import pkg_resources
 
 # -- Path setup --------------------------------------------------------------
 
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-import os
-import sys
 
 sys.path.insert(0, os.path.abspath("../.."))
 
@@ -28,7 +29,7 @@ author = "Community Surface Dynamics Modeling System"
 version = pkg_resources.get_distribution("babelizer").version
 release = version
 this_year = datetime.date.today().year
-copyright = "%s, %s" % (this_year, author)
+copyright = f"{this_year}, {author}"
 
 
 # -- General configuration ---------------------------------------------------
@@ -44,7 +45,7 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns: list[str] = []
 
 
 # -- Options for HTML output -------------------------------------------------

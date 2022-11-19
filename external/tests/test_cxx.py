@@ -10,8 +10,7 @@ from click.testing import CliRunner
 
 from babelizer.cli import babelize
 
-
-extra_opts = []
+extra_opts: list[str] = []
 if sys.platform.startswith("linux") and int(platform.python_version_tuple()[1]) <= 8:
     extra_opts += ["--no-build-isolation"]
 

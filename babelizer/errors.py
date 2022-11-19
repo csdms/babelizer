@@ -1,11 +1,14 @@
-class BabelizeError(Exception):
+"""Exceptions raised by the *babelizer*."""
 
+
+class BabelizeError(Exception):
     """An exception that the babelizer can handle and show to the user."""
 
     def __init__(self, message):
         self._message = message
 
     def __str__(self):
+        """Render a user-readable error message."""
         return self._message
 
 

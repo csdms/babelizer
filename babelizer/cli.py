@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+"""The command line interface to the babelizer."""
 import fnmatch
 import os
 import pathlib
@@ -94,7 +94,7 @@ def init(meta, template, quiet, verbose, package_version):
 
     if not quiet:
         out(
-            "Don't forget to drop model metadata files into {0}".format(
+            "Don't forget to drop model metadata files into {}".format(
                 new_folder / "meta"
             )
         )
@@ -124,9 +124,7 @@ def init(meta, template, quiet, verbose, package_version):
     help="Location of cookiecutter template",
 )
 def update(template, quiet, verbose):
-
     """Update an existing babelized project."""
-
     package_path = pathlib.Path(".").resolve()
 
     for fname in ("babel.toml", "babel.yaml", "plugin.yaml"):
@@ -182,7 +180,7 @@ def update(template, quiet, verbose):
 
     if not quiet:
         out(
-            "Don't forget to drop model metadata files into {0}".format(
+            "Don't forget to drop model metadata files into {}".format(
                 package_path / "meta"
             )
         )
@@ -256,7 +254,6 @@ def generate(
     os_name,
 ):
     """Generate the babelizer configuration file."""
-
     meta = _gather_input(
         prompt=prompt,
         package=package,
@@ -302,7 +299,6 @@ def _gather_input(
     the value of ``no_input``, either a default value is used or
     the user will be prompted for a value.
     """
-
     if prompt:
         ask = partial(click.prompt, show_default=True, err=True)
     else:

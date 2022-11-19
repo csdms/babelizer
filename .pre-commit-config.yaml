@@ -80,5 +80,4 @@ repos:
   hooks:
   - id: mypy
     additional_dependencies: [types-all]
-    exclude: conf.py$
     exclude: ^babelizer/data

@@ -3,8 +3,8 @@ import os
 import pathlib
 import shutil
 import subprocess
-import pytest
 
+import pytest
 from click.testing import CliRunner
 
 from babelizer.cli import babelize

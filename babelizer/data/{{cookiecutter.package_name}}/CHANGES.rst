@@ -9,4 +9,3 @@ Changelog for {{cookiecutter.package_name}}
 ------------------
 
 - Initial release
-

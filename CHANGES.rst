@@ -242,4 +242,3 @@ Improved Documentation
 ------------------
 
 - Initial release
-

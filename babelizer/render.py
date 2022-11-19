@@ -1,3 +1,4 @@
+"""Render a new babelized project."""
 import contextlib
 import os
 import pathlib
@@ -16,18 +17,28 @@ from .errors import OutputDirExistsError, RenderError
 def render(plugin_metadata, output, template=None, clobber=False, version="0.1"):
     """Generate a babelized library.
 
-    Args:
-        plugin_metadata (BabelMetadata obj): The metadata used to babelize the library.
-        output (str): Name of the directory that will be the new repository.
-        template (str, optional): Path (or URL) to the cookiecutter template to use. Defaults to None.
-        clobber (bool, optional): If a like-named repository already exists, overwrite it. Defaults to False.
-        version (str, optional): Version of babelized library. Defaults to "0.1".
+    Parameters
+    ----------
+    plugin_metadata : BabelMetadata
+        The metadata used to babelize the library.
+    output : str
+        Name of the directory that will be the new repository.
+    template : str, optional
+        Path (or URL) to the cookiecutter template to use.
+    clobber : bool, optional
+        If a like-named repository already exists, overwrite it.
+    version : str, optional
+        Version of babelized library.
 
-    Raises:
-        OutputDirExistsError: Raised if output directory exists and clobber is not set.
+    Returns
+    -------
+    str
+        Path to babelized library
 
-    Returns:
-        str: Path to babelized library
+    Raises
+    ------
+    OutputDirExistsError
+        Raised if output directory exists and clobber is not set.
     """
     if template is None:
         template = pkg_resources.resource_filename("babelizer", "data")
@@ -91,7 +102,7 @@ def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
     # if not os.path.isdir(path):
     path = output_dir / f"{name}"
     if not path.is_dir():
-        raise RenderError("error creating {0}".format(path))
+        raise RenderError(f"error creating {path}")
 
     git.Repo.init(path)
 
@@ -102,8 +113,10 @@ def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
 def as_cwd(path):
     """Change directory context.
 
-    Args:
-        path (str): Path-like object to a directory.
+    Parameters
+    ----------
+    path : str
+        Path-like object to a directory.
     """
     prev_cwd = os.getcwd()
     os.chdir(path)
@@ -114,10 +127,12 @@ def as_cwd(path):
 def blacken_file(filepath):
     """Format a Python file with ``black``.
 
-    Args:
-        filepath (str): Path-like object to a Python file.
+    Parameters
+    ----------
+    filepath : str
+        Path-like object to a Python file.
     """
-    with open(filepath, "r") as fp:
+    with open(filepath) as fp:
         try:
             new_contents = blk.format_file_contents(
                 fp.read(), fast=True, mode=blk.FileMode()
@@ -132,8 +147,10 @@ def blacken_file(filepath):
 def prettify_python(path_to_repo):
     """Format files in babelized project with ``black``.
 
-    Args:
-        path_to_repo (str): Path-like object to babelized project.
+    Parameters
+    ----------
+    path_to_repo : str
+        Path-like object to babelized project.
     """
     path_to_repo = pathlib.Path(path_to_repo)
     with open(path_to_repo / "babel.toml") as fp:

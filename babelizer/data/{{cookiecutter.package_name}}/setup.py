@@ -1,19 +1,23 @@
 #! /usr/bin/env python
 import os
 import sys
+
 {%- if cookiecutter.language == 'fortran' %}
 import contextlib
 import subprocess
+
 {%- endif -%}
 
 {%- if cookiecutter.language in ['c', 'c++', 'fortran'] %}
 import numpy as np
+
 {% endif %}
 from setuptools import Extension, find_packages, setup
 
 {% if cookiecutter.language == 'fortran' -%}
-from setuptools.command.build_ext import build_ext as _build_ext
 from numpy.distutils.fcompiler import new_fcompiler
+from setuptools.command.build_ext import build_ext as _build_ext
+
 {% endif %}
 
 {% if cookiecutter.language in ['c', 'c++', 'fortran'] -%}
@@ -137,7 +141,7 @@ def read(filename):
         return fp.read()
 
 
-long_description = u'\n\n'.join(
+long_description = '\n\n'.join(
     [read('README.rst'), read('CREDITS.rst'), read('CHANGES.rst')]
 )
 
