@@ -10,7 +10,7 @@ ROOT = pathlib.Path(__file__).parent
 ALL_LANGS = {"c", "cxx", "fortran", "python"}
 
 
-@nox.session(venv_backend="mamba", python=["3.9", "3.10", "3.11"])
+@nox.session(python=["3.9", "3.10", "3.11"])
 def test(session: nox.Session) -> None:
     """Run the tests."""
     session.install(".[dev,testing]")
@@ -62,6 +62,7 @@ def build_examples(session: nox.Session, lang):
 
 
 @nox.session(name="test-cli")
+@nox.session(python=["3.9", "3.10", "3.11"])
 def test_cli(session: nox.Session) -> None:
     """Test the command line interface."""
     session.install(".")
