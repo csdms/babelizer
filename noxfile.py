@@ -10,7 +10,7 @@ ROOT = pathlib.Path(__file__).parent
 ALL_LANGS = {"c", "cxx", "fortran", "python"}
 
 
-@nox.session
+@nox.session(venv_backend="mamba", python=["3.9", "3.10", "3.11"])
 def test(session: nox.Session) -> None:
     """Run the tests."""
     session.install(".[dev,testing]")
@@ -21,23 +21,44 @@ def test(session: nox.Session) -> None:
     session.run("pytest", *args)
 
 
-@nox.session(name="test-langs", venv_backend="mamba", reuse_venv=True)
-def test_langs(session: nox.Session) -> None:
+@nox.session(
+    name="test-langs",
+    python=["3.9", "3.10", "3.11"],
+    venv_backend="mamba",
+)
+@nox.parametrize("lang", ["c", "cxx", "fortran", "python"])
+def test_langs(session: nox.Session, lang) -> None:
     """Run language tests."""
-    langs = session.posargs or ALL_LANGS
+    build_examples(session, lang)
 
-    session.conda_install("--file", "requirements.txt")
-    session.conda_install("--file", "requirements-dev.txt")
-    session.conda_install("--file", "requirements-testing.txt")
+    session.conda_install("pip", "bmi-tester>=0.5.4")
+    session.install(".[testing]")
 
-    session.install(".")
-    build_examples(session)
+    session.run(
+        "pytest", f"external/tests/test_{lang}.py", "--disable-warnings", "-vvv"
+    )
 
-    session.conda_install("pip")
-    for lang in langs:
-        session.run(
-            "pytest", f"external/tests/test_{lang}.py", "--disable-warnings", "-vvv"
+
+@nox.session(name="build-examples", venv_backend="mamba")
+@nox.parametrize("lang", ["c", "cxx", "fortran", "python"])
+def build_examples(session: nox.Session, lang):
+    """Build the language examples."""
+    if lang == "python":
+        session.conda_install("bmipy", "make")
+        session.run("make", "-C", f"external/bmi-example-{lang}", "install")
+    else:
+        session.conda_install(
+            f"{lang}-compiler", f"bmi-{lang}", "make", "cmake", "pkg-config"
         )
+        session.run(
+            "cmake",
+            "-S",
+            f"external/bmi-example-{lang}",
+            "-B",
+            f"build/external/{lang}",
+            f"-DCMAKE_INSTALL_PREFIX={session.env['CONDA_PREFIX']}",
+        )
+        session.run("make", "-C", f"build/external/{lang}", "install")
 
 
 @nox.session(name="test-cli")
@@ -49,36 +70,6 @@ def test_cli(session: nox.Session) -> None:
     session.run("babelize", "init", "--help")
     session.run("babelize", "update", "--help")
     session.run("babelize", "generate", "--help")
-
-
-@nox.session(name="build-examples", venv_backend="mamba", reuse_venv=True)
-def build_examples(session: nox.Session):
-    """Build the language examples."""
-    langs = set(session.posargs) or ALL_LANGS
-
-    if unknown_langs := langs - ALL_LANGS:
-        session.error(
-            f"unknown language{'s' if len(unknown_langs) > 1 else ''}: "
-            f"{', '.join(unknown_langs)}"
-        )
-
-    session.conda_install("--file", "requirements.txt")
-    session.conda_install("--file", "requirements-testing.txt")
-    session.conda_install("--file", "external/requirements.txt")
-
-    for lang in langs - {"python"}:
-        session.run(
-            "cmake",
-            "-S",
-            f"external/bmi-example-{lang}",
-            "-B",
-            f"build/external/{lang}",
-            f"-DCMAKE_INSTALL_PREFIX={session.env['CONDA_PREFIX']}",
-        )
-        session.run("make", "-C", f"build/external/{lang}", "install")
-
-    if (lang := "python") in langs:
-        session.run("make", "-C", f"external/bmi-example-{lang}", "install")
 
 
 @nox.session
