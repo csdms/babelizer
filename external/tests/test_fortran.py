@@ -36,7 +36,10 @@ def test_babelize_init_fortran(tmpdir, datadir):
         assert (pathlib.Path("pymt_heatf") / "babel.toml").is_file()
 
         try:
-            result = run(["pip", "install", "-e", "."] + extra_opts, cwd="pymt_heatf")
+            result = run(
+                ["python", "-m", "pip", "install", "-e", "."] + extra_opts,
+                cwd="pymt_heatf",
+            )
         except subprocess.CalledProcessError as err:
             assert err.output is None, err.output
 

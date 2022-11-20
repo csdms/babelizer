@@ -3,9 +3,9 @@ import os
 import pathlib
 import shutil
 import subprocess
+import pytest
 from functools import partial
 
-import pytest
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
@@ -38,7 +38,11 @@ def test_babelize_init_python(sessiondir, datadir):
         assert (pathlib.Path("pymt_heatpy") / "babel.toml").is_file()
 
         try:
-            result = run(["pip", "install", "-e", "."], cwd="pymt_heatpy")
+            result = run(
+                ["python", "-m", "pip", "install", "-e", "."],
+                cwd="pymt_heatpy",
+            )
+
         except subprocess.CalledProcessError as err:
             assert err.output is None, err.output
 

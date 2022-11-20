@@ -36,7 +36,10 @@ def test_babelize_init_cxx(tmpdir, datadir):
         assert (pathlib.Path("pymt_heat") / "babel.toml").is_file()
 
         try:
-            result = run(["pip", "install", "-e", "."] + extra_opts, cwd="pymt_heat")
+            result = run(
+                ["python", "-m" "pip", "install", "-e", "."] + extra_opts,
+                cwd="pymt_heat",
+            )
         except subprocess.CalledProcessError as err:
             assert err.output is None, err.output
 
