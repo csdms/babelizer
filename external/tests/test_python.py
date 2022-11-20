@@ -3,9 +3,9 @@ import os
 import pathlib
 import shutil
 import subprocess
-import pytest
 from functools import partial
 
+import pytest
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
