@@ -38,6 +38,8 @@ def test_babelize_init_c(tmpdir, datadir):
         print(run(["which", "python"]).stdout)
         print(run(["which", "pip"]).stdout)
 
+        result = run(["python", "setup.py", "build_ext"], cwd="pymt_heat")
+
         try:
             result = run(
                 ["python", "-m", "pip", "install", "-e", "."] + extra_opts,
