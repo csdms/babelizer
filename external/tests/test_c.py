@@ -35,6 +35,9 @@ def test_babelize_init_c(tmpdir, datadir):
         assert pathlib.Path("pymt_heat").exists()
         assert (pathlib.Path("pymt_heat") / "babel.toml").is_file()
 
+        print(run(["which", "python"]).stdout)
+        print(run(["which", "pip"]).stdout)
+
         try:
             result = run(
                 ["python", "-m", "pip", "install", "-e", "."] + extra_opts,

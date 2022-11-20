@@ -35,7 +35,7 @@ def test_langs(session: nox.Session, lang) -> None:
     session.install(".[testing]")
 
     session.run(
-        "pytest", f"external/tests/test_{lang}.py", "--disable-warnings", "-vvv"
+        "pytest", "-s", f"external/tests/test_{lang}.py", "--disable-warnings", "-vvv"
     )
 
 
