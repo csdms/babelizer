@@ -5,6 +5,7 @@ import platform
 import shutil
 import subprocess
 import sys
+from functools import partial
 
 from click.testing import CliRunner
 
@@ -13,6 +14,14 @@ from babelizer.cli import babelize
 extra_opts: list[str] = []
 if sys.platform.startswith("linux") and int(platform.python_version_tuple()[1]) <= 8:
     extra_opts += ["--no-build-isolation"]
+
+run = partial(
+    subprocess.run,
+    check=True,
+    text=True,
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+)
 
 
 def test_babelize_init_fortran(tmpdir, datadir):
@@ -27,14 +36,7 @@ def test_babelize_init_fortran(tmpdir, datadir):
         assert (pathlib.Path("pymt_heatf") / "babel.toml").is_file()
 
         try:
-            result = subprocess.run(
-                ["pip", "install", "-e", "."] + extra_opts,
-                cwd="pymt_heatf",
-                check=True,
-                text=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-            )
+            result = run(["pip", "install", "-e", "."] + extra_opts, cwd="pymt_heatf")
         except subprocess.CalledProcessError as err:
             assert err.output is None, err.output
 
@@ -44,7 +46,7 @@ def test_babelize_init_fortran(tmpdir, datadir):
         shutil.copy(datadir / "sample.cfg", "_test/")
 
         try:
-            result = subprocess.run(
+            result = run(
                 [
                     "bmi-test",
                     "--config-file=sample.cfg",
@@ -53,10 +55,6 @@ def test_babelize_init_fortran(tmpdir, datadir):
                     "-vvv",
                 ],
                 cwd="_test",
-                check=True,
-                text=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
             )
         except subprocess.CalledProcessError as err:
             assert err.output is None, err.output
