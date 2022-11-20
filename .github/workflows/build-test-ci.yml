@@ -39,7 +39,7 @@ jobs:
         run: pip install nox
 
       - name: Run the tests
-        run: nox -s test test-cli test-langs
+        run: nox -s test test-cli test-langs --python ${{ matrix.python-version }}
 
       - name: Coveralls
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
