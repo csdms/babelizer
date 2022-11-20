@@ -37,7 +37,7 @@ def test_babelize_init_cxx(tmpdir, datadir):
 
         try:
             result = run(
-                ["python", "-m" "pip", "install", "-e", "."] + extra_opts,
+                ["python", "-m", "pip", "install", "-e", "."] + extra_opts,
                 cwd="pymt_heat",
             )
         except subprocess.CalledProcessError as err:
