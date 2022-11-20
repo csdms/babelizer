@@ -38,7 +38,10 @@ def test_babelize_init_c(tmpdir, datadir):
         print(run(["which", "python"]).stdout)
         print(run(["which", "pip"]).stdout)
 
-        result = run(["python", "setup.py", "build_ext"], cwd="pymt_heat")
+        try:
+            result = run(["python", "setup.py", "build_ext"], cwd="pymt_heat")
+        except subprocess.CalledProcessError as err:
+            assert err.output is None, err.output
 
         try:
             result = run(
