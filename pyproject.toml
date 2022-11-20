@@ -76,6 +76,7 @@ testing = [
   "pytest",
   "pytest-cov",
   "pytest-datadir",
+  "pytest-xdist",
   "coverage[toml]",
   "coveralls",
 ]
