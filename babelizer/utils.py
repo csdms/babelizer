@@ -17,7 +17,7 @@ def execute(args):
 
     Returns
     -------
-    CompletedProcess
+    ~subprocess.CompletedProcess
         results from :func:`subprocess.run`.
     """
     return subprocess.run(args, capture_output=True, check=True)

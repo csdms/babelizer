@@ -78,7 +78,7 @@ def build_examples(session: nox.Session):
         session.run("make", "-C", f"build/external/{lang}", "install")
 
     if (lang := "python") in langs:
-        session.run  ("make", "-C", f"external/bmi-example-{lang}", "install")
+        session.run("make", "-C", f"external/bmi-example-{lang}", "install")
 
 
 @nox.session
