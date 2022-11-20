@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.9", "3.10"]
 
     steps:
       - uses: actions/checkout@v2
@@ -36,60 +36,10 @@ jobs:
           channel-priority: true
 
       - name: Install dependencies
-        run: |
-          pip install coverage[toml]
-          mamba install --file=requirements.txt --file=requirements-testing.txt --file=external/requirements.txt
-          conda list
+        run: pip install nox
 
-      - name: Install build system
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.8'
-        run: |
-          mamba install cython numpy setuptools wheel
-
-      - name: Install babelizer
-        run: |
-          pip install .
-
-      - name: Run diagnostics
-        run: |
-          babelize --version
-          babelize --help
-          babelize init --help
-          babelize update --help
-          babelize generate --help
-          babelize generate
-          python -c 'import babelizer; print(babelizer.__version__)'
-
-      - name: Make C example
-        run: |
-          mkdir buildc && pushd buildc
-          cmake ../external/bmi-example-c -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-          make install
-          popd
-
-      - name: Make C++ example
-        run: |
-          mkdir buildcxx && pushd buildcxx
-          cmake ../external/bmi-example-cxx -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-          make install
-          popd
-
-      - name: Make Fortran example
-        run: |
-          mkdir buildf && pushd buildf
-          cmake ../external/bmi-example-fortran -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-          make install
-          popd
-
-      - name: Make Python example
-        run: |
-          pushd ./external/bmi-example-python
-          make install
-          popd
-
-      - name: Test babelizer + language examples and generate coverage report
-        run: |
-          pytest --cov=babelizer --cov-report=xml:./coverage.xml -vvv babelizer tests external/tests
+      - name: Run the tests
+        run: nox -s test test-cli test-langs
 
       - name: Coveralls
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
