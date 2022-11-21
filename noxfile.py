@@ -52,6 +52,9 @@ def test(session: nox.Session) -> None:
 )
 @nox.parametrize("lang", ["c", "cxx", "fortran", "python"])
 def test_langs(session: nox.session, lang) -> None:
+    if lang != "python":
+        session.conda_install(f"{lang}-compiler")
+
     datadir = ROOT / "external" / "tests" / f"test_{lang}"
 
     with open(datadir / "babel.toml", "rb") as fp:
@@ -69,6 +72,8 @@ def test_langs(session: nox.session, lang) -> None:
 
     session.conda_install("pip", "bmi-tester>=0.5.4")
     session.install(".[testing]")
+    if lang != "python":
+        session.conda_install(f"{lang}-compiler")
 
     with session.chdir(session.create_tmp()):
         session.run(
@@ -80,8 +85,8 @@ def test_langs(session: nox.session, lang) -> None:
         for k, v in sorted(session.env.items()):
             session.debug(f"{k}: {v!r}")
 
-        with session.chdir(package):
-            session.run("python", "setup.py", "build_ext")
+        # with session.chdir(package):
+        #     session.run("python", "setup.py", "build_ext")
 
         with session.chdir(package):
             session.run("python", "-m", "pip", "install", "-e", ".")
