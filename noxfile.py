@@ -14,9 +14,10 @@ import nox
 PROJECT = "babelizer"
 ROOT = pathlib.Path(__file__).parent
 ALL_LANGS = {"c", "cxx", "fortran", "python"}
+PYTHON_VERSIONS = ["3.9", "3.10", "3.11"]
 
 
-@nox.session(python=["3.9", "3.10", "3.11"])
+@nox.session(python=PYTHON_VERSIONS)
 def test(session: nox.Session) -> None:
     """Run the tests."""
     session.install(".[dev,testing]")
@@ -27,55 +28,26 @@ def test(session: nox.Session) -> None:
     session.run("pytest", *args)
 
 
-# @nox.session(
-#     name="test-langs",
-#     python=["3.9", "3.10", "3.11"],
-#     venv_backend="mamba",
-# )
-# @nox.parametrize("lang", ["c", "cxx", "fortran", "python"])
-# def test_langs(session: nox.Session, lang) -> None:
-#     """Run language tests."""
-#     build_examples(session, lang)
-#
-#     session.conda_install("pip", "bmi-tester>=0.5.4")
-#     session.install(".[testing]")
-#
-#     session.run(
-#         "pytest", "-s", f"external/tests/test_{lang}.py", "--disable-warnings", "-vvv"
-#     )
-
-
 @nox.session(
     name="test-langs",
-    python=["3.9", "3.10", "3.11"],
+    python=PYTHON_VERSIONS,
     venv_backend="mamba",
 )
 @nox.parametrize("lang", ["c", "cxx", "fortran", "python"])
 def test_langs(session: nox.session, lang) -> None:
-    if lang != "python":
-        session.conda_install(f"{lang}-compiler")
-
     datadir = ROOT / "external" / "tests" / f"test_{lang}"
+    tmpdir = pathlib.Path(session.create_tmp())
+    testdir = tmpdir / "_test"
+    testdir.mkdir()
 
-    with open(datadir / "babel.toml", "rb") as fp:
-        config = tomllib.load(fp)
-    package = config["package"]["name"]
-    library = list(config["library"])[0]
-    if lang == "python":
-        config_file = "heat.yaml"
-    elif lang == "fortran":
-        config_file = "sample.cfg"
-    else:
-        config_file = "config.txt"
+    package, library, config_file = _get_package_metadata(datadir)
 
     build_examples(session, lang)
 
     session.conda_install("pip", "bmi-tester>=0.5.4")
     session.install(".[testing]")
-    if lang != "python":
-        session.conda_install(f"{lang}-compiler")
 
-    with session.chdir(session.create_tmp()):
+    with session.chdir(tmpdir):
         session.run(
             "babelize",
             "init",
@@ -85,22 +57,27 @@ def test_langs(session: nox.session, lang) -> None:
         for k, v in sorted(session.env.items()):
             session.debug(f"{k}: {v!r}")
 
-        # with session.chdir(package):
-        #     session.run("python", "setup.py", "build_ext")
-
         with session.chdir(package):
             session.run("python", "-m", "pip", "install", "-e", ".")
 
-        os.mkdir("_test")
-        with session.chdir("_test"):
-            shutil.copy(datadir / config_file, ".")
-            session.run(
-                "bmi-test",
-                f"--config-file={config_file}",
-                "--root-dir=.",
-                f"{package}:{library}",
-                "-vvv",
-            )
+    with session.chdir(testdir):
+        shutil.copy(datadir / config_file, ".")
+        session.run(
+            "bmi-test",
+            f"--config-file={config_file}",
+            "--root-dir=.",
+            f"{package}:{library}",
+            "-vvv",
+        )
+
+
+def _get_package_metadata(datadir):
+    with open(datadir / "babel.toml", "rb") as fp:
+        config = tomllib.load(fp)
+    package = config["package"]["name"]
+    library = list(config["library"])[0]
+    config_files = [fname for fname in datadir.iterdir() if fname != "babel.toml"]
+    return package, library, config_files[0]
 
 
 @nox.session(name="build-examples", venv_backend="mamba")
@@ -114,10 +91,9 @@ def build_examples(session: nox.Session, lang):
         session.conda_install("bmipy", "make")
         session.run("make", "-C", str(srcdir), "install")
     else:
-        session.conda_install(
-            f"{lang}-compiler", f"bmi-{lang}", "make", "cmake", "pkg-config"
-        )
-        os.mkdir(builddir)
+        session.conda_install(f"bmi-{lang}", "make", "cmake", "pkg-config")
+
+        builddir.mkdir()
         with session.chdir(builddir):
             session.run(
                 "cmake",
@@ -127,11 +103,11 @@ def build_examples(session: nox.Session, lang):
                 ".",
                 f"-DCMAKE_INSTALL_PREFIX={session.env['CONDA_PREFIX']}",
             )
-            session.run("make", "-C", ".", "install")
+            session.run("make", "install")
 
 
 @nox.session(name="test-cli")
-@nox.session(python=["3.9", "3.10", "3.11"])
+@nox.session(python=PYTHON_VERSIONS)
 def test_cli(session: nox.Session) -> None:
     """Test the command line interface."""
     session.install(".")
