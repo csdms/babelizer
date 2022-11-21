@@ -76,6 +76,13 @@ def test_langs(session: nox.session, lang) -> None:
             "init",
             str(datadir / "babel.toml"),
         )
+
+        for k, v in session.env.items():
+            session.debug(f"{k}: {v!r}")
+
+        with session.chdir(package):
+            session.run("python", "setup.py", "build_ext")
+
         with session.chdir(package):
             session.run("python", "-m", "pip", "install", "-e", ".")
 
