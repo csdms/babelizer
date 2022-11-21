@@ -23,5 +23,5 @@ jobs:
 
       - name: Lint
         run: |
-          pip install nox
+          pip install nox tomli
           nox -s lint
