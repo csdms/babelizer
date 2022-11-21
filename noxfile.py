@@ -41,6 +41,9 @@ def test_langs(session: nox.session, lang) -> None:
     testdir.mkdir()
 
     package, library, config_file = _get_package_metadata(datadir)
+    session.debug(package)
+    session.debug(library)
+    session.debug(config_file)
 
     build_examples(session, lang)
 
@@ -76,7 +79,9 @@ def _get_package_metadata(datadir):
         config = tomllib.load(fp)
     package = config["package"]["name"]
     library = list(config["library"])[0]
-    config_files = [fname for fname in datadir.iterdir() if fname != "babel.toml"]
+    config_files = [
+        fname.name for fname in datadir.iterdir() if fname.name != "babel.toml"
+    ]
     return package, library, config_files[0]
 
 
@@ -90,7 +95,7 @@ def build_examples(session: nox.Session, lang):
     if lang == "python":
         session.conda_install("bmipy", "make")
     else:
-        session.conda_install(f"bmi-{lang}", "make", "cmake", "pkg-config")
+        session.conda_install(f"bmi-{lang}", "make", "pkg-config")
 
     for k, v in sorted(session.env.items()):
         session.debug(f"{k}: {v!r}")
