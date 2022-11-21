@@ -77,7 +77,7 @@ def test_langs(session: nox.session, lang) -> None:
             str(datadir / "babel.toml"),
         )
 
-        for k, v in session.env.items():
+        for k, v in sorted(session.env.items()):
             session.debug(f"{k}: {v!r}")
 
         with session.chdir(package):

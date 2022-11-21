@@ -46,7 +46,7 @@ jobs:
         run: nox --session test test-cli --python ${{ matrix.python-version }} --verbose
 
       - name: Run the language tests
-        run: nox --session test-langs --python ${{ matrix.python-version }} --verbose
+        run: nox --non-interactive --error-on-missing-interpreter --session test-langs --python ${{ matrix.python-version }} --verbose -- c
 
       - name: Coveralls
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
