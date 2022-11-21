@@ -44,9 +44,11 @@ jobs:
 
       - name: Install compilers
         if: matrix.os == 'ubuntu-latest'
-        run: mamba install "gcc<10" "gxx<10" "gfortran<10"
+        run: mamba install cmake
+        # run: mamba install "gcc<10" "gxx<10" "gfortran<10"
 
       - name: Install compilers
+        if: matrix.os != 'ubuntu-latest'
         run: mamba install c-compiler cxx-compiler fortran-compiler cmake
 
       - name: Run the tests
