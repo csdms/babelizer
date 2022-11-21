@@ -19,7 +19,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [macos-latest]
+        # os: [ubuntu-latest, macos-latest]
         python-version: ["3.9", "3.10"]
 
     steps:
@@ -46,7 +47,7 @@ jobs:
         run: nox --session test test-cli --python ${{ matrix.python-version }} --verbose
 
       - name: Run the language tests
-        run: nox --non-interactive --error-on-missing-interpreter --session test-langs --python ${{ matrix.python-version }} --verbose -- c
+        run: nox --non-interactive --error-on-missing-interpreter --session test-langs --python ${{ matrix.python-version }} --verbose
 
       - name: Coveralls
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
