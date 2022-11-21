@@ -43,6 +43,9 @@ jobs:
       - name: Install dependencies
         run: python -m pip install nox tomli
 
+      - name: Install compilers
+        run: mamba install c-compiler cxx-compiler fortran-compiler
+
       - name: Run the tests
         run: nox --session test test-cli --python ${{ matrix.python-version }} --verbose
 
