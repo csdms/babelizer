@@ -1,13 +1,9 @@
 Changelog
 =========
 
+.. towncrier-draft-entries:: Not yet released
+
 .. towncrier release notes start
-
-0.3.10 (unreleased)
--------------------
-
-- Nothing changed yet.
-
 
 0.3.9 (2022-03-04)
 ------------------

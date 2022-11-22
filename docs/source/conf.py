@@ -9,6 +9,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 import datetime
 import os
+import pathlib
 import sys
 
 import pkg_resources
@@ -17,6 +18,7 @@ import pkg_resources
 
 
 sys.path.insert(0, os.path.abspath("../.."))
+docs_dir = os.path.dirname(__file__)
 
 
 # The master toctree document.
@@ -37,7 +39,21 @@ copyright = f"{this_year}, {author}"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "sphinx_click"]
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.todo",
+    "sphinx.ext.coverage",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.autosummary",
+    "sphinx_inline_tabs",
+    "sphinx_click",
+    "sphinx_copybutton",
+    "sphinxcontrib.towncrier",
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -54,6 +70,9 @@ exclude_patterns: list[str] = []
 # a list of builtin themes.
 #
 html_theme = "alabaster"
+# html_theme = "furo"
+html_title = "babelizer"
+language = "en"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -79,3 +98,36 @@ html_sidebars = {
         "searchbox.html",
     ],
 }
+
+# html_theme_options = {
+#     "announcement": None,
+#     "source_repository": "https://github.com/csdms/babelizer/",
+#     "source_branch": "develop",
+#     "source_directory": "docs/source",
+#     "sidebar_hide_name": False,
+#     "footer_icons": [
+#         {
+#             "name": "power",
+#             "url": "https://csdms.colorado.edu",
+#             "html": """
+#                <svg stroke="currentColor" fill="currentColor" stroke-width="0" version="1.1" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M6 0l-6 8h6l-4 8 14-10h-8l6-6z"></path></svg>
+#                <b><i>Powered by CSDMS</i></b>
+#             """,
+#             "class": "",
+#         },
+#     ],
+# }
+# -- Options for intersphinx extension ---------------------------------------
+
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+}
+
+
+# -- Options for towncrier_draft extension --------------------------------------------
+
+towncrier_draft_autoversion_mode = "draft"  # or: 'sphinx-release', 'sphinx-version'
+towncrier_draft_include_empty = True
+towncrier_draft_working_directory = pathlib.Path(docs_dir).parent.parent
+
+autodoc_default_options = {"special-members": "__init__", "undoc-members": True}
