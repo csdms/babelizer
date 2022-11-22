@@ -39,6 +39,7 @@ User Guide
    :maxdepth: 2
 
    readme
+   cli
    example
    glossary
 
