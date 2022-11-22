@@ -61,6 +61,7 @@ dev = [
   "isort",
   "nox",
   "pre-commit",
+  "towncrier",
 ]
 docs = [
   "sphinx>=4",
