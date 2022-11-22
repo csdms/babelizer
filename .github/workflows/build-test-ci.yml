@@ -43,13 +43,7 @@ jobs:
         run: python -m pip install nox tomli
 
       - name: Install compilers
-        if: matrix.os == 'ubuntu-latest'
-        run: mamba install cmake
-        # run: mamba install "gcc<10" "gxx<10" "gfortran<10"
-
-      - name: Install compilers
-        if: matrix.os != 'ubuntu-latest'
-        run: mamba install c-compiler cxx-compiler fortran-compiler cmake
+        run: mamba install c-compiler cxx-compiler fortran-compiler cmake bmi-fortran
 
       - name: Run the tests
         run: nox --session test test-cli --python ${{ matrix.python-version }} --verbose
