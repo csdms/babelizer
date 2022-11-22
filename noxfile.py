@@ -4,11 +4,6 @@ import shutil
 import sys
 from itertools import chain
 
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    import tomli as tomllib
-
 import nox
 
 PROJECT = "babelizer"
@@ -75,6 +70,11 @@ def test_langs(session: nox.session, lang) -> None:
 
 
 def _get_package_metadata(datadir):
+    if sys.version_info >= (3, 11):
+        import tomllib
+    else:
+        import tomli as tomllib
+
     with open(datadir / "babel.toml", "rb") as fp:
         config = tomllib.load(fp)
     package = config["package"]["name"]
