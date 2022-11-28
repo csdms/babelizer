@@ -95,7 +95,7 @@ def build_examples(session: nox.Session, lang):
     if lang == "python":
         session.conda_install("bmipy", "make")
     else:
-        session.conda_install(f"bmi-{lang}", "make", "pkg-config")
+        session.conda_install(f"bmi-{lang}", "cmake", "make", "pkg-config")
 
     for k, v in sorted(session.env.items()):
         session.debug(f"{k}: {v!r}")
