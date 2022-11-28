@@ -6,12 +6,6 @@ Welcome to {{ cookiecutter.package_name }}'s documentation!
 
    readme
    installation
-   modules
+   api/index
 ..   usage
 ..   contributing
-
-Indices and tables
-==================
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
