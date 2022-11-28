@@ -2,7 +2,6 @@
 import numpy as np
 from pymt_heatc import HeatModel
 
-
 config_file = "config.txt"
 np.set_printoptions(formatter={"float": "{: 6.1f}".format})
 
@@ -18,7 +17,7 @@ print("Output vars:", m.get_output_var_names())
 
 # Get the grid_id for the plate_surface__temperature variable.
 var_name = "plate_surface__temperature"
-print("Variable {}".format(var_name))
+print(f"Variable {var_name}")
 grid_id = m.get_var_grid(var_name)
 print(" - grid id:", grid_id)
 

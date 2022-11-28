@@ -1,7 +1,5 @@
 """Run the heat model in pymt."""
-import numpy as np
 from pymt.models import HeatModel
-
 
 # Instantiate the component and get its name.
 m = HeatModel()
@@ -14,14 +12,14 @@ m.initialize(*args)
 # List the model's exchange items.
 print("Number of input vars:", len(m.input_var_names))
 for var in m.input_var_names:
-    print(" - {}".format(var))
+    print(f" - {var}")
 print("Number of output vars:", len(m.output_var_names))
 for var in m.output_var_names:
-    print(" - {}".format(var))
+    print(f" - {var}")
 
 # Get variable info.
 var_name = m.output_var_names[0]
-print("Variable {}".format(var_name))
+print(f"Variable {var_name}")
 print(" - variable type:", m.var_type(var_name))
 print(" - units:", m.var_units(var_name))
 print(" - itemsize:", m.var_itemsize(var_name))
@@ -44,9 +42,9 @@ print("Time step:", m.time_step)
 print("Time units:", m.time_units)
 
 # Get the initial values of the variable.
-print("Get values of {}...".format(var_name))
+print(f"Get values of {var_name}...")
 val = m.var[var_name].data
-print(" - values at time {}:".format(m.time))
+print(f" - values at time {m.time}:")
 print(val)
 
 # Advance the model by one time step.

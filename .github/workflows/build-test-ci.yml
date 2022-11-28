@@ -20,12 +20,16 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.9", "3.10"]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
       - uses: conda-incubator/setup-miniconda@v2
         with:
@@ -36,60 +40,16 @@ jobs:
           channel-priority: true
 
       - name: Install dependencies
-        run: |
-          pip install coverage[toml]
-          mamba install --file=requirements.txt --file=requirements-testing.txt --file=external/requirements.txt
-          conda list
+        run: python -m pip install nox tomli
 
-      - name: Install build system
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.8'
-        run: |
-          mamba install cython numpy setuptools wheel
+      - name: Install compilers
+        run: mamba install c-compiler cxx-compiler fortran-compiler cmake
 
-      - name: Install babelizer
-        run: |
-          pip install .
+      - name: Run the tests
+        run: nox --session test test-cli --python ${{ matrix.python-version }} --verbose
 
-      - name: Run diagnostics
-        run: |
-          babelize --version
-          babelize --help
-          babelize init --help
-          babelize update --help
-          babelize generate --help
-          babelize generate
-          python -c 'import babelizer; print(babelizer.__version__)'
-
-      - name: Make C example
-        run: |
-          mkdir buildc && pushd buildc
-          cmake ../external/bmi-example-c -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-          make install
-          popd
-
-      - name: Make C++ example
-        run: |
-          mkdir buildcxx && pushd buildcxx
-          cmake ../external/bmi-example-cxx -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-          make install
-          popd
-
-      - name: Make Fortran example
-        run: |
-          mkdir buildf && pushd buildf
-          cmake ../external/bmi-example-fortran -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-          make install
-          popd
-
-      - name: Make Python example
-        run: |
-          pushd ./external/bmi-example-python
-          make install
-          popd
-
-      - name: Test babelizer + language examples and generate coverage report
-        run: |
-          pytest --cov=babelizer --cov-report=xml:./coverage.xml -vvv babelizer tests external/tests
+      - name: Run the language tests
+        run: nox --non-interactive --error-on-missing-interpreter --session test-langs --python ${{ matrix.python-version }} --verbose
 
       - name: Coveralls
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'

@@ -4,7 +4,6 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-
 PROJECT_DIRECTORY = Path.cwd().resolve()
 LIB_DIRECTORY = Path("{{ cookiecutter.package_name }}", "lib")
 
@@ -44,7 +43,7 @@ def clean_folder(folderpath, keep=None):
 
 def split_file(filepath, include_preamble=False):
     filepath = Path(filepath)
-    SPLIT_START_REGEX = re.compile("\s*#\s*start:\s*(?P<fname>\S+)\s*")
+    SPLIT_START_REGEX = re.compile(r"\s*#\s*start:\s*(?P<fname>\S+)\s*")
 
     files = defaultdict(list)
     fname = "preamble"

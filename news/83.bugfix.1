@@ -1,0 +1,4 @@
+
+Changed the template *pyproject.toml* to require *setuptools < 60* for the
+build system. Newer versions of *setuptools* caused fortran builds to break
+because *numpy* does not support newer versions of *setuptools*.

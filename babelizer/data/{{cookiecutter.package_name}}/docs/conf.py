@@ -40,9 +40,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'{{ cookiecutter.package_name }}'
-copyright = u"{% now 'local', '%Y' %}, {{ cookiecutter.info.full_name }}"
-author = u"{{ cookiecutter.info.full_name }}"
+project = '{{ cookiecutter.package_name }}'
+copyright = "{% now 'local', '%Y' %}, {{ cookiecutter.info.full_name }}"
+author = "{{ cookiecutter.info.full_name }}"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -94,4 +94,4 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = '{{ cookiecutter.package_name }}doc'
+htmlhelp_basename = "{{ cookiecutter.package_name }}doc"
