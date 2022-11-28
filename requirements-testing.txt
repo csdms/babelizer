@@ -1,5 +1,8 @@
+# Requirements extracted from pyproject.toml
+# [project.optional-dependencies.testing]
 pytest
 pytest-cov
 pytest-datadir
-coverage
+pytest-xdist
+coverage[toml]
 coveralls

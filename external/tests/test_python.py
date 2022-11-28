@@ -3,8 +3,9 @@ import os
 import pathlib
 import shutil
 import subprocess
-import pytest
+from functools import partial
 
+import pytest
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
@@ -14,6 +15,15 @@ from babelizer.cli import babelize
 def sessiondir(tmpdir_factory):
     sdir = tmpdir_factory.mktemp("tmp")
     return sdir
+
+
+run = partial(
+    subprocess.run,
+    check=True,
+    text=True,
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+)
 
 
 def test_babelize_init_python(sessiondir, datadir):
@@ -28,14 +38,11 @@ def test_babelize_init_python(sessiondir, datadir):
         assert (pathlib.Path("pymt_heatpy") / "babel.toml").is_file()
 
         try:
-            result = subprocess.run(
-                ["pip", "install", "-e", "."],
+            result = run(
+                ["python", "-m", "pip", "install", "-e", "."],
                 cwd="pymt_heatpy",
-                check=True,
-                text=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
             )
+
         except subprocess.CalledProcessError as err:
             assert err.output is None, err.output
 
@@ -47,7 +54,7 @@ def test_babelize_init_python(sessiondir, datadir):
         shutil.copy(datadir / "heat.yaml", "_test/")
 
         try:
-            result = subprocess.run(
+            result = run(
                 [
                     "bmi-test",
                     "--config-file=heat.yaml",
@@ -56,10 +63,6 @@ def test_babelize_init_python(sessiondir, datadir):
                     "-vvv",
                 ],
                 cwd="_test",
-                check=True,
-                text=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
             )
         except subprocess.CalledProcessError as err:
             assert err.output is None, err.output

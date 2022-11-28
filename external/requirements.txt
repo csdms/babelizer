@@ -7,4 +7,6 @@ cmake
 c-compiler
 cxx-compiler
 fortran-compiler
+make
 pkg-config
+pip

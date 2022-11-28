@@ -1,7 +1,9 @@
+"""Library metadata used by the babelizer to wrap libraries."""
 import pathlib
 import re
 import warnings
 from collections import OrderedDict, defaultdict
+from contextlib import suppress
 
 import tomlkit as toml
 import yaml
@@ -10,7 +12,10 @@ from .errors import ScanError, ValidationError
 
 
 def _setup_yaml_with_canonical_dict():
-    """https://stackoverflow.com/a/8661021"""
+    """Add a pyyaml handler to create canonical dictionaries.
+
+    From https://stackoverflow.com/a/8661021
+    """
     yaml.add_representer(
         OrderedDict,
         lambda self, data: self.represent_mapping(
@@ -67,13 +72,19 @@ _setup_yaml_with_canonical_dict()
 def validate_dict(meta, required=None, optional=None):
     """Validate babelizer configuration metadata.
 
-    Args:
-        meta (dict): Configuration metadata
-        required (dict, optional): Required keys in configuration. Defaults to None.
-        optional (dict, optional): Optional keys in configuration. Defaults to None.
+    Parameters
+    ----------
+    meta : dict
+        Configuration metadata
+    required : dict, optional
+        Required keys in configuration.
+    optional : dict, optional
+        Optional keys in configuration.
 
-    Raises:
-        ValidationError: Raised for invalid metadata
+    Raises
+    ------
+    ValidationError
+        Raised for invalid metadata.
     """
     actual = set(meta)
     required = set() if required is None else set(required)
@@ -82,14 +93,14 @@ def validate_dict(meta, required=None, optional=None):
 
     if missing := required - actual:
         raise ValidationError(
-            "missing required key{0}: {1}".format(
+            "missing required key{}: {}".format(
                 "s" if len(missing) > 1 else "", ", ".join(missing)
             )
         )
 
     if unknown := actual - valid:
         raise ValidationError(
-            "unknown key{0}: {1}".format(
+            "unknown key{}: {}".format(
                 "s" if len(unknown) > 1 else "", ", ".join(unknown)
             )
         )
@@ -106,6 +117,7 @@ def _norm_os(name):
 
 
 class BabelMetadata:
+    """Library metadata."""
 
     LOADERS = {"yaml": yaml.safe_load, "toml": toml.parse}
 
@@ -114,13 +126,20 @@ class BabelMetadata:
     ):
         """Metadata used by the babelizer to wrap a library.
 
-        Args:
-            library (dict, optional): Information about the library being babelized. Defaults to None.
-            build (dict, optional): User-specified compiler flags. Defaults to None.
-            package (dict, optional): Name and requirements to build the babelized library. Defaults to None.
-            info (dict, optional): Descriptive information about the package. Defaults to None.
-            plugin (dict, optional): Deprecated, use package. Defaults to None.
-            ci (dict, optional): Information about how to set up continuous integration. Defaults to None.
+        Parameters
+        ----------
+        library : dict, optional
+            Information about the library being babelized.
+        build : dict, optional
+            User-specified compiler flags.
+        package : dict, optional
+            Name and requirements to build the babelized library.
+        info : dict, optional
+            Descriptive information about the package.
+        plugin : dict, optional
+            Deprecated, use package.
+        ci : dict, optional
+            Information about how to set up continuous integration.
         """
         if plugin is not None:
             warnings.warn("use 'package' instead of 'plugin'", DeprecationWarning)
@@ -144,11 +163,16 @@ class BabelMetadata:
     def from_stream(cls, stream, fmt="yaml"):
         """Create an instance of BabelMetadata from a file-like object.
 
-        Args:
-            stream (file object): File object with a babelizer configuration
-            fmt (str, optional): File format. Defaults to "yaml".
+        Parameters
+        ----------
+        stream : file-like
+            File object with a babelizer configuration
+        fmt : str, optional
+            File format.
 
-        Returns:
+        Returns
+        -------
+        BabelMetadata
             A BabelMetadata instance.
         """
         try:
@@ -171,25 +195,33 @@ class BabelMetadata:
     def from_path(cls, filepath):
         """Create an instance of BabelMetadata from a path-like object.
 
-        Args:
-            filepath (str): Path to a babelizer configuration file.
+        Parameters
+        ----------
+        filepath : str
+            Path to a babelizer configuration file.
 
-        Returns:
+        Returns
+        -------
             A BabelMetadata instance.
         """
         path = pathlib.Path(filepath)
 
-        with open(filepath, "r") as fp:
+        with open(filepath) as fp:
             return BabelMetadata.from_stream(fp, fmt=path.suffix[1:])
 
     def get(self, section, value):
         """Get a metadata value from the given section.
 
-        Args:
-            section (str): Section name.
-            value (str): Key name.
+        Parameters
+        ----------
+        section : str
+            Section name.
+        value : str
+            Key name.
 
-        Returns:
+        Returns
+        -------
+        value
             Metadata value.
         """
         return self._meta[section][value]
@@ -198,11 +230,15 @@ class BabelMetadata:
     def validate(config):
         """Ensure babelizer configuration metadata are valid.
 
-        Args:
-            config (dict): Metadata to babelize a library.
+        Parameters
+        ----------
+        config : dict
+            Metadata to babelize a library.
 
-        Raises:
-            ValidationError: if metadata are not valid.
+        Raises
+        ------
+        ValidationError
+            If metadata are not valid.
         """
         libraries = config["library"]
         if "entry_point" in libraries:
@@ -213,7 +249,7 @@ class BabelMetadata:
                 except ValidationError:
                     raise ValidationError(f"poorly-formed entry point ({entry_point})")
         else:
-            for babelized_class, library in libraries.items():
+            for _babelized_class, library in libraries.items():
                 validate_dict(
                     library,
                     required={"language", "library", "header", "entry_point"},
@@ -301,17 +337,19 @@ class BabelMetadata:
     def norm(config):
         """Ensure current style metadata are used in babelizer configuration.
 
-        Args:
-            config (dict): Metadata to babelize a library.
+        Parameters
+        ----------
+        config : dict
+            Metadata to babelize a library.
 
-        Returns:
+        Return
+        ------
+        dict
             A dict of babelizer configuration metadata.
         """
         build = defaultdict(list)
-        try:
+        with suppress(KeyError):
             build.update(config["build"])
-        except KeyError:
-            pass
 
         if "entry_point" in config["library"]:
             libraries = BabelMetadata._handle_old_style_entry_points(config["library"])
@@ -350,19 +388,26 @@ class BabelMetadata:
     def dump(self, fp, fmt="yaml"):
         """Write serialized metadata to a file.
 
-        Args:
-            fp (file object): File object for output.
-            fmt (str, optional): [description]. Defaults to "yaml".
+        Parameters
+        ----------
+        fp : file-like
+            File object for output.
+        fmt : str, optional
+            Format to serialize data.
         """
         print(self.format(fmt=fmt), file=fp)
 
     def format(self, fmt="yaml"):
-        """Serialize metadata to output format
+        """Serialize metadata to output format.
 
-        Args:
-            fmt (str, optional): Output format. Defaults to "yaml".
+        Parameters
+        ----------
+        fmt : str, optional
+            Output format.
 
-        Returns:
+        Returns
+        -------
+        metadata : str
             Serialized metadata.
         """
         return getattr(self, f"format_{fmt}")()
@@ -370,8 +415,10 @@ class BabelMetadata:
     def format_yaml(self):
         """Serialize metadata as YAML.
 
-        Returns:
-            str: Serialized metadata as a YAML-formatted string
+        Returns
+        -------
+        str
+            Serialized metadata as a YAML-formatted string
         """
         import io
 
@@ -382,8 +429,10 @@ class BabelMetadata:
     def format_toml(self):
         """Serialize metadata as TOML.
 
-        Returns:
-            str: Serialized metadata as a TOML-formatted string
+        Returns
+        -------
+        str
+            Serialized metadata as a TOML-formatted string
         """
         return toml.dumps(self._meta)
 
@@ -418,8 +467,8 @@ class BabelMetadata:
         babelizer.errors.ValidationError: bad entry point specifier (bar:Baz). specifier must be of the form name=module:class
         """
         try:
-            name, value = [item.strip() for item in specifier.split("=")]
-            module, obj = [item.strip() for item in value.split(":")]
+            name, value = (item.strip() for item in specifier.split("="))
+            module, obj = (item.strip() for item in value.split(":"))
         except ValueError:
             raise ValidationError(
                 f"bad entry point specifier ({specifier}). specifier must be of the form name=module:class"
@@ -430,8 +479,10 @@ class BabelMetadata:
     def as_cookiecutter_context(self):
         """Format metadata in cookiecutter context.
 
-        Returns:
-            dict: Metadata in cookiecutter context.
+        Returns
+        -------
+        dict
+            Metadata in cookiecutter context.
         """
         languages = [lib["language"] for lib in self._meta["library"].values()]
         language = languages[0]

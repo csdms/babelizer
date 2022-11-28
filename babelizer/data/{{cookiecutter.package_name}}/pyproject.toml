@@ -1,5 +1,5 @@
 [build-system]
-requires = ["cython", "numpy", "setuptools", "wheel"]
+requires = ["cython", "numpy", "setuptools<60", "wheel"]
 
 [tool.pytest.ini_options]
 minversion = "5.0"

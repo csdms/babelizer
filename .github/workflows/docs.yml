@@ -26,9 +26,9 @@ jobs:
         if:
           github.event_name == 'push' || github.event.pull_request.head.repo.full_name !=
           github.repository
-    
+
         runs-on: ubuntu-latest
-        
+
         defaults:
           run:
             shell: bash -l {0}
@@ -43,16 +43,11 @@ jobs:
               channel-priority: true
 
           - name: Show conda installation info
-            run: |
-              conda info
-              conda list
+            run: conda info
 
           - name: Install dependencies
             run: |
-              conda install mamba
-              mamba install --file=requirements.txt
-              pip install -r requirements-docs.txt
-              pip install -e .
+              pip install nox
 
           - name: Build documentation
-            run: make -C docs clean html
+            run: nox -s build-docs

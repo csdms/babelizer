@@ -130,7 +130,7 @@ of the library containing the compiled *heat* model:
 
 .. code::
 
-  > if not exist %LIBRARY_INC%\\bmi_heat.h exit 1 
+  > if not exist %LIBRARY_INC%\\bmi_heat.h exit 1
 
 Create the *babelizer* input file
 ---------------------------------
@@ -277,7 +277,7 @@ ending with
 .. code:: bash
 
   🎉 All tests passed!
-  
+
 if everything has been built correctly.
 
 

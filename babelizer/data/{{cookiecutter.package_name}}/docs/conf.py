@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # {{ cookiecutter.package_name }} documentation build configuration file, created by
 # sphinx-quickstart on Fri Jun  9 13:47:02 2017.
@@ -20,6 +19,7 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('..'))
 
 import {{ cookiecutter.package_name }}
@@ -47,9 +47,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'{{ cookiecutter.package_name }}'
-copyright = u"{% now 'local', '%Y' %}, {{ cookiecutter.info.full_name }}"
-author = u"{{ cookiecutter.info.full_name }}"
+project = '{{ cookiecutter.package_name }}'
+copyright = "{% now 'local', '%Y' %}, {{ cookiecutter.info.full_name }}"
+author = "{{ cookiecutter.info.full_name }}"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -129,8 +129,8 @@ latex_elements = {
 # [howto, manual, or own class]).
 latex_documents = [
     (master_doc, '{{ cookiecutter.package_name }}.tex',
-     u'{{ cookiecutter.package_name }} Documentation',
-     u'{{ cookiecutter.info.full_name }}', 'manual'),
+     '{{ cookiecutter.package_name }} Documentation',
+     '{{ cookiecutter.info.full_name }}', 'manual'),
 ]
 
 
@@ -140,7 +140,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, '{{ cookiecutter.package_name }}',
-     u'{{ cookiecutter.package_name }} Documentation',
+     '{{ cookiecutter.package_name }} Documentation',
      [author], 1)
 ]
 
@@ -152,12 +152,9 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, '{{ cookiecutter.package_name }}',
-     u'{{ cookiecutter.package_name }} Documentation',
+     '{{ cookiecutter.package_name }} Documentation',
      author,
      '{{ cookiecutter.package_name }}',
      'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
