@@ -4,6 +4,9 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
+from logoizer import logoize
+
+
 PROJECT_DIRECTORY = Path.cwd().resolve()
 LIB_DIRECTORY = Path("{{ cookiecutter.package_name }}", "lib")
 
@@ -83,6 +86,10 @@ class: {plugin_class}
 
 if __name__ == "__main__":
     keep = set()
+
+    make_folder(PROJECT_DIRECTORY / "docs" / "_static")
+    logoize("{{ cookiecutter.package_name }}", PROJECT_DIRECTORY / "docs" / "_static" / "logo-light.svg", light=True)
+    logoize("{{ cookiecutter.package_name }}", PROJECT_DIRECTORY / "docs" / "_static" / "logo-dark.svg", light=False)
 
     {%- if cookiecutter.language == 'c' %}
 

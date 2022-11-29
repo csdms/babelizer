@@ -44,6 +44,7 @@ dependencies = [
   "tomlkit",
   "isort>=5",
   "cookiecutter",
+  "logoizer @ git+https://github.com/mcflugen/logoizer",
 ]
 dynamic = ["readme", "version"]
 
