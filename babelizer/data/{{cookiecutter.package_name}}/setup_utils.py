@@ -48,7 +48,7 @@ def get_compiler_flags():
         "language": "{{ cookiecutter.language }}",
     {% endif -%}
     }
-    
+
     # Locate directories under Windows %LIBRARY_PREFIX%.
     if sys.platform.startswith("win"):
         flags["include_dirs"].append(os.path.join(sys.prefix, "Library", "include"))
@@ -66,7 +66,7 @@ def get_extension_modules():
         "{{ lib|trim }}",{% endfor %}
     {%- endif %}
     ]
-    
+
     ext_modules = [
     {%- for babelized_class, component in cookiecutter.components|dictsort %}
         Extension(
@@ -80,7 +80,7 @@ def get_extension_modules():
         ),
     {%- endfor %}
     ]
-    
+
     return ext_modules
 
 
@@ -95,7 +95,7 @@ def as_cwd(path):
 def build_interoperability():
     compiler = new_fcompiler()
     compiler.customize()
-    
+
     flags = get_compiler_flags()
 
     cmd = []
