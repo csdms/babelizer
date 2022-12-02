@@ -1,8 +1,9 @@
-Changelog for {{cookiecutter.package_name}}
-=============={{ '=' * cookiecutter.package_name | length }}
+Release Notes
+=============
 
-0.2.0 (unreleased)
--------------------
+.. towncrier-draft-entries:: Not yet released
+
+.. towncrier release notes start
 
 
 0.1.0 ({% now 'local', '%Y-%m-%d' %})

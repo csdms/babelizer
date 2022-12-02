@@ -53,7 +53,7 @@ testing = [
 ]
 
 [tool.setuptools.dynamic]
-readme = {file = ["README.rst", "CREDITS.rst", "CHANGES.rst", "LICENSE"]}
+readme = {file = ["README.rst", "CREDITS.rst", "CHANGES.rst", "LICENSE.rst"]}
 version = {attr = "{{ cookiecutter.package_name }}._version.__version__"}
 
 [tool.setuptools]
