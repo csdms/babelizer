@@ -12,22 +12,29 @@
    :target: https://{{ cookiecutter.package_name }}.readthedocs.org/
    :class: only-dark
 
+.. include:: ../README.rst
+   :start-after: start-intro
+   :end-before: end-intro
+
 .. toctree::
    :maxdepth: 2
    :caption: User Guide
-   :hidden: true
+   :hidden:
 
-   readme
-   installation
+   quickstart
    usage
+   API <api/{{ cookiecutter.package_name }}>
+   babel
 ..   contributing
 
 .. toctree::
    :maxdepth: 2
    :caption: Contribute
-   :hidden: true
+   :hidden:
 
-   api/index
+   developer_install
+   environments
+   updating
    authors
    changelog
    license
