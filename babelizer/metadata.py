@@ -148,11 +148,11 @@ class BabelMetadata:
             package = plugin
 
         config = {
-            "library": library or {},
-            "build": build or {},
-            "package": package or {},
-            "info": info or {},
-            "ci": ci or {},
+            "library": dict(library or {}),
+            "build": dict(build or {}),
+            "package": dict(package or {}),
+            "info": dict(info or {}),
+            "ci": dict(ci or {}),
         }
 
         BabelMetadata.validate(config)
@@ -354,7 +354,7 @@ class BabelMetadata:
         if "entry_point" in config["library"]:
             libraries = BabelMetadata._handle_old_style_entry_points(config["library"])
         else:
-            libraries = config["library"]
+            libraries = {k: dict(v) for k, v in config["library"].items()}
 
         if "plugin_author" in config["info"]:
             info = BabelMetadata._handle_old_style_info(config["info"])
