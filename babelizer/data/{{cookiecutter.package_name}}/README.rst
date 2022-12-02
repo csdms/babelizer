@@ -29,23 +29,22 @@
 
 .. start-intro
 
-**{{ cookiecutter.info.project_short_description }}**
-
 This project provides a wrapped version (using the `babelizer <https://babelizer.readthedocs.io>`_ tool)
-of the {{ cookiecutter.language }} library
-components that expose a Basic Model Interface. This allows these components to be imported and used within
+of components within the following following libraries that expose a Basic Model Interface.
+This allows these components to be imported and used within
 Python and the Python Modeling Toolkit, PyMT.
-
 
 .. list-table::
   :header-rows: 1
-  :width: 80%
+  :width: 90%
   :widths: auto
 
-  * - Component
+  * - Library
+    - Component
     - PyMT
   {% for babelized_class, component in cookiecutter.components|dictsort -%}
-  * - :class:`~{{ cookiecutter.package_name}}.{{ babelized_class }}`
+  * - {{ component.library }}
+    - :class:`~{{ cookiecutter.package_name }}.{{ babelized_class }}`
     -
       .. code-block:: pycon
 
