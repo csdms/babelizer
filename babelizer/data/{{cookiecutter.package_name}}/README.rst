@@ -27,80 +27,144 @@
 {%- endif %}
 
 
-{{ cookiecutter.info.project_short_description }}
+.. start-intro
+
+**{{ cookiecutter.info.project_short_description }}**
+
+This project provides a wrapped version (using the `babelizer <https://babelizer.readthedocs.io>`_ tool)
+of the {{ cookiecutter.language }} library
+components that expose a Basic Model Interface. This allows these components to be imported and used within
+Python and the Python Modeling Toolkit, PyMT.
+
+
+.. list-table::
+  :header-rows: 1
+  :width: 80%
+  :widths: auto
+
+  * - Component
+    - PyMT
+  {% for babelized_class, component in cookiecutter.components|dictsort -%}
+  * - :class:`~{{ cookiecutter.package_name}}.{{ babelized_class }}`
+    -
+      .. code-block:: pycon
+
+        >>> from pymt.models import {{ babelized_class }}
+  {% endfor %}
+
+.. end-intro
+
 
 {% if is_open_source %}
 * Free software: {{ cookiecutter.open_source_license }}
 * Documentation: https://{{ cookiecutter.package_name | replace("_", "-") }}.readthedocs.io.
 {% endif %}
 
-{% set mwidth = ["Component" | length] -%}
-{%- for babelized_class, component in cookiecutter.components|dictsort %}
-    {%- if babelized_class|length > mwidth[0] -%}
-        {% set _ = mwidth.pop() -%}
-        {% set _ = mwidth.append(babelized_class|length) -%}
-    {%- endif -%}
-{%- endfor %}
-{% set max_width = mwidth[0] %}
 
-{%- set width_col_1 = max_width -%}
-{%- set width_col_2 = max_width + "`from pymt.models import `" | length -%}
-{% set fmt = "%-" + max_width|string + "s" %}
-{{ '=' * max_width }} {{ '=' * width_col_2 }}
-{{ fmt | format("Component",) }} PyMT
-{{ '=' * max_width }} {{ '=' * width_col_2 }}
+Quickstart
+==========
+
+.. start-quickstart
+
+To get started you will need to install the *{{ cookiecutter.package_name }}* package, which is currently distributed
+on *conda-forge*. The easiest way to install *{{ cookiecutter.package_name }}* into your current environment using either *mamba* or *conda*.
+
+.. tab:: mamba
+
+  .. code:: bash
+
+    mamba install {{ cookiecutter.package_name }}
+
+.. tab:: conda
+
+  .. code:: bash
+
+    conda install {{ cookiecutter.package_name }}
+
+.. end-quickstart
+
+Usage
+=====
+
+.. start-usage
+
+There are two ways to use the data components provided by this package: directly through it's Basic
+Model Interface, or as a PyMT plugin.
+
+A BMI is provided by each component in this package:
+{%- for babelized_class, component in cookiecutter.components|dictsort -%}
+:class:`~{{ cookiecutter.package_name}}.{{ babelized_class }}`
+{% endfor %}.
+
+
 {% for babelized_class, component in cookiecutter.components|dictsort -%}
-{{ fmt | format(babelized_class) }} `from pymt.models import {{ babelized_class }}`
-{% endfor -%}
-{{ '=' * max_width }} {{ '=' * width_col_2 }}
 
----------------
-Installing pymt
----------------
+.. code-block:: pycon
 
-Installing `pymt` from the `conda-forge` channel can be achieved by adding
-`conda-forge` to your channels with:
+  >>> from {{ cookiecutter.package_name}} import {{ babelized_class }}
+  >>> model = {{ babelized_class }}()
+  >>> model.get_component_name()  # Get the name of the component
+  >>> model.get_output_var_names()  # Get a list of the component's output variables
 
-.. code::
+The PyMT provides a more Pythonic and convenient way to use the component,
 
-  conda config --add channels conda-forge
+.. code-block:: pycon
 
-*Note*: Before installing `pymt`, you may want to create a separate environment
-into which to install it. This can be done with,
+  >>> from pymt.models import {{ babelized_class }}
+  >>> model = {{ babelized_class }}()
+  >>> model.component_name
+  >>> model.output_var_names
 
-.. code::
+{% endfor %}
 
-  conda create -n pymt python=3
-  conda activate pymt
 
-Once the `conda-forge` channel has been enabled, `pymt` can be installed with:
+.. note::
 
-.. code::
+  If you will be using this project's components through the PyMT, you will first need to install
+  PyMT. This can be done using either *mamba* or *conda*.
 
-  conda install pymt
+  .. tab:: mamba
 
-It is possible to list all of the versions of `pymt` available on your platform with:
+    .. code-block:: bash
 
-.. code::
+      mamba install pymt -c conda-forge
 
-  conda search pymt --channel conda-forge
+  .. tab:: conda
 
------------{{ '-' * cookiecutter.package_name | length }}
-Installing {{ cookiecutter.package_name }}
------------{{ '-' * cookiecutter.package_name | length }}
+      .. code-block:: bash
 
-{% if cookiecutter.package_requirements -%}
-Once `pymt` is installed, the dependencies of `{{ cookiecutter.package_name }}` can
-be installed with:
+        conda install pymt -c conda-forge
 
-.. code::
 
-  conda install {{ cookiecutter.package_requirements.split(',') | join(" ") }}
+.. end-usage
 
-{%- endif %}
 
-To install `{{ cookiecutter.package_name }}`,
+Updating
+========
 
-.. code::
+.. start-updating
 
-  conda install {{ cookiecutter.package_name }}
+This project has been automatically generated using the `babelizer <https://babelizer.readthedocs.io>`_ tool.
+If you have made changes to the project's ``babel.toml`` file or the would like to rerender the project
+with a newer version of the *babelizer*, you can do this either directly with the *babelize* command
+or using *nox*.
+
+.. warning::
+
+  Many of the files in the project are auto-generated by the *babelizer* and so any changes that you've
+  made to them will likely be lost after running the following commands.
+
+.. tab:: nox
+
+  .. code:: bash
+
+    nox -s update
+
+.. tab:: babelizer
+
+  .. code:: bash
+
+    babelize update
+
+
+.. end-updating
