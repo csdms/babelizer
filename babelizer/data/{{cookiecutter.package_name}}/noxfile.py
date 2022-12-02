@@ -24,6 +24,13 @@ def test(session: nox.Session) -> None:
 {%- endfor %}
 
 
+@nox.session(venv_backend="mamba")
+def update(session: nox.Session) -> None:
+    session.conda_install("babelizer")
+
+    session.run("babelize", "update")
+
+
 @nox.session
 def lint(session: nox.Session) -> None:
     """Look for lint."""
