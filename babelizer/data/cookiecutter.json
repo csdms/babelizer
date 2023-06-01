@@ -6,7 +6,8 @@
     "libraries": [],
     "library_dirs": [],
     "include_dirs": [],
-    "extra_compile_args": []
+    "extra_compile_args": [],
+    "max_instances": 3
   },
   "info": {
     "full_name": "CSDMS",
