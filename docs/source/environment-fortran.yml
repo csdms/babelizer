@@ -1,0 +1,12 @@
+# A conda environment file for the babelizer Fortran example
+name: wrap
+channels:
+  - conda-forge
+dependencies:
+  - python=3
+  - make
+  - cmake
+  - pkg-config
+  - fortran-compiler
+  - bmi-fortran
+  - babelizer
