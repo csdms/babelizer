@@ -42,7 +42,7 @@ def test_langs(session: nox.session, lang) -> None:
 
     build_examples(session, lang)
 
-    session.conda_install("pip", "bmi-tester>=0.5.4")
+    session.conda_install("pip", "bmi-tester>=0.5.4", "cmake")
     session.install(".[testing]")
 
     with session.chdir(tmpdir):
