@@ -1,4 +1,5 @@
 """Test the babelizer command-line interface"""
+
 from click.testing import CliRunner
 
 from babelizer.cli import babelize

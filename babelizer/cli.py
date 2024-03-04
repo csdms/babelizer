@@ -1,4 +1,5 @@
 """The command line interface to the babelizer."""
+
 import fnmatch
 import os
 import pathlib
@@ -359,9 +360,7 @@ def _gather_input(
     }
 
     libraries = {}
-    if (not prompt) or any(
-        [x is not None for x in (name, library, header, entry_point)]
-    ):
+    if (not prompt) or any(x is not None for x in (name, library, header, entry_point)):
         babelized_class = name or ask("Name of babelized class", default="<name>")
         libraries[babelized_class] = {
             "language": language,
@@ -385,11 +384,13 @@ def _gather_input(
             libraries[babelized_class] = {
                 "language": language,
                 "library": ask(f"[{babelized_class}] Name of library to babelize"),
-                "header": ask(
-                    f"[{babelized_class}] Name of header file containing BMI class "
-                )
-                if language != "python"
-                else "__UNUSED__",
+                "header": (
+                    ask(
+                        f"[{babelized_class}] Name of header file containing BMI class "
+                    )
+                    if language != "python"
+                    else "__UNUSED__"
+                ),
                 "entry_point": ask(f"[{babelized_class}] Name of BMI class "),
             }
             if not yes("Add another library?", default=False):

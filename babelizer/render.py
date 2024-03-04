@@ -1,4 +1,5 @@
 """Render a new babelized project."""
+
 import contextlib
 import os
 import pathlib
