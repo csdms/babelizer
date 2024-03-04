@@ -10,6 +10,7 @@ from __future__ import absolute_import
 from .lib import {{ classes|join(', ') }}
 
 {%- else %}
+import sys
 if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
     import importlib.resources as importlib_resources
 else:  # pragma: no cover (<PY312)
