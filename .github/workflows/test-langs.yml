@@ -41,7 +41,7 @@ jobs:
         run: python -m pip install nox tomli
 
       - name: Install compilers
-        run: mamba install c-compiler cxx-compiler fortran-compiler cmake
+        run: mamba install c-compiler cxx-compiler fortran-compiler
 
       - name: Run the language tests
         run: nox -s "test-langs-${{ matrix.python-version }}(lang='${{ matrix.language }}')" --python ${{ matrix.python-version }} --verbose
