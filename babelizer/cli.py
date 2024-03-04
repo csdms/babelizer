@@ -339,7 +339,7 @@ def _gather_input(
         "package_author_email": email
         or ask("Babelizing author email", default="csdms@colorado.edu"),
         "package_license": license
-        or ask("License to use for the babelized project", default="MIT"),
+        or ask("License to use for the babelized project", default="MIT License"),
         "summary": summary
         or ask("Brief description of what the library does", default=""),
     }
