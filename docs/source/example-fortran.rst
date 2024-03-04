@@ -128,7 +128,7 @@ Windows
 
 Building the *heat* model on Windows requires either:
 
-* A Unix-like system, such as `Cygwin <https://www.cygwin.com/>`_ or 
+* A Unix-like system, such as `Cygwin <https://www.cygwin.com/>`_ or
   `Windows Subsystem for Linux <https://learn.microsoft.com/en-us/windows/wsl/>`_,
   in which case you can follow the above Linux and macOS instructions.
 * Microsoft Visual Studio 2017 or later, or Microsoft Build Tools for
@@ -167,7 +167,7 @@ to conda, for example using the binaries provided by
 The `BMI bindings <https://github.com/csdms/bmi-fortran>`_ (installed
 here via conda) should be compiled with the same compiler as the model
 that uses them, to avoid incompatibility issues, and so if you choose
-a different compiler than provided by `fortran-compiler`, you will 
+a different compiler than provided by `fortran-compiler`, you will
 likely have to compile the BMI bindings with this compiler as well.
 
 
