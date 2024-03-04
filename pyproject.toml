@@ -1,111 +1,159 @@
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "babelizer"
+requires-python = ">=3.10"
 description = "Wrap BMI libraries with Python bindings"
+keywords = [
+    "bmi",
+    "component modeling",
+    "geosciences",
+    "interoperability",
+    "model coupling",
+    "numerical modeling",
+    "pymt",
+]
 authors = [
-  {name = "Eric Hutton", email = "huttone@colorado.edu"},
+    { name = "Eric Hutton", email = "huttone@colorado.edu" },
 ]
 maintainers = [
-  {name = "Eric Hutton", email = "huttone@colorado.edu"},
-  {name = "Mark Piper", email = "mark.piper@colorado.edu"},
+    { name = "Eric Hutton", email = "huttone@colorado.edu" },
+    { name = "Mark Piper", email = "mark.piper@colorado.edu" },
 ]
-keywords = [
-  "bmi",
-  "component modeling",
-  "geosciences",
-  "interoperability",
-  "model coupling",
-  "numerical modeling",
-  "pymt",
-]
-license = {text = "MIT License"}
 classifiers = [
-  "Development Status :: 4 - Beta",
-  "Intended Audience :: Developers",
-  "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: MIT License",
-  "Operating System :: MacOS :: MacOS X",
-  "Operating System :: POSIX :: Linux",
-  "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Topic :: Software Development :: Code Generators",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Code Generators",
 ]
-requires-python = ">=3.8"
 dependencies = [
-  "black",
-  "click",
-  "gitpython",
-  "pyyaml",
-  "tomlkit",
-  "isort>=5",
-  "cookiecutter",
+    "black",
+    "click",
+    "cookiecutter",
+    "gitpython",
+    "importlib-resources; python_version < '3.12'",
+    "isort>=5",
+    "pyyaml",
+    "tomlkit",
 ]
-dynamic = ["readme", "version"]
+dynamic = [
+    "readme",
+    "version",
+]
+
+[project.license]
+text = "MIT"
 
 [project.urls]
-homepage = "https://babelizer.readthedocs.io/"
-documentation = "https://babelizer.readthedocs.io/"
-repository = "https://github.com/csdms/babelizer"
 changelog = "https://github.com/csdms/babelizer/blob/master/CHANGES.rst"
+documentation = "https://babelizer.readthedocs.io/"
+homepage = "https://babelizer.readthedocs.io/"
+repository = "https://github.com/csdms/babelizer"
 
 [project.optional-dependencies]
 dev = [
-  "black",
-  "flake8",
-  "flake8-bugbear",
-  "isort",
-  "nox",
-  "pre-commit",
-  "towncrier",
+    "black",
+    "flake8",
+    "flake8-bugbear",
+    "isort",
+    "nox",
+    "pre-commit",
+    "towncrier",
 ]
 docs = [
-  "sphinx>=4",
-  "sphinx-click",
-  "sphinx-copybutton",
-  "sphinx-inline-tabs",
-  "sphinxcontrib.towncrier",
-  "pygments>=2.4",
-  "sphinx-inline-tabs",
-  "furo",
+    "furo",
+    "pygments>=2.4",
+    "sphinx-click",
+    "sphinx-copybutton",
+    "sphinx-inline-tabs",
+    "sphinx-inline-tabs",
+    "sphinx>=4",
+    "sphinxcontrib.towncrier",
 ]
 testing = [
-  "pytest",
-  "pytest-cov",
-  "pytest-datadir",
-  "pytest-xdist",
-  "coverage[toml]",
-  "coveralls",
+    "coverage[toml]",
+    "coveralls",
+    "pytest",
+    "pytest-cov",
+    "pytest-datadir",
+    "pytest-xdist",
 ]
 
 [project.scripts]
 babelize = "babelizer.cli:babelize"
 
+[build-system]
+requires = [
+    "setuptools",
+    "wheel",
+]
+build-backend = "setuptools.build_meta"
+
 [tool.setuptools]
 include-package-data = true
 
+[tool.setuptools.dynamic.readme]
+file = "README.rst"
+content-type = "text/x-rst"
+
+[tool.setuptools.dynamic.version]
+attr = "babelizer._version.__version__"
+
 [tool.setuptools.package-data]
 babelizer = [
-  "data/*",
+    "data/*",
 ]
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["babelizer*"]
+where = [
+    ".",
+]
+include = [
+    "babelizer*",
+]
 
-[tool.setuptools.dynamic]
-readme = {file = ["README.rst", "CREDITS.rst", "CHANGES.rst", "LICENSE.rst"]}
-version = {attr = "babelizer._version.__version__"}
+[tool.black]
+line-length = 88
+exclude = """
+(
+  babelizer/data
+  | external
+)
+"""
+
+[tool.coverage.run]
+omit = [
+    "*/babelizer/data/*",
+]
+relative_files = true
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+line_length = 88
+skip = [
+    "babelizer/data",
+]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-testpaths = ["babelizer", "tests"]
-norecursedirs = [".*", "*.egg*", "build", "dist"]
-# usefixtures = suppress_resource_warning
+testpaths = [
+    "babelizer",
+    "tests",
+]
+norecursedirs = [
+    ".*",
+    "*.egg*",
+    "build",
+    "dist",
+]
 addopts = """
     --ignore setup.py
     --ignore babelizer/data
@@ -118,25 +166,8 @@ addopts = """
 doctest_optionflags = [
     "NORMALIZE_WHITESPACE",
     "IGNORE_EXCEPTION_DETAIL",
-    "ALLOW_UNICODE"
+    "ALLOW_UNICODE",
 ]
-
-[tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-combine_as_imports = true
-line_length = 88
-skip = ["babelizer/data"]
-
-[tool.black]
-line-length = 88
-exclude = '''
-(
-  babelizer/data
-  | external
-)
-'''
 
 [tool.towncrier]
 directory = "news"
@@ -147,3 +178,7 @@ underlines = "-^\""
 issue_format = "`#{issue} <https://github.com/csdms/babelizer/issues/{issue}>`_"
 title_format = "{version} ({project_date})"
 wrap = true
+
+[tool.zest-releaser]
+tag-format = "v{version}"
+python-file-with-version = "babelizer/_version.py"

@@ -22,9 +22,9 @@ def requirements(extras):
     if extras:
         optional_dependencies = project.get("optional-dependencies", {})
         for extra in extras:
-            dependencies[
-                f"[project.optional-dependencies.{extra}]"
-            ] = optional_dependencies[extra]
+            dependencies[f"[project.optional-dependencies.{extra}]"] = (
+                optional_dependencies[extra]
+            )
     else:
         dependencies["[project.dependencies]"] = project["dependencies"]
 
