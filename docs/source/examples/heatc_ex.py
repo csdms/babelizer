@@ -1,4 +1,5 @@
 """An example of running the heatc model through its BMI."""
+
 import numpy as np
 from pymt_heatc import HeatModel
 
@@ -30,10 +31,10 @@ m.get_grid_shape(grid_id, grid_shape)
 print(" - shape:", grid_shape)
 grid_size = m.get_grid_size(grid_id)
 print(" - size:", grid_size)
-grid_spacing = np.empty(grid_rank, dtype=np.float)
+grid_spacing = np.empty(grid_rank, dtype=np.float64)
 m.get_grid_spacing(grid_id, grid_spacing)
 print(" - spacing:", grid_spacing)
-grid_origin = np.empty(grid_rank, dtype=np.float)
+grid_origin = np.empty(grid_rank, dtype=np.float64)
 m.get_grid_origin(grid_id, grid_origin)
 print(" - origin:", grid_origin)
 print(" - variable type:", m.get_var_type(var_name))
@@ -42,7 +43,7 @@ print(" - itemsize:", m.get_var_itemsize(var_name))
 print(" - nbytes:", m.get_var_nbytes(var_name))
 
 # Get the initial temperature values.
-val = np.empty(grid_shape, dtype=np.float)
+val = np.empty(grid_shape, dtype=np.float64)
 m.get_value(var_name, val)
 print(" - initial values (gridded):")
 print(val.reshape(np.roll(grid_shape, 1)))

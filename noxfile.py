@@ -9,7 +9,7 @@ import nox
 PROJECT = "babelizer"
 ROOT = pathlib.Path(__file__).parent
 ALL_LANGS = {"c", "cxx", "fortran", "python"}
-PYTHON_VERSIONS = ["3.9", "3.10", "3.11"]
+PYTHON_VERSIONS = ["3.10", "3.11", "3.12"]
 
 
 @nox.session(python=PYTHON_VERSIONS)
@@ -42,7 +42,7 @@ def test_langs(session: nox.session, lang) -> None:
 
     build_examples(session, lang)
 
-    session.conda_install("pip", "bmi-tester>=0.5.4")
+    session.conda_install("pip", "bmi-tester>=0.5.4", "cmake")
     session.install(".[testing]")
 
     with session.chdir(tmpdir):
