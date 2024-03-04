@@ -125,6 +125,10 @@ exclude = """
 )
 """
 
+[tool.coverage.run]
+omit = "*/babelizer/data/*"
+relative_files = true
+
 [tool.isort]
 multi_line_output = 3
 include_trailing_comma = true
@@ -171,3 +175,7 @@ underlines = "-^\""
 issue_format = "`#{issue} <https://github.com/csdms/babelizer/issues/{issue}>`_"
 title_format = "{version} ({project_date})"
 wrap = true
+
+[tool.zest-releaser]
+tag-format = "v{version}"
+python-file-with-version = "babelizer/_version.py"
