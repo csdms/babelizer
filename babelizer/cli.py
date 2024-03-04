@@ -3,12 +3,18 @@
 import fnmatch
 import os
 import pathlib
+import sys
 import tempfile
 from functools import partial
 
 import click
 import git
-import pkg_resources
+
+if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
+    import importlib.resources as importlib_resources
+else:  # pragma: no cover (<PY312)
+    import importlib_resources
+
 
 from .errors import OutputDirExistsError, ScanError, SetupPyError, ValidationError
 from .metadata import BabelMetadata
@@ -71,7 +77,7 @@ def init(meta, template, quiet, verbose, package_version):
     META is babelizer configuration information, usually saved to a file.
     """
     output = pathlib.Path(".")
-    template = template or pkg_resources.resource_filename("babelizer", "data")
+    template = template or str(importlib_resources.files("babelizer") / "data")
 
     if not quiet:
         out(f"reading template from {template}")
@@ -139,7 +145,7 @@ def update(template, quiet, verbose):
         err("this does not appear to be a babelized folder (missing 'babel.yaml')")
         raise click.Abort()
 
-    template = template or pkg_resources.resource_filename("babelizer", "data")
+    template = template or str(importlib_resources.files("babelizer") / "data")
 
     if not quiet:
         out(f"reading template from {template}")

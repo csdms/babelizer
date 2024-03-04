@@ -12,7 +12,7 @@ import os
 import pathlib
 import sys
 
-import pkg_resources
+from babelizer._version import __version__
 
 # -- Path setup --------------------------------------------------------------
 
@@ -28,7 +28,7 @@ master_doc = "index"
 
 project = "babelizer"
 author = "Community Surface Dynamics Modeling System"
-version = pkg_resources.get_distribution("babelizer").version
+version = __version__
 release = version
 this_year = datetime.date.today().year
 copyright = f"{this_year}, {author}"

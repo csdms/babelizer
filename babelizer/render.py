@@ -3,14 +3,19 @@
 import contextlib
 import os
 import pathlib
+import sys
 
 import black as blk
 import git
 import isort
-import pkg_resources
 import tomlkit as toml
 from cookiecutter.exceptions import OutputDirExistsException
 from cookiecutter.main import cookiecutter
+
+if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
+    import importlib.resources as importlib_resources
+else:  # pragma: no cover (<PY312)
+    import importlib_resources
 
 from .errors import OutputDirExistsError, RenderError
 
@@ -42,7 +47,7 @@ def render(plugin_metadata, output, template=None, clobber=False, version="0.1")
         Raised if output directory exists and clobber is not set.
     """
     if template is None:
-        template = pkg_resources.resource_filename("babelizer", "data")
+        template = str(importlib_resources.files("babelizer") / "data")
 
     try:
         path = render_plugin_repo(

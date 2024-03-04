@@ -36,6 +36,7 @@ dependencies = [
     "click",
     "cookiecutter",
     "gitpython",
+    "importlib-resources; python_version < '3.12'",
     "isort>=5",
     "pyyaml",
     "tomlkit",
