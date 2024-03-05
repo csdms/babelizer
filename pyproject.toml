@@ -38,9 +38,10 @@ dependencies = [
     "gitpython",
     "importlib-resources; python_version < '3.12'",
     "isort>=5",
-    "logoizer @ git+https://github.com/mcflugen/logoizer",
+    "logoizer@ git+https://github.com/mcflugen/logoizer",
     "pyyaml",
-    "tomlkit",
+    "tomli-w",
+    "tomli; python_version < '3.11'",
 ]
 dynamic = [
     "readme",

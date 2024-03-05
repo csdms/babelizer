@@ -1,13 +1,18 @@
 """Library metadata used by the babelizer to wrap libraries."""
 
 import pathlib
-import re
+import sys
 import warnings
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 from contextlib import suppress
 
-import tomlkit as toml
+import tomli_w
 import yaml
+
+if sys.version_info >= (3, 11):  # pragma: no cover (PY11+)
+    import tomllib
+else:  # pragma: no cover (<PY311)
+    import tomli as tomllib
 
 from .errors import ScanError, ValidationError
 
@@ -62,7 +67,7 @@ def _norm_os(name):
 class BabelMetadata:
     """Library metadata."""
 
-    LOADERS = {"yaml": yaml.safe_load, "toml": toml.parse}
+    LOADERS = {"yaml": yaml.safe_load, "toml": tomllib.loads}
 
     def __init__(
         self, library=None, build=None, package=None, info=None, plugin=None, ci=None
@@ -129,7 +134,7 @@ class BabelMetadata:
             meta = loader(stream.read())
         except yaml.scanner.ScannerError as error:
             raise ScanError(f"unable to scan yaml-formatted metadata file:\n{error}")
-        except toml.exceptions.ParseError as error:
+        except tomllib.TOMLDecodeError as error:
             raise ScanError(f"unable to scan toml-formatted metadata file:\n{error}")
         else:
             if not isinstance(meta, dict):
@@ -367,7 +372,7 @@ class BabelMetadata:
         str
             Serialized metadata as a TOML-formatted string
         """
-        return toml.dumps(self._meta)
+        return tomli_w.dumps(self._meta, multiline_strings=True)
 
     @staticmethod
     def parse_entry_point(specifier):
