@@ -107,3 +107,7 @@ underlines = "-^\""
 issue_format = "`#{issue} <https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/issues/{issue}>`_"
 title_format = "{version} ({project_date})"
 wrap = true
+
+[tool.zest-releaser]
+tag-format = "v{version}"
+python-file-with-version = "{{ cookiecutter.package_name }}/_version.py"
