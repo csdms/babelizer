@@ -20,7 +20,8 @@ if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
 else:  # pragma: no cover (<PY312)
     import importlib_resources
 
-from .errors import OutputDirExistsError, RenderError
+from .errors import OutputDirExistsError
+from .errors import RenderError
 
 
 def render(plugin_metadata, output, template=None, clobber=False, version="0.1"):

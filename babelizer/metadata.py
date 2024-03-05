@@ -14,7 +14,8 @@ if sys.version_info >= (3, 11):  # pragma: no cover (PY11+)
 else:  # pragma: no cover (<PY311)
     import tomli as tomllib
 
-from .errors import ScanError, ValidationError
+from .errors import ScanError
+from .errors import ValidationError
 
 
 def validate_dict(meta, required=None, optional=None):
