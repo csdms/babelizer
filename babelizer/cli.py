@@ -142,7 +142,7 @@ def update(template, quiet, verbose):
         metadata_path = None
 
     if not metadata_path:
-        err("this does not appear to be a babelized folder (missing 'babel.yaml')")
+        err("this does not appear to be a babelized folder (missing 'babel.toml')")
         raise click.Abort()
 
     template = template or str(importlib_resources.files("babelizer") / "data")
