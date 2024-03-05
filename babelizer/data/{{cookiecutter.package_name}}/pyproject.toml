@@ -1,5 +1,6 @@
 [build-system]
-requires = ["cython", "numpy", "setuptools", "wheel"]
+build-backend = "mesonpy"
+requires = ["cython", "numpy", "meson-python", "wheel"]
 
 [project]
 name = "{{cookiecutter.package_name}}"
@@ -39,6 +40,9 @@ homepage = "https://github.com/{{ cookiecutter.info.github_username }}/{{ cookie
 
 [project.optional-dependencies]
 dev = [
+  "meson",
+  "meson-python",
+  "ninja",
   "nox",
 ]
 docs = [
