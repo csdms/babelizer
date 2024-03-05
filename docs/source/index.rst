@@ -41,6 +41,7 @@ User Guide
    readme
    cli
    example
+   example-fortran
    glossary
 
 

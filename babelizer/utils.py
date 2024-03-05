@@ -1,4 +1,5 @@
 """Utility functions used by the babelizer."""
+
 import pathlib
 import subprocess
 import sys

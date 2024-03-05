@@ -1,4 +1,5 @@
 """Run the heat model in pymt."""
+
 from pymt.models import HeatModel
 
 # Instantiate the component and get its name.

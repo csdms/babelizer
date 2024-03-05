@@ -1,13 +1,20 @@
 """The command line interface to the babelizer."""
+
 import fnmatch
 import os
 import pathlib
+import sys
 import tempfile
 from functools import partial
 
 import click
 import git
-import pkg_resources
+
+if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
+    import importlib.resources as importlib_resources
+else:  # pragma: no cover (<PY312)
+    import importlib_resources
+
 
 from .errors import OutputDirExistsError, ScanError, SetupPyError, ValidationError
 from .metadata import BabelMetadata
@@ -70,7 +77,7 @@ def init(meta, template, quiet, verbose, package_version):
     META is babelizer configuration information, usually saved to a file.
     """
     output = pathlib.Path(".")
-    template = template or pkg_resources.resource_filename("babelizer", "data")
+    template = template or str(importlib_resources.files("babelizer") / "data")
 
     if not quiet:
         out(f"reading template from {template}")
@@ -138,7 +145,7 @@ def update(template, quiet, verbose):
         err("this does not appear to be a babelized folder (missing 'babel.yaml')")
         raise click.Abort()
 
-    template = template or pkg_resources.resource_filename("babelizer", "data")
+    template = template or str(importlib_resources.files("babelizer") / "data")
 
     if not quiet:
         out(f"reading template from {template}")
@@ -332,7 +339,7 @@ def _gather_input(
         "package_author_email": email
         or ask("Babelizing author email", default="csdms@colorado.edu"),
         "package_license": license
-        or ask("License to use for the babelized project", default="MIT"),
+        or ask("License to use for the babelized project", default="MIT License"),
         "summary": summary
         or ask("Brief description of what the library does", default=""),
     }
@@ -359,9 +366,7 @@ def _gather_input(
     }
 
     libraries = {}
-    if (not prompt) or any(
-        [x is not None for x in (name, library, header, entry_point)]
-    ):
+    if (not prompt) or any(x is not None for x in (name, library, header, entry_point)):
         babelized_class = name or ask("Name of babelized class", default="<name>")
         libraries[babelized_class] = {
             "language": language,
@@ -385,11 +390,13 @@ def _gather_input(
             libraries[babelized_class] = {
                 "language": language,
                 "library": ask(f"[{babelized_class}] Name of library to babelize"),
-                "header": ask(
-                    f"[{babelized_class}] Name of header file containing BMI class "
-                )
-                if language != "python"
-                else "__UNUSED__",
+                "header": (
+                    ask(
+                        f"[{babelized_class}] Name of header file containing BMI class "
+                    )
+                    if language != "python"
+                    else "__UNUSED__"
+                ),
                 "entry_point": ask(f"[{babelized_class}] Name of BMI class "),
             }
             if not yes("Add another library?", default=False):

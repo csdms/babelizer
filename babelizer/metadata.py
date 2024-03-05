@@ -1,4 +1,5 @@
 """Library metadata used by the babelizer to wrap libraries."""
+
 import pathlib
 import re
 import warnings
@@ -142,7 +143,9 @@ class BabelMetadata:
             Information about how to set up continuous integration.
         """
         if plugin is not None:
-            warnings.warn("use 'package' instead of 'plugin'", DeprecationWarning)
+            warnings.warn(
+                "use 'package' instead of 'plugin'", DeprecationWarning, stacklevel=2
+            )
             if package is not None:
                 raise ValueError("specify one of 'package' or 'plugin', not both")
             package = plugin
@@ -295,7 +298,9 @@ class BabelMetadata:
                 ),
                 optional={},
             )
-            warnings.warn("use 'package' instead of 'plugin'", DeprecationWarning)
+            warnings.warn(
+                "use 'package' instead of 'plugin'", DeprecationWarning, stacklevel=2
+            )
 
     @staticmethod
     def _handle_old_style_entry_points(library):

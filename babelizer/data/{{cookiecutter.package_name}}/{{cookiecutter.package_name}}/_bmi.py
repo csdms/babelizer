@@ -8,7 +8,12 @@
 from .lib import {{ classes|join(', ') }}
 
 {%- else %}
-import pkg_resources
+import sys
+if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
+    import importlib.resources as importlib_resources
+else:  # pragma: no cover (<PY312)
+    import importlib_resources
+
 
 {% for babelized_class, component in cookiecutter.components|dictsort %}
 
@@ -18,7 +23,7 @@ from {{ component.library }} import {{ component.entry_point }} as {{ babelized_
 
     {%- for cls in classes %}
 {{ cls }}.__name__ = "{{ cls }}"
-{{ cls }}.METADATA = pkg_resources.resource_filename(__name__ , "data/{{ cls }}")
+{{ cls }}.METADATA = str(importlib_resources.files(__name__) / "data/{{ cls }}")
     {%- endfor %}
 
 {%- endif %}
