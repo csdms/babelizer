@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 {% set classes = [] -%}
 {%- for babelized_class in cookiecutter.components -%}
     {% set _ = classes.append(babelized_class) %}

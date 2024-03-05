@@ -1,17 +1,40 @@
-Welcome to {{ cookiecutter.package_name }}'s documentation!
-==========={{ '=' * cookiecutter.package_name | length }}=================
+.. image:: _static/logo-light.svg
+   :align: center
+   :scale: 15%
+   :alt: {{ cookiecutter.package_name }}
+   :target: https://{{ cookiecutter.package_name }}.readthedocs.org/
+   :class: only-light
+
+.. image:: _static/logo-dark.svg
+   :align: center
+   :scale: 15%
+   :alt: {{ cookiecutter.package_name }}
+   :target: https://{{ cookiecutter.package_name }}.readthedocs.org/
+   :class: only-dark
+
+.. include:: ../README.rst
+   :start-after: start-intro
+   :end-before: end-intro
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: User Guide
+   :hidden:
 
-   readme
-   installation
-   modules
-..   usage
+   quickstart
+   usage
+   API <api/{{ cookiecutter.package_name }}>
+   babel
 ..   contributing
 
-Indices and tables
-==================
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. toctree::
+   :maxdepth: 2
+   :caption: Contribute
+   :hidden:
+
+   developer_install
+   environments
+   updating
+   authors
+   changelog
+   license

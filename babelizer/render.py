@@ -165,7 +165,8 @@ def prettify_python(path_to_repo):
 
     files_to_fix = [
         path_to_repo / "setup.py",
-        path_to_repo / module_name / "bmi.py",
+        path_to_repo / "setup_utils.py",
+        path_to_repo / module_name / "_bmi.py",
         path_to_repo / module_name / "__init__.py",
         path_to_repo / "docs" / "conf.py",
     ]
