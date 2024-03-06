@@ -1,73 +1,21 @@
 """Library metadata used by the babelizer to wrap libraries."""
 
 import pathlib
-import re
+import sys
 import warnings
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 from contextlib import suppress
 
-import tomlkit as toml
+import tomli_w
 import yaml
 
-from .errors import ScanError, ValidationError
+if sys.version_info >= (3, 11):  # pragma: no cover (PY11+)
+    import tomllib
+else:  # pragma: no cover (<PY311)
+    import tomli as tomllib
 
-
-def _setup_yaml_with_canonical_dict():
-    """Add a pyyaml handler to create canonical dictionaries.
-
-    From https://stackoverflow.com/a/8661021
-    """
-    yaml.add_representer(
-        OrderedDict,
-        lambda self, data: self.represent_mapping(
-            "tag:yaml.org,2002:map", data.items()
-        ),
-        Dumper=yaml.SafeDumper,
-    )
-
-    def repr_ordered_dict(self, data):
-        return self.represent_mapping("tag:yaml.org,2002:map", data.items())
-
-    yaml.add_representer(dict, repr_ordered_dict, Dumper=yaml.SafeDumper)
-
-    def repr_dict(self, data):
-        return self.represent_mapping(
-            "tag:yaml.org,2002:map", sorted(data.items(), key=lambda t: t[0])
-        )
-
-    yaml.add_representer(dict, repr_dict, Dumper=yaml.SafeDumper)
-
-    # https://stackoverflow.com/a/45004464
-    def repr_str(dumper, data):
-        if "\n" in data:
-            return dumper.represent_scalar("tag:yaml.org,2002:str", data, style="|")
-        return dumper.represent_str(data)
-
-    yaml.add_representer(str, repr_str, Dumper=yaml.SafeDumper)
-
-    def repr_tuple(dumper, data):
-        return dumper.represent_sequence("tag:yaml.org,2002:seq", list(data))
-
-    yaml.add_representer(tuple, repr_tuple, Dumper=yaml.SafeDumper)
-
-    # loader = yaml.SafeLoader
-    yaml.add_implicit_resolver(
-        "tag:yaml.org,2002:float",
-        re.compile(
-            """^(?:
-         [-+]?(?:[0-9][0-9_]*)\\.[0-9_]*(?:[eE][-+]?[0-9]+)?
-        |[-+]?(?:[0-9][0-9_]*)(?:[eE][-+]?[0-9]+)
-        |\\.[0-9_]+(?:[eE][-+][0-9]+)?
-        |[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*
-        |[-+]?\\.(?:inf|Inf|INF)
-        |\\.(?:nan|NaN|NAN))$""",
-            re.X,
-        ),
-        list("-+0123456789."),
-    )
-
-
-_setup_yaml_with_canonical_dict()
+from .errors import ScanError
+from .errors import ValidationError
 
 
 def validate_dict(meta, required=None, optional=None):
@@ -120,7 +68,7 @@ def _norm_os(name):
 class BabelMetadata:
     """Library metadata."""
 
-    LOADERS = {"yaml": yaml.safe_load, "toml": toml.parse}
+    LOADERS = {"yaml": yaml.safe_load, "toml": tomllib.loads}
 
     def __init__(
         self, library=None, build=None, package=None, info=None, plugin=None, ci=None
@@ -163,7 +111,7 @@ class BabelMetadata:
         self._meta = BabelMetadata.norm(config)
 
     @classmethod
-    def from_stream(cls, stream, fmt="yaml"):
+    def from_stream(cls, stream, fmt="toml"):
         """Create an instance of BabelMetadata from a file-like object.
 
         Parameters
@@ -187,7 +135,7 @@ class BabelMetadata:
             meta = loader(stream.read())
         except yaml.scanner.ScannerError as error:
             raise ScanError(f"unable to scan yaml-formatted metadata file:\n{error}")
-        except toml.exceptions.ParseError as error:
+        except tomllib.TOMLDecodeError as error:
             raise ScanError(f"unable to scan toml-formatted metadata file:\n{error}")
         else:
             if not isinstance(meta, dict):
@@ -390,7 +338,7 @@ class BabelMetadata:
             },
         }
 
-    def dump(self, fp, fmt="yaml"):
+    def dump(self, fp, fmt="toml"):
         """Write serialized metadata to a file.
 
         Parameters
@@ -402,7 +350,7 @@ class BabelMetadata:
         """
         print(self.format(fmt=fmt), file=fp)
 
-    def format(self, fmt="yaml"):
+    def format(self, fmt="toml"):
         """Serialize metadata to output format.
 
         Parameters
@@ -417,20 +365,6 @@ class BabelMetadata:
         """
         return getattr(self, f"format_{fmt}")()
 
-    def format_yaml(self):
-        """Serialize metadata as YAML.
-
-        Returns
-        -------
-        str
-            Serialized metadata as a YAML-formatted string
-        """
-        import io
-
-        contents = io.StringIO()
-        yaml.safe_dump(self._meta, contents, default_flow_style=False)
-        return contents.getvalue()
-
     def format_toml(self):
         """Serialize metadata as TOML.
 
@@ -439,7 +373,7 @@ class BabelMetadata:
         str
             Serialized metadata as a TOML-formatted string
         """
-        return toml.dumps(self._meta)
+        return tomli_w.dumps(self._meta, multiline_strings=True)
 
     @staticmethod
     def parse_entry_point(specifier):

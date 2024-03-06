@@ -1,0 +1,3 @@
+
+Removed the ability of the *babelizer* to write its config file in
+*yaml* format. We switched to using *toml* a while ago.

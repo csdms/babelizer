@@ -3,7 +3,8 @@
 import pathlib
 import subprocess
 import sys
-from contextlib import contextmanager, suppress
+from contextlib import contextmanager
+from contextlib import suppress
 
 from .errors import SetupPyError
 
