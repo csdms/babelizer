@@ -38,6 +38,7 @@ srcs = [
 install_pkg_srcs = [
     '{{ cookiecutter.package_name }}/__init__.py',
     '{{ cookiecutter.package_name }}/_bmi.py',
+    '{{ cookiecutter.package_name }}/_version.py',
 ]
 py.install_sources(
     install_pkg_srcs,
