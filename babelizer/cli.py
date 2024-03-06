@@ -15,14 +15,14 @@ if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
 else:  # pragma: no cover (<PY312)
     import importlib_resources
 
-from .errors import OutputDirExistsError
-from .errors import ScanError
-from .errors import SetupPyError
-from .errors import ValidationError
-from .metadata import BabelMetadata
-from .render import render
-from .utils import get_setup_py_version
-from .utils import save_files
+from babelizer.errors import OutputDirExistsError
+from babelizer.errors import ScanError
+from babelizer.errors import SetupPyError
+from babelizer.errors import ValidationError
+from babelizer.metadata import BabelMetadata
+from babelizer.render import render
+from babelizer.utils import get_setup_py_version
+from babelizer.utils import save_files
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)

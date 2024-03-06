@@ -6,7 +6,7 @@ import sys
 from contextlib import contextmanager
 from contextlib import suppress
 
-from .errors import SetupPyError
+from babelizer.errors import SetupPyError
 
 
 def execute(args):
