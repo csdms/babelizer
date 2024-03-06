@@ -8,16 +8,20 @@ import sys
 import black as blk
 import git
 import isort
-import tomlkit as toml
 from cookiecutter.exceptions import OutputDirExistsException
 from cookiecutter.main import cookiecutter
 
+if sys.version_info >= (3, 11):  # pragma: no cover (PY11+)
+    import tomllib
+else:  # pragma: no cover (<PY311)
+    import tomli as tomllib
 if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
     import importlib.resources as importlib_resources
 else:  # pragma: no cover (<PY312)
     import importlib_resources
 
-from .errors import OutputDirExistsError, RenderError
+from .errors import OutputDirExistsError
+from .errors import RenderError
 
 
 def render(plugin_metadata, output, template=None, clobber=False, version="0.1"):
@@ -160,7 +164,7 @@ def prettify_python(path_to_repo):
     """
     path_to_repo = pathlib.Path(path_to_repo)
     with open(path_to_repo / "babel.toml") as fp:
-        meta = toml.parse(fp.read())
+        meta = tomllib.loads(fp.read())
     module_name = meta["package"]["name"]
 
     files_to_fix = [
