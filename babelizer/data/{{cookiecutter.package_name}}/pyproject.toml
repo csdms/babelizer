@@ -58,19 +58,6 @@ testing = [
   "bmi-tester>=0.5.4",
 ]
 
-[tool.setuptools.dynamic]
-readme = {file = ["README.rst", "CREDITS.rst", "CHANGES.rst", "LICENSE.rst"]}
-version = {attr = "{{ cookiecutter.package_name }}._version.__version__"}
-
-[tool.setuptools]
-include-package-data = true
-packages = ["{{ cookiecutter.package_name }}"]
-
-[tool.setuptools.package-data]
-{{ cookiecutter.package_name }} = [
-  "data/*",
-]
-
 [tool.pytest.ini_options]
 minversion = "5.0"
 testpaths = ["{{ cookiecutter.package_name }}", "tests"]
