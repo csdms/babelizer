@@ -20,10 +20,11 @@ incs = include_directories(
     ]
 )
 
+{% set dependency_list = cookiecutter.package_requirements.split(',') -%}
 deps = [
-    fc.find_library('bmif'),
-    fc.find_library('heatf'),
-    fc.find_library('bmiheatf'),
+{%- for dependency in dependency_list %}
+    fc.find_library('{{ dependency }}'),
+{%- endfor %}
 ]
 
 {# This is temporary until I figure out how to do multiple components. #}
