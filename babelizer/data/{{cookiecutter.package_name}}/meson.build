@@ -22,7 +22,7 @@ incs = include_directories(
 
 {% set dependency_list = cookiecutter.package_requirements.split(',') -%}
 deps = [
-{%- for dependency in dependency_list %}
+{%- for dependency in dependency_list if dependency != '' %}
     fc.find_library('{{ dependency }}'),
 {%- endfor %}
 ]
