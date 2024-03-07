@@ -20,15 +20,15 @@ incs = include_directories(
     ]
 )
 
+{% set babelized_class = cookiecutter.components|list|first -%}
+# babelized_class = {{ babelized_class }}
+
 {% set dependency_list = cookiecutter.package_requirements.split(',') -%}
 deps = [
 {%- for dependency in dependency_list if dependency != '' %}
     fc.find_library('{{ dependency }}'),
 {%- endfor %}
 ]
-
-{# This is temporary until I figure out how to do multiple components. #}
-{%- set babelized_class = 'HeatModelF' -%}
 
 srcs = [
     '{{ cookiecutter.package_name }}/lib/bmi_interoperability.f90',
