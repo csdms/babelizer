@@ -1,0 +1,4 @@
+
+Simplified the *babelize generate* command so that it no longer accepts
+any command line options or prompts the user for input. Instead, it
+prints a sample *babelize* config file.
