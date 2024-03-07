@@ -126,6 +126,7 @@ def test_cli(session: nox.Session) -> None:
     session.run("babelize", "init", "--help")
     session.run("babelize", "update", "--help")
     session.run("babelize", "generate", "--help")
+    session.run("babelize", "generate")
 
 
 @nox.session

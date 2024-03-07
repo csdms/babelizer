@@ -1,8 +1,11 @@
 """Test the babelizer command-line interface"""
 
+import tomllib
+
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
+from babelizer.metadata import BabelMetadata
 
 
 def test_help():
@@ -51,6 +54,15 @@ def test_generate_noargs():
     runner = CliRunner()
     result = runner.invoke(babelize, ["generate"])
     assert result.exit_code == 0
+
+
+def test_generate_gives_valid_toml():
+    runner = CliRunner()
+    result = runner.invoke(babelize, ["generate"])
+    assert result.exit_code == 0
+
+    config = tomllib.loads(result.output)
+    BabelMetadata.validate(config)
 
 
 def test_init_noargs():
