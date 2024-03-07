@@ -1,6 +1,11 @@
 """Test the babelizer command-line interface"""
 
-import tomllib
+import sys
+
+if sys.version_info >= (3, 11):  # pragma: no cover (PY11+)
+    import tomllib
+else:  # pragma: no cover (<PY311)
+    import tomli as tomllib
 
 from click.testing import CliRunner
 
