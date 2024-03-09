@@ -3,6 +3,8 @@ project('{{ cookiecutter.package_name }}', '{{ cookiecutter.language }}', 'cytho
 py = import('python').find_installation(pure: false)
 fc = meson.get_compiler('fortran')
 
+bmiheatf = dependency('bmiheatf', method : 'pkg-config')
+
 python_inc = py.get_path('data') / 'include'
 numpy_inc = run_command(
     py,
@@ -25,6 +27,7 @@ incs = include_directories(
 
 {% set dependency_list = cookiecutter.package_requirements.split(',') -%}
 deps = [
+    bmiheatf,
 {%- for dependency in dependency_list if dependency != '' %}
     fc.find_library('{{ dependency }}'),
 {%- endfor %}
