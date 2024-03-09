@@ -15,11 +15,7 @@ extra_compile_args = []
 
 [package]
 name = "pymt_heatf"
-requirements = [
-    "bmif",
-    "heatf",
-    "bmiheatf",
-]
+requirements = []
 
 [info]
 github_username = "pymt-lab"
