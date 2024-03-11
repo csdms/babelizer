@@ -1,6 +1,13 @@
 [build-system]
+{%- if cookiecutter.language == 'python' %}
+build-backend = "setuptools.build_meta"
+requires = [
+    "setuptools >=61",
+]
+{% else %}
 build-backend = "mesonpy"
 requires = ["cython", "numpy", "meson-python", "wheel"]
+{% endif %}
 
 [project]
 name = "{{cookiecutter.package_name}}"
@@ -57,6 +64,12 @@ docs = [
 testing = [
   "bmi-tester>=0.5.4",
 ]
+
+{%- if cookiecutter.language == 'python' %}
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["{{cookiecutter.package_name}}*"]
+{% endif %}
 
 [tool.pytest.ini_options]
 minversion = "5.0"
