@@ -59,10 +59,10 @@ Cflags: -I${{includedir}}
         print(bmiheatf_pc, file=fp)
 
     heatf_pc = f"""\
-_prefix={os.environ.get('CMAKE_PREFIX_PATH', instdir)}
-exec_prefix=${{_prefix}}
+prefix={instdir!s}
+exec_prefix=${{prefix}}
 libdir=${{exec_prefix}}/lib
-includedir=${{_prefix}}/include
+includedir=${{prefix}}/include
 
 Name: heatf
 Description: Heat Fortran
@@ -86,6 +86,7 @@ Cflags: -I${{includedir}}
             session.debug(f"{k}: {v!r}")
 
         with session.chdir(package):
+            session.run("pkg-config", "--list-all")
             session.run("python", "-m", "pip", "install", ".[dev]")
 
     with session.chdir(testdir):
