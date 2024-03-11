@@ -13,10 +13,10 @@ project(
 
 {%- if cookiecutter.language == 'c' %}
 lang = 'c'
-bmilib = 'BmiHeatC'
+bmilib = 'bmiheatc'
 {%- elif cookiecutter.language == 'c++' %}
 lang = 'cpp'
-bmilib = 'BmiHeatCXX'
+bmilib = 'bmiheatcxx'
 {%- elif cookiecutter.language == 'fortran' %}
 lang = 'fortran'
 bmilib = 'bmiheatf'
