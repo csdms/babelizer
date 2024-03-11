@@ -86,14 +86,7 @@ Cflags: -I${{includedir}}
             session.debug(f"{k}: {v!r}")
 
         with session.chdir(package):
-            session.run(
-                "python",
-                "-m",
-                "pip",
-                "install",
-                ".[dev]",
-                env={"PKG_CONFIG_PATH": os.path.join(instdir, "lib", "pkgconfig")},
-            )
+            session.run("python", "-m", "pip", "install", ".[dev]")
 
     with session.chdir(testdir):
         shutil.copy(datadir / config_file, ".")
@@ -134,7 +127,7 @@ def build_examples(session: nox.Session, lang):
     if lang == "python":
         session.install("bmipy")
     else:
-        session.conda_install(f"bmi-{lang}")
+        session.conda_install(f"bmi-{lang}", "pkg-config")
 
     for k, v in sorted(session.env.items()):
         session.debug(f"{k}: {v!r}")
