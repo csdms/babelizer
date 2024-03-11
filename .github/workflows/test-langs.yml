@@ -42,7 +42,7 @@ jobs:
 
       - name: Install compilers
         if: matrix.language != 'python'
-        run: mamba install ${{ matrix.language }}-compiler bmi-${{ matrix.language }} cmake make pkg-config
+        run: mamba install ${{ matrix.language }}-compiler cmake make pkg-config
 
       - name: Run the language tests
         run: nox -s "test-langs-${{ matrix.python-version }}(lang='${{ matrix.language }}')" --python ${{ matrix.python-version }} --verbose
