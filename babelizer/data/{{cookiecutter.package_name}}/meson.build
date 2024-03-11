@@ -1,11 +1,32 @@
-project('{{ cookiecutter.package_name }}', '{{ cookiecutter.language }}', 'cython', version: '{{ cookiecutter.package_version }}')
+project(
+    '{{ cookiecutter.package_name }}',
+{%- if cookiecutter.language == 'c' %}
+    'c',
+{%- elif cookiecutter.language == 'c++' %}
+    'cpp',
+{%- elif cookiecutter.language == 'fortran' %}
+    'fortran',
+{%- endif %}
+    'cython',
+    version: '{{ cookiecutter.package_version }}',
+)
+
+{%- if cookiecutter.language == 'c' %}
+lang = 'c'
+bmilib = 'bmiheatc'
+{%- elif cookiecutter.language == 'c++' %}
+lang = 'cpp'
+bmilib = 'bmiheatcxx'
+{%- elif cookiecutter.language == 'fortran' %}
+lang = 'fortran'
+bmilib = 'bmiheatf'
+{%- endif %}
 
 py = import('python').find_installation(pure: false)
-fc = meson.get_compiler('fortran')
 
-bmiheatf = dependency('bmiheatf', method : 'pkg-config')
+compiler = meson.get_compiler(lang)
 
-python_inc = py.get_path('data') / 'include'
+# python_inc = py.get_path('data') / 'include'
 numpy_inc = run_command(
     py,
     [
@@ -17,7 +38,7 @@ numpy_inc = run_command(
 incs = include_directories(
     [
         '{{ cookiecutter.package_name }}/lib',
-        python_inc,
+        # python_inc,
         numpy_inc,
     ]
 )
@@ -27,14 +48,18 @@ incs = include_directories(
 
 {% set dependency_list = cookiecutter.package_requirements.split(',') -%}
 deps = [
-    bmiheatf,
+{%- if cookiecutter.language in ['c', 'c++', 'fortran'] %}
+    dependency(bmilib, method : 'pkg-config'),
+{% endif %}
 {%- for dependency in dependency_list if dependency != '' %}
-    fc.find_library('{{ dependency }}'),
+    compiler.find_library('{{ dependency }}'),
 {%- endfor %}
 ]
 
 srcs = [
+{%- if cookiecutter.language == 'fortran' %}
     '{{ cookiecutter.package_name }}/lib/bmi_interoperability.f90',
+{%- endif %}
     '{{ cookiecutter.package_name }}/lib/{{ babelized_class|lower }}.pyx',
 ]
 
@@ -69,6 +94,9 @@ py.extension_module(
     include_directories: incs,
     install: true,
     subdir: '{{ cookiecutter.package_name }}/lib',
+{%- if cookiecutter.language == 'c++' %}
+    override_options : ['cython_language=cpp'],
+{%- endif %}
 )
 
 # This is a temporary fix for editable installs.
