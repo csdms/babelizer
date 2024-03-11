@@ -38,9 +38,6 @@ def test_langs(session: nox.session, lang) -> None:
 
     instdir = build_examples(session, lang)
 
-    session.install("bmi-tester>=0.5.4", "ninja")
-    session.conda_install("pip", "cmake", "make", "pkg-config")
-
     session.install(".[testing]")
 
     bmiheatf_pc = f"""\
@@ -52,13 +49,31 @@ includedir=${{prefix}}/include
 Name: bmiheatf
 Description: BMI Heat Fortran
 Version: 1.0.0
-Libs: -L${{libdir}} -lheatf -lbmiheatf
+Requires: heatf
+Libs: -L${{libdir}} -lbmiheatf
 Cflags: -I${{includedir}}
 """
 
     os.makedirs(instdir / "lib" / "pkgconfig", exist_ok=True)
     with open(instdir / "lib" / "pkgconfig" / "bmiheatf.pc", "w") as fp:
         print(bmiheatf_pc, file=fp)
+
+    heatf_pc = f"""\
+_prefix={os.environ.get('CMAKE_PREFIX_PATH', instdir)}
+exec_prefix=${{_prefix}}
+libdir=${{exec_prefix}}/lib
+includedir=${{_prefix}}/include
+
+Name: heatf
+Description: Heat Fortran
+Version: 1.0.0
+Libs: -L${{libdir}} -lheatf
+Cflags: -I${{includedir}}
+"""
+
+    os.makedirs(instdir / "lib" / "pkgconfig", exist_ok=True)
+    with open(instdir / "lib" / "pkgconfig" / "heatf.pc", "w") as fp:
+        print(heatf_pc, file=fp)
 
     with session.chdir(tmpdir):
         session.run(
@@ -107,19 +122,19 @@ def _get_package_metadata(datadir):
     return package, library, config_files[0]
 
 
-@nox.session(name="build-examples", venv_backend="conda")
+@nox.session(name="build-examples", python=PYTHON_VERSIONS, venv_backend="conda")
 @nox.parametrize("lang", ["c", "cxx", "fortran", "python"])
 def build_examples(session: nox.Session, lang):
     """Build the language examples."""
     srcdir = ROOT / "external" / f"bmi-example-{lang}"
     tmpdir = ROOT / pathlib.Path(session.create_tmp())
     builddir = tmpdir / "_build"
-    instdir = tmpdir / "_inst"
+    instdir = pathlib.Path(session.virtualenv.location)
 
     if lang == "python":
-        session.conda_install("bmipy", "make")
+        session.install("bmipy")
     else:
-        session.conda_install(f"bmi-{lang}", "make", "pkg-config")
+        session.conda_install(f"bmi-{lang}")
 
     for k, v in sorted(session.env.items()):
         session.debug(f"{k}: {v!r}")
