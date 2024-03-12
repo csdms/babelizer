@@ -36,7 +36,7 @@ def test_defaults():
 
 def test_generate_help():
     runner = CliRunner()
-    result = runner.invoke(babelize, ["generate", "--help"])
+    result = runner.invoke(babelize, ["sample-config", "--help"])
     assert result.exit_code == 0
     assert "Usage:" in result.output
 
@@ -57,13 +57,13 @@ def test_update_help():
 
 def test_generate_noargs():
     runner = CliRunner()
-    result = runner.invoke(babelize, ["generate"])
+    result = runner.invoke(babelize, ["sample-config"])
     assert result.exit_code == 0
 
 
 def test_generate_gives_valid_toml():
     runner = CliRunner()
-    result = runner.invoke(babelize, ["generate"])
+    result = runner.invoke(babelize, ["sample-config"])
     assert result.exit_code == 0
 
     config = tomllib.loads(result.output)
