@@ -26,8 +26,6 @@ from babelizer.utils import save_files
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
-# ask = partial(click.prompt, show_default=True, err=True)
-yes = partial(click.confirm, show_default=True, err=True)
 
 
 class BabelizerAbort(click.Abort):
@@ -210,7 +208,7 @@ def update(template, quiet, verbose, set_version):
 @babelize.command()
 def sample_config():
     """Generate the babelizer configuration file."""
-    sample_config()
+    print_sample_config()
 
 
 def _get_dir_contents(base, trunk=None):
@@ -293,7 +291,7 @@ os = [
 """
 
 
-def sample_config() -> int:
+def print_sample_config() -> int:
     """Print a sample babelizer configuration file."""
     print(SAMPLE_CONFIG, end="")
     return 0
