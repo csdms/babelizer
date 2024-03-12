@@ -23,9 +23,9 @@ jobs:
         python-version: [{{ cookiecutter.ci.python_version | join(", ") }}]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: conda-incubator/setup-miniconda@v2
+      - uses: conda-incubator/setup-miniconda@v3
         with:
           auto-update-conda: true
           python-version: ${{ '{{' }} matrix.python-version {{ '}}' }}
@@ -39,16 +39,15 @@ jobs:
 
       - name: Install requirements
         run: |
-          conda install mamba
-          mamba install --file=requirements-build.txt --file=requirements-library.txt
-          mamba list
+          conda install --file=requirements-build.txt --file=requirements-library.txt
+          conda list
 
       - name: Build and install package
         run: |
           pip install -e .
 
       - name: Install testing dependencies
-        run: mamba install --file=requirements-testing.txt
+        run: conda install --file=requirements-testing.txt
 
       - name: Test
         run: |
