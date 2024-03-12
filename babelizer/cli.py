@@ -15,19 +15,17 @@ if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
 else:  # pragma: no cover (<PY312)
     import importlib_resources
 
-from .errors import OutputDirExistsError
-from .errors import ScanError
-from .errors import SetupPyError
-from .errors import ValidationError
-from .metadata import BabelMetadata
-from .render import render
-from .utils import get_setup_py_version
-from .utils import save_files
+from babelizer.errors import OutputDirExistsError
+from babelizer.errors import ScanError
+from babelizer.errors import SetupPyError
+from babelizer.errors import ValidationError
+from babelizer.metadata import BabelMetadata
+from babelizer.render import render
+from babelizer.utils import get_setup_py_version
+from babelizer.utils import save_files
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
-# ask = partial(click.prompt, show_default=True, err=True)
-yes = partial(click.confirm, show_default=True, err=True)
 
 
 class BabelizerAbort(click.Abort):
@@ -133,7 +131,10 @@ def init(meta, template, quiet, verbose, package_version):
     default=None,
     help="Location of cookiecutter template",
 )
-def update(template, quiet, verbose):
+@click.option(
+    "--set-version", default=None, help="Set the version of the updated package"
+)
+def update(template, quiet, verbose, set_version):
     """Update an existing babelized project."""
     package_path = pathlib.Path(".").resolve()
 
@@ -159,10 +160,16 @@ def update(template, quiet, verbose):
         raise BabelizerAbort(error)
 
     try:
-        version = get_setup_py_version()
+        version = set_version or get_setup_py_version()
     except SetupPyError as error:
         raise BabelizerAbort(
-            os.linesep.join(["the setup.py of this package has an error:", f"{error}"])
+            os.linesep.join(
+                [
+                    "the setup.py of this package has an error:",
+                    f"{error}"
+                    "unable to get package's version. Try using the '--set-version' option",
+                ]
+            )
         )
 
     out(f"re-rendering {package_path}")
@@ -199,219 +206,9 @@ def update(template, quiet, verbose):
 
 
 @babelize.command()
-@click.option(
-    "--prompt",
-    is_flag=True,
-    help="Prompt the user for values",
-)
-@click.option(
-    "--package",
-    help="Name to use for the babelized package",
-)
-@click.option(
-    "--name",
-    help="Name of the babelized class",
-)
-@click.option(
-    "--email",
-    help="Contact email to use for the babelized package",
-)
-@click.option(
-    "--language",
-    help="Programming language of the library being babelized",
-    type=click.Choice(["c", "c++", "fortran", "python"], case_sensitive=False),
-)
-@click.option("--author", help="Babelizing author")
-@click.option(
-    "--username",
-    help="GitHub username or organization that will host the project",
-)
-@click.option(
-    "--license",
-    help="License to use for the babelized project",
-)
-@click.option(
-    "--summary",
-    help="Brief description of what the library does",
-)
-@click.option("--library", help="Name of the BMI library to wrap", default=None)
-@click.option(
-    "--header", help="Name of the header file declaring the BMI class", default=None
-)
-@click.option(
-    "--entry-point", help="Name of the BMI entry point into the library", default=None
-)
-@click.option("--requirement", help="Required libraries", multiple=True, default=None)
-@click.option("--python-version", help="Supported Python versions", default="3.9")
-@click.option(
-    "--os-name", help="Supported operating systems", default="linux,mac,windows"
-)
-def generate(
-    prompt,
-    package,
-    name,
-    email,
-    language,
-    author,
-    username,
-    license,
-    summary,
-    library,
-    header,
-    entry_point,
-    requirement,
-    python_version,
-    os_name,
-):
+def sample_config():
     """Generate the babelizer configuration file."""
-    meta = _gather_input(
-        prompt=prompt,
-        package=package,
-        name=name,
-        email=email,
-        language=language,
-        author=author,
-        username=username,
-        license=license,
-        summary=summary,
-        library=library,
-        header=header,
-        entry_point=entry_point,
-        requirement=requirement,
-        python_version=python_version,
-        os_name=os_name,
-    )
-
-    print(BabelMetadata(**meta).format(fmt="toml"))
-
-
-def _gather_input(
-    prompt=False,
-    package=None,
-    name=None,
-    email=None,
-    language=None,
-    author=None,
-    username=None,
-    license=None,
-    summary=None,
-    library=None,
-    header=None,
-    entry_point=None,
-    requirement=None,
-    python_version=None,
-    os_name=None,
-):
-    """Gather input either from command-line option, default, or user prompt.
-
-    If a value is not ``None``, that means it was provided on the command
-    line and so its value will be used. Otherwise, depending on
-    the value of ``no_input``, either a default value is used or
-    the user will be prompted for a value.
-    """
-    if prompt:
-        ask = partial(click.prompt, show_default=True, err=True)
-    else:
-
-        def ask(text, default=None, **kwds):
-            return default
-
-    def _split_if_str(val, sep=","):
-        return val.split(sep) if isinstance(val, str) else val
-
-    python_version = _split_if_str(python_version)
-    os_name = _split_if_str(os_name)
-
-    def ask_until_done(text):
-        answers = []
-        while (answer := ask(text, default="done")) != "done":
-            answers.append(answer)
-        return answers
-
-    package = {
-        "name": package or ask("Name to use for the babelized package", default=""),
-        "requirements": requirement or ask_until_done("Requirement"),
-    }
-    info = {
-        "github_username": username
-        or ask(
-            "GitHub username or organization that will host the project",
-            default="pymt-lab",
-        ),
-        "package_author": author or ask("Babelizing author", default="csdms"),
-        "package_author_email": email
-        or ask("Babelizing author email", default="csdms@colorado.edu"),
-        "package_license": license
-        or ask("License to use for the babelized project", default="MIT License"),
-        "summary": summary
-        or ask("Brief description of what the library does", default=""),
-    }
-
-    language = language or ask(
-        "Programming language of the library being babelized",
-        show_choices=["c", "c++", "fortran", "python"],
-        default="c",
-    )
-
-    ci = {
-        "os": os_name
-        or ask_until_done(
-            "Supported operating system",
-            show_choices=["linux", "mac", "windows", "all"],
-            default="all",
-        ),
-        "python_version": python_version
-        or ask_until_done(
-            "Supported python version",
-            show_choices=["3.7", "3.8", "3.9"],
-            default="3.9",
-        ),
-    }
-
-    libraries = {}
-    if (not prompt) or any(x is not None for x in (name, library, header, entry_point)):
-        babelized_class = name or ask("Name of babelized class", default="<name>")
-        libraries[babelized_class] = {
-            "language": language,
-            "library": library
-            or ask(f"[{babelized_class}] Name of library to babelize", default=""),
-            "header": header
-            or (
-                ask(
-                    f"[{babelized_class}] Name of header file containing BMI class ",
-                    default="",
-                )
-                if language != "python"
-                else "__UNUSED__"
-            ),
-            "entry_point": entry_point
-            or ask(f"[{babelized_class}] Name of BMI class ", default=""),
-        }
-    else:
-        while 1:
-            babelized_class = ask("Name of babelized class")
-            libraries[babelized_class] = {
-                "language": language,
-                "library": ask(f"[{babelized_class}] Name of library to babelize"),
-                "header": (
-                    ask(
-                        f"[{babelized_class}] Name of header file containing BMI class "
-                    )
-                    if language != "python"
-                    else "__UNUSED__"
-                ),
-                "entry_point": ask(f"[{babelized_class}] Name of BMI class "),
-            }
-            if not yes("Add another library?", default=False):
-                break
-
-    return {
-        "library": libraries,
-        "package": package,
-        "info": info,
-        "build": {},
-        "ci": ci,
-    }
+    print_sample_config()
 
 
 def _get_dir_contents(base, trunk=None):
@@ -442,6 +239,62 @@ def _generated_files(babel_metadata, template=None, version="0.1"):
             version=version,
         )
         return _get_dir_contents(new_folder, trunk=new_folder)
+
+
+SAMPLE_CONFIG = """\
+# See https://babelizer.readthedocs.io/ for more information
+
+# Describe the library being wrapped.
+[library.Monorail]
+language = "c"
+library = "bmimonorail"
+header = "monorail.h"
+entry_point = "register_monorail"
+
+# Describe compiler options need to build the library being
+# wrapped.
+[build]
+undef_macros = []
+define_macros = []
+libraries = []
+library_dirs = []
+include_dirs = []
+extra_compile_args = []
+
+# Describe the newly wrapped package.
+[package]
+name = "springfield_monorail"
+requirements = ["three_million_dollars"]
+
+[info]
+github_username = "lyle-lanley"
+package_author = "Lyle Lanley"
+package_author_email = "lyle@monorail.com"
+package_license = "MIT License"
+summary = '''
+Well, sir, there's nothing on Earth like a genuine,
+bona fide, electrified, six-car monorail. What'd I say?
+Monorail! What's it called? Monorail! That's right! Monorail!
+'''
+
+[ci]
+python_version = [
+    "3.10",
+    "3.11",
+    "3.12",
+]
+os = [
+    "linux",
+    "mac",
+    "windows",
+]
+"""
+
+
+def print_sample_config() -> int:
+    """Print a sample babelizer configuration file."""
+    print(SAMPLE_CONFIG, end="")
+    return 0
 
 
 if __name__ == "__main__":

@@ -1,0 +1,4 @@
+
+Renamed *babelize generate* to *babelize sample-config* and simplified
+the command so that it no longer accepts command line options or
+prompts the user for input. Instead, it prints a sample *babelize* config file.

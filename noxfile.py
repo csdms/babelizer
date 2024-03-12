@@ -125,7 +125,16 @@ def test_cli(session: nox.Session) -> None:
     session.run("babelize", "--help")
     session.run("babelize", "init", "--help")
     session.run("babelize", "update", "--help")
-    session.run("babelize", "generate", "--help")
+    session.run("babelize", "sample-config", "--help")
+
+    with session.chdir(session.create_tmp()):
+        with open("babel.toml", "w") as fp:
+            session.run("babelize", "sample-config", stdout=fp)
+        new_folder = session.run(
+            "babelize", "init", "babel.toml", "--quiet", silent=True
+        ).strip()
+        with session.chdir(new_folder):
+            session.run("babelize", "update", "--set-version=0.1.1")
 
 
 @nox.session

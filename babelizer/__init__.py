@@ -1,5 +1,5 @@
 """The *babelizer*."""
 
-from ._version import __version__
+from babelizer._version import __version__
 
 __all__ = ["__version__"]

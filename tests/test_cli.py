@@ -1,8 +1,16 @@
 """Test the babelizer command-line interface"""
 
+import sys
+
+if sys.version_info >= (3, 11):  # pragma: no cover (PY11+)
+    import tomllib
+else:  # pragma: no cover (<PY311)
+    import tomli as tomllib
+
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
+from babelizer.metadata import BabelMetadata
 
 
 def test_help():
@@ -28,7 +36,7 @@ def test_defaults():
 
 def test_generate_help():
     runner = CliRunner()
-    result = runner.invoke(babelize, ["generate", "--help"])
+    result = runner.invoke(babelize, ["sample-config", "--help"])
     assert result.exit_code == 0
     assert "Usage:" in result.output
 
@@ -49,8 +57,17 @@ def test_update_help():
 
 def test_generate_noargs():
     runner = CliRunner()
-    result = runner.invoke(babelize, ["generate"])
+    result = runner.invoke(babelize, ["sample-config"])
     assert result.exit_code == 0
+
+
+def test_generate_gives_valid_toml():
+    runner = CliRunner()
+    result = runner.invoke(babelize, ["sample-config"])
+    assert result.exit_code == 0
+
+    config = tomllib.loads(result.output)
+    BabelMetadata.validate(config)
 
 
 def test_init_noargs():
