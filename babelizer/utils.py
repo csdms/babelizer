@@ -1,8 +1,11 @@
 """Utility functions used by the babelizer."""
 
+from __future__ import annotations
+
 import pathlib
 import subprocess
 import sys
+from collections.abc import Iterator
 from contextlib import contextmanager
 from contextlib import suppress
 
@@ -36,7 +39,7 @@ def setup_py(*args):
     return [sys.executable, "setup.py"] + list(args)
 
 
-def get_setup_py_version():
+def get_setup_py_version() -> str | None:
     """Get babelized package version.
 
     Returns
@@ -64,7 +67,7 @@ def get_setup_py_version():
 
 
 @contextmanager
-def save_files(files):
+def save_files(files: Iterator[str]):
     """Generate repository files through a context.
 
     Parameters

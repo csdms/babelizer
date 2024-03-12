@@ -1,13 +1,15 @@
 """Exceptions raised by the *babelizer*."""
 
+from __future__ import annotations
+
 
 class BabelizeError(Exception):
     """An exception that the babelizer can handle and show to the user."""
 
-    def __init__(self, message):
+    def __init__(self, message: str):
         self._message = message
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Render a user-readable error message."""
         return self._message
 
