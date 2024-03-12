@@ -208,7 +208,7 @@ def update(template, quiet, verbose, set_version):
 
 
 @babelize.command()
-def generate():
+def sample_config():
     """Generate the babelizer configuration file."""
     sample_config()
 
