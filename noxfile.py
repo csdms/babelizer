@@ -86,7 +86,6 @@ Cflags: -I${{includedir}}
             session.debug(f"{k}: {v!r}")
 
         with session.chdir(package):
-            session.run("pkg-config", "--list-all")
             session.run("python", "-m", "pip", "install", ".[dev]")
 
     with session.chdir(testdir):
