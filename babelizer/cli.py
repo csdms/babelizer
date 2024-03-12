@@ -133,7 +133,10 @@ def init(meta, template, quiet, verbose, package_version):
     default=None,
     help="Location of cookiecutter template",
 )
-def update(template, quiet, verbose):
+@click.option(
+    "--set-version", default=None, help="Set the version of the updated package"
+)
+def update(template, quiet, verbose, set_version):
     """Update an existing babelized project."""
     package_path = pathlib.Path(".").resolve()
 
@@ -159,10 +162,16 @@ def update(template, quiet, verbose):
         raise BabelizerAbort(error)
 
     try:
-        version = get_setup_py_version()
+        version = set_version or get_setup_py_version()
     except SetupPyError as error:
         raise BabelizerAbort(
-            os.linesep.join(["the setup.py of this package has an error:", f"{error}"])
+            os.linesep.join(
+                [
+                    "the setup.py of this package has an error:",
+                    f"{error}"
+                    "unable to get package's version. Try using the '--set-version' option",
+                ]
+            )
         )
 
     out(f"re-rendering {package_path}")
