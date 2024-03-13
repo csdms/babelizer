@@ -36,7 +36,7 @@ def test_langs(session: nox.session, lang) -> None:
     session.debug(library)
     session.debug(config_file)
 
-    instdir = build_examples(session, lang)
+    build_examples(session, lang)
 
     session.install(".[testing]")
 
