@@ -58,7 +58,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = '{{ cookiecutter.package_name }}'
+project = "{{ cookiecutter.package_name }}"
 copyright = "{% now 'local', '%Y' %}, {{ cookiecutter.info.full_name }}"
 author = "{{ cookiecutter.info.full_name }}"
 
@@ -81,7 +81,7 @@ language = "en"
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns : list[str] = []
+exclude_patterns: list[str] = []
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"

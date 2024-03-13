@@ -20,7 +20,11 @@ def test(session: nox.Session) -> None:
     session.install(".[testing]")
 
 {%- for babelized_class, _ in cookiecutter.components|dictsort %}
-    session.run("bmi-test", "{{ cookiecutter.package_name }}.bmi:{{ babelized_class }}", "-vvv")
+    session.run(
+        "bmi-test",
+        "{{ cookiecutter.package_name }}.bmi:{{ babelized_class }}",
+        "-vvv",
+    )
 {%- endfor %}
 
 
@@ -82,7 +86,6 @@ def build_docs(session: nox.Session) -> None:
             "sphinx-build",
             "-b",
             "html",
-            # "-W",
             "docs",
             "build/html",
         )
