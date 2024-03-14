@@ -2,6 +2,7 @@ import os
 
 
 def render(plugin_metadata) -> str:
+    """Render a .gitignore file."""
     package_name = plugin_metadata.get("package", "name")
 
     languages = {

@@ -2,13 +2,12 @@ from datetime import datetime
 
 
 def render(plugin_metadata) -> str:
+    """Render LICENSE.rst."""
     license_name = plugin_metadata.get("info", "package_license")
     kwds = {
         "full_name": plugin_metadata.get("info", "package_author"),
         "year": datetime.now().year,
-        "project_short_description": plugin_metadata.get(
-            "info", "summary"
-        ),
+        "project_short_description": plugin_metadata.get("info", "summary"),
     }
 
     return LICENSE[license_name].format(**kwds)
