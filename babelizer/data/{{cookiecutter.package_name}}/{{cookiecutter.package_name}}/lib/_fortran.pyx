@@ -526,4 +526,4 @@ cdef class {{ babelized_class }}:
             ok_or_raise(ENOMSG)
 
         return buffer
-{%- endfor %}
+{% endfor -%}

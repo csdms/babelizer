@@ -348,7 +348,7 @@ class BabelMetadata:
         fmt : str, optional
             Format to serialize data.
         """
-        print(self.format(fmt=fmt), file=fp)
+        print(self.format(fmt=fmt), file=fp, end="")
 
     def format(self, fmt="toml"):
         """Serialize metadata to output format.
