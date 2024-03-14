@@ -1,3 +1,4 @@
+# conda requirements needed to build the project
 {%- if cookiecutter.language == 'c' -%}
 bmi-c
 c-compiler
@@ -7,4 +8,4 @@ cxx-compiler
 {%- elif cookiecutter.language == 'fortran' -%}
 bmi-fortran
 fortran-compiler
-{%- endif -%}
+{%- endif %}

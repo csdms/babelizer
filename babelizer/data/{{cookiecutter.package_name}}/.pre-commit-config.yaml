@@ -11,6 +11,8 @@ repos:
     minimum_pre_commit_version: 2.9.2
     require_serial: true
     types_or: [python, pyi]
+    args: ["--extend-exclude=setup_utils.py"]
+    exclude: ^setup_utils.py
   - id: black-jupyter
     name: black-jupyter
     description:
@@ -21,6 +23,7 @@ repos:
     require_serial: true
     types_or: [python, pyi, jupyter]
     additional_dependencies: [".[jupyter]"]
+    exclude: ^setup_utils.py
 
 - repo: https://github.com/pycqa/flake8
   rev: 7.0.0
@@ -42,7 +45,6 @@ repos:
   hooks:
   - id: isort
     files: \.py$
-    exclude: ^babelizer/data
     args: [--force-single-line-imports]
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -57,16 +59,6 @@ repos:
     - id: end-of-file-fixer
     - id: forbid-new-submodules
     - id: trailing-whitespace
-
-- repo: https://github.com/PyCQA/pydocstyle
-  rev: 6.3.0
-  hooks:
-  - id: pydocstyle
-    files: babelizer/.*\.py$
-    args:
-    - --convention=numpy
-    - --add-select=D417
-    additional_dependencies: [".[toml]"]
 
 - repo: https://github.com/pre-commit/mirrors-mypy
   rev: v1.8.0
