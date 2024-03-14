@@ -1,7 +1,7 @@
 import os
 
 
-def render_bmi(plugin_metadata):
+def render(plugin_metadata) -> str:
     """Render _bmi.py."""
     languages = {
         library["language"] for library in plugin_metadata._meta["library"].values()
@@ -15,7 +15,7 @@ def render_bmi(plugin_metadata):
         return _render_bmi_c(plugin_metadata)
 
 
-def _render_bmi_c(plugin_metadata):
+def _render_bmi_c(plugin_metadata) -> str:
     """Render _bmi.py for a non-python library."""
     languages = [
         library["language"] for library in plugin_metadata._meta["library"].values()
@@ -41,7 +41,7 @@ __all__ = [
 """
 
 
-def _render_bmi_py(plugin_metadata):
+def _render_bmi_py(plugin_metadata) -> str:
     """Render _bmi.py for a python library."""
     languages = [
         library["language"] for library in plugin_metadata._meta["library"].values()
@@ -82,51 +82,6 @@ else:  # pragma: no cover (<PY312)
 {os.linesep.join(sorted(imports))}
 
 {os.linesep.join(sorted(rename))}
-
-__all__ = [
-{os.linesep.join(sorted(names))}
-]\
-"""
-
-
-def render_init(plugin_metadata):
-    """Render __init__.py."""
-    package_name = plugin_metadata.get("package", "name")
-
-    imports = [f"from {package_name}._version import __version__"]
-    imports += [
-        f"from {package_name}._bmi import {cls}"
-        for cls in plugin_metadata._meta["library"]
-    ]
-
-    names = [
-        f"    {cls!r},".replace("'", '"') for cls in plugin_metadata._meta["library"]
-    ]
-
-    return f"""\
-{os.linesep.join(sorted(imports))}
-
-__all__ = [
-    "__version__",
-{os.linesep.join(sorted(names))}
-]\
-"""
-
-
-def render_lib_init(plugin_metadata):
-    """Render lib/__init__.py."""
-    package_name = plugin_metadata.get("package", "name")
-    imports = [
-        f"from {package_name}.lib.{cls.lower()} import {cls}"
-        for cls in plugin_metadata._meta["library"]
-    ]
-
-    names = [
-        f"    {cls!r},".replace("'", '"') for cls in plugin_metadata._meta["library"]
-    ]
-
-    return f"""\
-{os.linesep.join(sorted(imports))}
 
 __all__ = [
 {os.linesep.join(sorted(names))}

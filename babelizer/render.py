@@ -26,9 +26,11 @@ if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
 else:  # pragma: no cover (<PY312)
     import importlib_resources
 
-from babelizer._render_file import render_bmi
-from babelizer._render_file import render_init
-from babelizer._render_file import render_lib_init
+from babelizer._files.bmi_py import render as render_bmi
+from babelizer._files.gitignore import render as render_gitignore
+from babelizer._files.init_py import render as render_init
+from babelizer._files.lib_init_py import render as render_lib_init
+from babelizer._files.license_rst import render as render_license
 from babelizer.errors import OutputDirExistsError
 from babelizer.errors import RenderError
 
@@ -76,6 +78,8 @@ def render(
         "_bmi.py": render_bmi(plugin_metadata),
         "__init__.py": render_init(plugin_metadata),
         "lib/__init__.py": render_lib_init(plugin_metadata),
+        ".gitignore": render_gitignore(plugin_metadata),
+        "LICENSE.rst": render_license(plugin_metadata),
     }
 
     try:
