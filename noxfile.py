@@ -120,7 +120,7 @@ def build_examples(session: nox.Session, lang):
 @nox.session(python=PYTHON_VERSIONS)
 def test_cli(session: nox.Session) -> None:
     """Test the command line interface."""
-    session.install("black", "isort")
+    session.install("pre-commit")
     session.install(".")
     session.run("babelize", "--version")
     session.run("babelize", "--help")
@@ -137,17 +137,7 @@ def test_cli(session: nox.Session) -> None:
         with session.chdir(new_folder):
             session.run("babelize", "update", "--set-version=0.1.1")
         with session.chdir(new_folder):
-            session.run(
-                "black",
-                "--check",
-                "--diff",
-                r"--extend-exclude=setup_utils\.py",
-                "--verbose",
-                ".",
-            )
-            session.run(
-                "isort", "--force-single-line-imports", "--check", "--diff", "."
-            )
+            session.run("pre-commit", "run", "--all-files")
 
 
 @nox.session
