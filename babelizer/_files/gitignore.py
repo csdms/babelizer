@@ -8,24 +8,23 @@ def render(plugin_metadata) -> str:
     languages = {
         library["language"] for library in plugin_metadata._meta["library"].values()
     }
-    ignore = [
+    ignore = {
         "*.egg-info/",
         "*.py[cod]",
         ".coverage",
+        ".nox/",
         "__pycache__/",
         "build/",
         "dist/",
-    ]
+    }
 
-    if "fortran" in languages:
-        ignore += [
-            f"{package_name}/lib/bmi_interoperability.mod",
-            f"{package_name}/lib/bmi_interoperability.smod",
-            f"{package_name}/lib/bmi_interoperability.o",
-        ]
-        ignore += [
+    if "python" not in languages:
+        ignore |= {"*.o", "*.so"} | {
             f"{package_name}/lib/{cls.lower()}.c"
             for cls in plugin_metadata._meta["library"]
-        ]
+        }
+
+    if "fortran" in languages:
+        ignore |= {"*.mod", "*.smod"}
 
     return f"{os.linesep.join(sorted(ignore))}"

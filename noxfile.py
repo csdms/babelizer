@@ -23,11 +23,7 @@ def test(session: nox.Session) -> None:
     session.run("pytest", *args)
 
 
-@nox.session(
-    name="test-langs",
-    python=PYTHON_VERSIONS,
-    venv_backend="mamba",
-)
+@nox.session(name="test-langs", python=PYTHON_VERSIONS, venv_backend="conda")
 @nox.parametrize("lang", ["c", "cxx", "fortran", "python"])
 def test_langs(session: nox.session, lang) -> None:
     datadir = ROOT / "external" / "tests" / f"test_{lang}"
@@ -42,7 +38,6 @@ def test_langs(session: nox.session, lang) -> None:
 
     build_examples(session, lang)
 
-    session.conda_install("pip", "bmi-tester>=0.5.4", "cmake")
     session.install(".[testing]")
 
     with session.chdir(tmpdir):
@@ -56,7 +51,7 @@ def test_langs(session: nox.session, lang) -> None:
             session.debug(f"{k}: {v!r}")
 
         with session.chdir(package):
-            session.run("python", "-m", "pip", "install", "-e", ".")
+            session.run("python", "-m", "pip", "install", ".[dev]")
 
     with session.chdir(testdir):
         shutil.copy(datadir / config_file, ".")
@@ -85,17 +80,19 @@ def _get_package_metadata(datadir):
     return package, library, config_files[0]
 
 
-@nox.session(name="build-examples", venv_backend="mamba")
+@nox.session(name="build-examples", python=PYTHON_VERSIONS, venv_backend="conda")
 @nox.parametrize("lang", ["c", "cxx", "fortran", "python"])
 def build_examples(session: nox.Session, lang):
     """Build the language examples."""
     srcdir = ROOT / "external" / f"bmi-example-{lang}"
-    builddir = pathlib.Path(session.create_tmp()) / "_build"
+    tmpdir = ROOT / pathlib.Path(session.create_tmp())
+    builddir = tmpdir / "_build"
+    instdir = pathlib.Path(session.virtualenv.location)
 
     if lang == "python":
-        session.conda_install("bmipy", "make")
+        session.install("bmipy")
     else:
-        session.conda_install(f"bmi-{lang}", "cmake", "make", "pkg-config")
+        session.conda_install(f"bmi-{lang}", "pkg-config")
 
     for k, v in sorted(session.env.items()):
         session.debug(f"{k}: {v!r}")
@@ -111,9 +108,10 @@ def build_examples(session: nox.Session, lang):
                 str(srcdir),
                 "-B",
                 ".",
-                f"-DCMAKE_INSTALL_PREFIX={session.env['CONDA_PREFIX']}",
+                f"-DCMAKE_INSTALL_PREFIX={instdir}",
             )
             session.run("make", "install")
+    return instdir
 
 
 @nox.session(name="test-cli")
