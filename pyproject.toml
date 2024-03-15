@@ -78,6 +78,7 @@ docs = [
     "sphinxcontrib.towncrier",
 ]
 testing = [
+    "bmi-tester>=0.5.9",
     "coverage[toml]",
     "coveralls",
     "pytest",

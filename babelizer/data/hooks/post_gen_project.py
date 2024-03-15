@@ -114,6 +114,10 @@ if __name__ == "__main__":
     if "Not open source" == "{{ cookiecutter.open_source_license }}":
         remove_file("LICENSE")
 
+    {%- if cookiecutter.language == 'python' %}
+    remove_file("meson.build")
+    {%- endif %}
+
     datadir = Path("meta")
     package_datadir = Path("{{ cookiecutter.package_name }}") / "data"
     if not package_datadir.exists():

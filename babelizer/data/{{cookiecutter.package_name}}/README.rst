@@ -65,20 +65,44 @@ Quickstart
 
 .. start-quickstart
 
-To get started you will need to install the *{{ cookiecutter.package_name }}* package, which is currently distributed
-on *conda-forge*. The easiest way to install *{{ cookiecutter.package_name }}* into your current environment using either *mamba* or *conda*.
+To get started you will need to install the *{{ cookiecutter.package_name }}* package.
+Here are two ways to do so.
 
-.. tab:: mamba
+Install from conda-forge
+------------------------
 
-  .. code:: bash
+If the *{{ cookiecutter.package_name }}* package is distributed on *conda-forge*, install it into your current environment with *conda*.
 
-    mamba install {{ cookiecutter.package_name }}
+.. code:: bash
 
-.. tab:: conda
+  conda install -c conda-forge {{ cookiecutter.package_name }}
 
-  .. code:: bash
+Install from source
+-------------------
 
-    conda install {{ cookiecutter.package_name }}
+You can build and install the *{{ cookiecutter.package_name }}* package from source using *conda* and *pip*.
+
+First, from the source directory, install package dependencies into your current environment with *conda*.
+
+.. code:: bash
+
+  conda install -c conda-forge --file requirements.txt --file requirements-build.txt --file requirements-library.txt
+
+Then install the package itself with *pip*.
+{%- if cookiecutter.language == 'python' %}
+
+.. code:: bash
+
+  pip install -e .
+
+{%- else %}
+
+.. code:: bash
+
+  pip install --no-build-isolation --editable .
+
+Note that for an editable install, the ``--no-build-isolation`` flag must be set.
+{%- endif %}
 
 .. end-quickstart
 
@@ -87,8 +111,8 @@ Usage
 
 .. start-usage
 
-There are two ways to use the data components provided by this package: directly through it's Basic
-Model Interface, or as a PyMT plugin.
+There are two ways to use the components provided by this package: directly through its Basic
+Model Interface (BMI), or as a PyMT plugin.
 
 A BMI is provided by each component in this package:
 {%- for babelized_class, component in cookiecutter.components|dictsort -%}
