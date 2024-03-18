@@ -3,11 +3,9 @@ import os
 
 def render(plugin_metadata) -> str:
     """Render a .gitignore file."""
-    package_name = plugin_metadata.get("package", "name")
+    package_name = plugin_metadata["package"]["name"]
 
-    languages = {
-        library["language"] for library in plugin_metadata._meta["library"].values()
-    }
+    languages = {library["language"] for library in plugin_metadata["library"].values()}
     ignore = {
         "*.egg-info/",
         "*.py[cod]",
@@ -20,8 +18,7 @@ def render(plugin_metadata) -> str:
 
     if "python" not in languages:
         ignore |= {"*.o", "*.so"} | {
-            f"{package_name}/lib/{cls.lower()}.c"
-            for cls in plugin_metadata._meta["library"]
+            f"{package_name}/lib/{cls.lower()}.c" for cls in plugin_metadata["library"]
         }
 
     if "fortran" in languages:

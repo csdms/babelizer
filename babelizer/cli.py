@@ -15,6 +15,9 @@ if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
 else:  # pragma: no cover (<PY312)
     import importlib_resources
 
+from babelizer._files.gitignore import render as render_gitignore
+from babelizer._files.license_rst import render as render_license
+from babelizer._files.meson_build import render as render_meson_build
 from babelizer.errors import OutputDirExistsError
 from babelizer.errors import ScanError
 from babelizer.errors import SetupPyError
@@ -209,6 +212,54 @@ def update(template, quiet, verbose, set_version):
 def sample_config():
     """Generate the babelizer configuration file."""
     print_sample_config()
+
+
+@babelize.command()
+def sample_license():
+    """Generate a license file."""
+    context = {
+        "info": {
+            "package_author": "Lyle Lanley",
+            "summary": "A Monorail!",
+            "package_license": "MIT License",
+        }
+    }
+    print(render_license(context))
+
+
+@babelize.command()
+def sample_gitignore():
+    """Generate a .gitignore file."""
+    context = {
+        "package": {"name": "springfield_monorail"},
+        "library": {"monorail": {"language": "c"}},
+    }
+    print(render_gitignore(context))
+
+
+@babelize.command()
+@click.argument("extension", nargs=-1)
+def sample_meson_build(extension):
+    """Generate a meson.build file."""
+    if len(extension) == 0:
+        contents = render_meson_build(
+            [
+                "springfield_monorail/lib/monorail.pyx",
+                "springfield_monorail/lib/rail.pyx",
+            ],
+            install=[
+                "springfield_monorail/__init__.py",
+                "springfield_monorail/_bmi.py",
+                "springfield_monorail/_version.py",
+                "springfield_monorail/lib/__init__.py",
+                "springfield_monorail/lib/monorail.pyx",
+                "springfield_monorail/lib/rail.pyx",
+            ],
+        )
+    else:
+        contents = render_meson_build(extension)
+
+    print(contents)
 
 
 def _get_dir_contents(base, trunk=None):
