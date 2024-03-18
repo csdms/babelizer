@@ -66,17 +66,6 @@ repos:
     - id: forbid-new-submodules
     - id: trailing-whitespace
 
-- repo: https://github.com/PyCQA/pydocstyle
-  rev: 6.3.0
-  hooks:
-  - id: pydocstyle
-    files: babelizer/.*\.py$
-    args:
-    - --convention=numpy
-    - --add-select=D417
-    exclude: ^babelizer/data
-    additional_dependencies: [".[toml]"]
-
 - repo: https://github.com/pre-commit/mirrors-mypy
   rev: v1.8.0
   hooks:
