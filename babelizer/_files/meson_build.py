@@ -48,7 +48,7 @@ numpy_inc = run_command(
 # )
 
 # This is a temporary fix for editable installs.
-# run_command('cp', '-r', 'data/', 'build')
+# run_command('cp', '-r', 'data/', 'build')\
 """
     contents = [before]
     if files_to_install:
@@ -83,7 +83,7 @@ py.install_sources(
 
 def _render_extension_module(path: str) -> str:
     root, ext = os.path.splitext(path)
-    assert ext == ".pyx"
+    assert ext == ".pyx", f"{path} does not appear to be a cython file"
 
     module_name = root.replace(os.path.sep, ".")
 
