@@ -94,7 +94,7 @@ Read all about them in the `Basic Model Interface`_ documentation.
 Requirements
 ------------
 
-The *babelizer* requires Python >=3.9.
+The *babelizer* requires Python >=3.10.
 
 
 Apart from Python, the *babelizer* has a number of other requirements, all of which
@@ -396,23 +396,13 @@ called *hydrotrend*.
     python_version = ["3.7", "3.8", "3.9"]
     os = ["linux", "mac", "windows"]
 
-You can use the ``babelize generate`` command to generate *babel.toml* files.
-For example the above *babel.toml* can be generated with the following,
+You can use the ``babelize sample-config`` command to generate
+a sample *babel.toml* file to get you started. For example,
+the above *babel.toml* can be generated with the following,
 
 .. code:: bash
 
-    $ babelize generate \
-	  --package=pymt_hydrotrend \
-	  --summary="PyMT plugin for hydrotrend" \
-	  --language=c \
-	  --library=bmi_hydrotrend \
-	  --header=bmi_hydrotrend.h \
-	  --entry-point=register_bmi_hydrotrend \
-	  --name=Hydrotrend \
-	  --requirement=hydrotrend \
-    --os-name=linux,mac,windows \
-    --python-version=3.7,3.8,3.9 > babel.toml
-
+    babelize sample-config
 
 Use
 ---
@@ -422,13 +412,13 @@ sending output to the current directory
 
 .. code:: bash
 
-  $ babelize init babel.toml
+    babelize init babel.toml
 
 Update an existing repository
 
 .. code:: bash
 
-  $ babelize update
+  babelize update
 
 For a complete example of using the *babelizer*
 to wrap a C library exposing a BMI,
