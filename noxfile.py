@@ -124,10 +124,11 @@ def test_cli(session: nox.Session) -> None:
     session.run("babelize", "--help")
     session.run("babelize", "init", "--help")
     session.run("babelize", "update", "--help")
+    session.run("babelize", "sample-config")
+    session.run("babelize", "sample-gitignore")
     session.run("babelize", "sample-license")
     session.run("babelize", "sample-meson-build")
-    session.run("babelize", "sample-gitignore")
-    session.run("babelize", "sample-config")
+    session.run("babelize", "sample-readme")
 
     with session.chdir(session.create_tmp()):
         with open("babel.toml", "w") as fp:

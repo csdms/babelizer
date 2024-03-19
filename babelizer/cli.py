@@ -3,21 +3,17 @@
 import fnmatch
 import os
 import pathlib
-import sys
 import tempfile
 from functools import partial
 
 import click
 import git
 
-if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
-    import importlib.resources as importlib_resources
-else:  # pragma: no cover (<PY312)
-    import importlib_resources
-
+from babelizer._datadir import get_datadir
 from babelizer._files.gitignore import render as render_gitignore
 from babelizer._files.license_rst import render as render_license
 from babelizer._files.meson_build import render as render_meson_build
+from babelizer._files.readme import render as render_readme
 from babelizer.errors import OutputDirExistsError
 from babelizer.errors import ScanError
 from babelizer.errors import SetupPyError
@@ -81,7 +77,7 @@ def init(meta, template, quiet, verbose, package_version):
     META is babelizer configuration information, usually saved to a file.
     """
     output = pathlib.Path(".")
-    template = template or str(importlib_resources.files("babelizer") / "data")
+    template = template or get_datadir()
 
     if not quiet:
         out(f"reading template from {template}")
@@ -152,7 +148,7 @@ def update(template, quiet, verbose, set_version):
         err("this does not appear to be a babelized folder (missing 'babel.toml')")
         raise click.Abort()
 
-    template = template or str(importlib_resources.files("babelizer") / "data")
+    template = template or get_datadir()
 
     if not quiet:
         out(f"reading template from {template}")
@@ -260,6 +256,28 @@ def sample_meson_build(extension):
         contents = render_meson_build(extension)
 
     print(contents)
+
+
+@babelize.command()
+def sample_readme():
+    context = {
+        "cookiecutter": {
+            "language": "python",
+            "open_source_license": "MIT License",
+            "package_name": "springfield_monorail",
+            "info": {
+                "github_username": "lyle-lanley",
+                "package_author": "Lyle Lanley",
+                "summary": "A Monorail!",
+                "package_license": "MIT License",
+            },
+            "components": {
+                "Monorail": {"library": "monorail"},
+                "Rail": {"library": "rail"},
+            },
+        }
+    }
+    print(render_readme(context))
 
 
 def _get_dir_contents(base, trunk=None):
