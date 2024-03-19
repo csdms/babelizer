@@ -32,12 +32,11 @@ classifiers = [
     "Topic :: Software Development :: Code Generators",
 ]
 dependencies = [
-    "black",
     "click",
     "cookiecutter",
     "gitpython",
     "importlib-resources; python_version < '3.12'",
-    "isort>=5",
+    "jinja2",
     "logoizer@ git+https://github.com/mcflugen/logoizer",
     "pyyaml",
     "tomli-w",
@@ -66,6 +65,10 @@ dev = [
     "nox",
     "pre-commit",
     "towncrier",
+]
+format = [
+    "black",
+    "isort>=5",
 ]
 docs = [
     "furo",

@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import errno
+import os
 import re
 from collections import defaultdict
 from pathlib import Path
@@ -63,7 +64,8 @@ def split_file(filepath, include_preamble=False):
         with open(folderpath / name, "w") as fp:
             if include_preamble:
                 fp.write("".join(preamble))
-            fp.write("".join(contents))
+            print("".join(contents).strip(), file=fp)
+            # fp.write("".join(contents).strip())
 
     return set(files)
 
@@ -72,24 +74,36 @@ def write_api_yaml(folderpath, **kwds):
     make_folder(folderpath)
 
     api_yaml = PROJECT_DIRECTORY / folderpath / "api.yaml"
-    contents = """
+    contents = """\
 name: {package_name}
 language: {language}
 package: {package_name}
 class: {plugin_class}
-""".format(**kwds).strip()
+""".format(**kwds)
     with open(api_yaml, "w") as fp:
         fp.write(contents)
 
     return api_yaml
 
 
+def remove_trailing_whitespace(path):
+    with open(path) as fp:
+        lines = [line.rstrip() for line in fp]
+    with open(path, "w") as fp:
+        print(os.linesep.join(lines), file=fp)
+
+
 if __name__ == "__main__":
     keep = set()
 
-    make_folder(PROJECT_DIRECTORY / "docs" / "_static")
-    logoize("{{ cookiecutter.package_name }}", PROJECT_DIRECTORY / "docs" / "_static" / "logo-light.svg", light=True)
-    logoize("{{ cookiecutter.package_name }}", PROJECT_DIRECTORY / "docs" / "_static" / "logo-dark.svg", light=False)
+    static_dir = PROJECT_DIRECTORY / "docs" / "_static"
+    make_folder(static_dir)
+
+    logoize("{{ cookiecutter.package_name }}", static_dir / "logo-light.svg", light=True)
+    logoize("{{ cookiecutter.package_name }}", static_dir / "logo-dark.svg", light=False)
+
+    remove_trailing_whitespace(static_dir / "logo-dark.svg")
+    remove_trailing_whitespace(static_dir / "logo-light.svg")
 
     {%- if cookiecutter.language == 'c' %}
 

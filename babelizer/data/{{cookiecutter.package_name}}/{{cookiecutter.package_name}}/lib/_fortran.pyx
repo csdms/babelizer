@@ -1,10 +1,11 @@
 # cython: language_level=3
 import ctypes
-from libc.stdlib cimport malloc, free
 
 cimport numpy as np
-import numpy as np
+from libc.stdlib cimport free
+from libc.stdlib cimport malloc
 
+import numpy as np
 
 SIZEOF_FLOAT = 8 * ctypes.sizeof(ctypes.c_float)
 SIZEOF_DOUBLE = 8 * ctypes.sizeof(ctypes.c_double)
@@ -525,4 +526,4 @@ cdef class {{ babelized_class }}:
             ok_or_raise(ENOMSG)
 
         return buffer
-{%- endfor %}
+{% endfor -%}

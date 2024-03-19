@@ -118,12 +118,17 @@ def build_examples(session: nox.Session, lang):
 @nox.session(python=PYTHON_VERSIONS)
 def test_cli(session: nox.Session) -> None:
     """Test the command line interface."""
+    session.install("pre-commit")
     session.install(".")
     session.run("babelize", "--version")
     session.run("babelize", "--help")
     session.run("babelize", "init", "--help")
     session.run("babelize", "update", "--help")
-    session.run("babelize", "sample-config", "--help")
+    session.run("babelize", "sample-config")
+    session.run("babelize", "sample-gitignore")
+    session.run("babelize", "sample-license")
+    session.run("babelize", "sample-meson-build")
+    session.run("babelize", "sample-readme")
 
     with session.chdir(session.create_tmp()):
         with open("babel.toml", "w") as fp:
@@ -133,6 +138,8 @@ def test_cli(session: nox.Session) -> None:
         ).strip()
         with session.chdir(new_folder):
             session.run("babelize", "update", "--set-version=0.1.1")
+        with session.chdir(new_folder):
+            session.run("pre-commit", "run", "--all-files")
 
 
 @nox.session

@@ -1,13 +1,14 @@
 # cython: c_string_type=str, c_string_encoding=ascii
 
 import ctypes
+
+cimport numpy as np
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 
-cimport numpy as np
 import numpy as np
-
 {%- for babelized_class, component in cookiecutter.components|dictsort %}
+
 # start: {{ babelized_class|lower }}.pyx
 
 cdef extern from "{{ component.header }}":

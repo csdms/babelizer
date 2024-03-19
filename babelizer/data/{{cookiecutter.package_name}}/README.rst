@@ -49,7 +49,7 @@ Python and the Python Modeling Toolkit, PyMT.
       .. code-block:: pycon
 
         >>> from pymt.models import {{ babelized_class }}
-  {% endfor %}
+  {%- endfor %}
 
 .. end-intro
 

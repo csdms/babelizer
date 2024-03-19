@@ -5,11 +5,17 @@ import os
 import pathlib
 import sys
 
-import black as blk
 import git
-import isort
 from cookiecutter.exceptions import OutputDirExistsException
 from cookiecutter.main import cookiecutter
+
+try:
+    import black as blk
+    import isort
+except ModuleNotFoundError:
+    MAKE_PRETTY = False
+else:
+    MAKE_PRETTY = True
 
 if sys.version_info >= (3, 11):  # pragma: no cover (PY11+)
     import tomllib
@@ -20,11 +26,23 @@ if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
 else:  # pragma: no cover (<PY312)
     import importlib_resources
 
+from babelizer._files.bmi_py import render as render_bmi
+from babelizer._files.gitignore import render as render_gitignore
+from babelizer._files.init_py import render as render_init
+from babelizer._files.lib_init_py import render as render_lib_init
+from babelizer._files.license_rst import render as render_license
 from babelizer.errors import OutputDirExistsError
 from babelizer.errors import RenderError
 
 
-def render(plugin_metadata, output, template=None, clobber=False, version="0.1"):
+def render(
+    plugin_metadata,
+    output,
+    template=None,
+    clobber=False,
+    version="0.1",
+    make_pretty=False,
+):
     """Generate a babelized library.
 
     Parameters
@@ -39,6 +57,8 @@ def render(plugin_metadata, output, template=None, clobber=False, version="0.1")
         If a like-named repository already exists, overwrite it.
     version : str, optional
         Version of babelized library.
+    make_pretty : bool, optional
+        If black and isort are available, run them over the generated project.
 
     Returns
     -------
@@ -53,12 +73,19 @@ def render(plugin_metadata, output, template=None, clobber=False, version="0.1")
     if template is None:
         template = str(importlib_resources.files("babelizer") / "data")
 
+    context = plugin_metadata.as_cookiecutter_context()
+    context["files"] = {
+        "_bmi.py": render_bmi(plugin_metadata),
+        "__init__.py": render_init(plugin_metadata),
+        "lib/__init__.py": render_lib_init(plugin_metadata),
+        ".gitignore": render_gitignore(plugin_metadata),
+        "LICENSE.rst": render_license(plugin_metadata),
+    }
+
     try:
         path = render_plugin_repo(
             template,
-            context=dict(
-                plugin_metadata.as_cookiecutter_context(), package_version=version
-            ),
+            context=dict(context, package_version=version),
             output_dir=output,
             clobber=clobber,
         )
@@ -68,7 +95,8 @@ def render(plugin_metadata, output, template=None, clobber=False, version="0.1")
     with open(path / "babel.toml", "w") as fp:
         plugin_metadata.dump(fp, fmt="toml")
 
-    prettify_python(path)
+    if make_pretty and MAKE_PRETTY:
+        prettify_python(path)
 
     return path.resolve()
 

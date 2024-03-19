@@ -1,11 +1,12 @@
 # cython: c_string_type=str, c_string_encoding=ascii
 
 import ctypes
-from libc.stdlib cimport malloc, free
 
 cimport numpy as np
-import numpy as np
+from libc.stdlib cimport free
+from libc.stdlib cimport malloc
 
+import numpy as np
 
 SIZEOF_FLOAT = 8 * ctypes.sizeof(ctypes.c_float)
 SIZEOF_DOUBLE = 8 * ctypes.sizeof(ctypes.c_double)

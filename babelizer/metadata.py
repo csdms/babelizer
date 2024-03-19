@@ -4,6 +4,8 @@ import pathlib
 import sys
 import warnings
 from collections import defaultdict
+from collections.abc import Generator
+from collections.abc import Mapping
 from contextlib import suppress
 
 import tomli_w
@@ -65,7 +67,7 @@ def _norm_os(name):
     return name
 
 
-class BabelMetadata:
+class BabelMetadata(Mapping):
     """Library metadata."""
 
     LOADERS = {"yaml": yaml.safe_load, "toml": tomllib.loads}
@@ -109,6 +111,15 @@ class BabelMetadata:
         BabelMetadata.validate(config)
 
         self._meta = BabelMetadata.norm(config)
+
+    def __getitem__(self, key: str) -> str:
+        return self._meta[key]
+
+    def __iter__(self) -> Generator[str, None, None]:
+        yield from self._meta
+
+    def __len__(self) -> int:
+        return len(self._meta)
 
     @classmethod
     def from_stream(cls, stream, fmt="toml"):
@@ -348,7 +359,7 @@ class BabelMetadata:
         fmt : str, optional
             Format to serialize data.
         """
-        print(self.format(fmt=fmt), file=fp)
+        print(self.format(fmt=fmt), file=fp, end="")
 
     def format(self, fmt="toml"):
         """Serialize metadata to output format.

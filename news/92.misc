@@ -1,0 +1,3 @@
+
+Removed *black* and *isort* as dependencies of the *babelizer*.
+instead, *babelize* generates properly formatted code itself.
