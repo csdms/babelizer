@@ -148,6 +148,14 @@ skip = [
     "babelizer/data",
 ]
 
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = [
