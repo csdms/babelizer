@@ -71,4 +71,5 @@ repos:
   hooks:
   - id: mypy
     additional_dependencies: [types-all]
+    files: babelizer/.*\.py$
     exclude: ^babelizer/data

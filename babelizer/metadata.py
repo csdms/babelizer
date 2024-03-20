@@ -1,12 +1,18 @@
 """Library metadata used by the babelizer to wrap libraries."""
 
+from __future__ import annotations
+
+import io
 import pathlib
 import sys
 import warnings
 from collections import defaultdict
+from collections.abc import Callable
 from collections.abc import Generator
+from collections.abc import Iterable
 from collections.abc import Mapping
 from contextlib import suppress
+from typing import Any
 
 import tomli_w
 import yaml
@@ -20,7 +26,11 @@ from babelizer.errors import ScanError
 from babelizer.errors import ValidationError
 
 
-def validate_dict(meta, required=None, optional=None):
+def validate_dict(
+    meta: dict[str, Any],
+    required: Iterable[str] | None = None,
+    optional: Iterable[str] | None = None,
+) -> None:
     """Validate babelizer configuration metadata.
 
     Parameters
@@ -57,7 +67,7 @@ def validate_dict(meta, required=None, optional=None):
         )
 
 
-def _norm_os(name):
+def _norm_os(name: str) -> str:
     if name == "linux":
         name = "ubuntu"
     elif name == "mac":
@@ -67,13 +77,22 @@ def _norm_os(name):
     return name
 
 
-class BabelMetadata(Mapping):
+class BabelMetadata(Mapping[str, Any]):
     """Library metadata."""
 
-    LOADERS = {"yaml": yaml.safe_load, "toml": tomllib.loads}
+    LOADERS: dict[str, Callable[[str], dict[str, Any]]] = {
+        "yaml": yaml.safe_load,
+        "toml": tomllib.loads,
+    }
 
     def __init__(
-        self, library=None, build=None, package=None, info=None, plugin=None, ci=None
+        self,
+        library: dict[str, Any] | None = None,
+        build: dict[str, Any] | None = None,
+        package: dict[str, Any] | None = None,
+        info: dict[str, Any] | None = None,
+        plugin: dict[str, Any] | None = None,
+        ci: dict[str, Any] | None = None,
     ):
         """Metadata used by the babelizer to wrap a library.
 
@@ -122,7 +141,7 @@ class BabelMetadata(Mapping):
         return len(self._meta)
 
     @classmethod
-    def from_stream(cls, stream, fmt="toml"):
+    def from_stream(cls, stream: io.TextIOBase, fmt: str = "toml") -> BabelMetadata:
         """Create an instance of BabelMetadata from a file-like object.
 
         Parameters
@@ -154,7 +173,7 @@ class BabelMetadata(Mapping):
         return cls(**meta)
 
     @classmethod
-    def from_path(cls, filepath):
+    def from_path(cls, filepath: str) -> BabelMetadata:
         """Create an instance of BabelMetadata from a path-like object.
 
         Parameters
@@ -171,25 +190,8 @@ class BabelMetadata(Mapping):
         with open(filepath) as fp:
             return BabelMetadata.from_stream(fp, fmt=path.suffix[1:])
 
-    def get(self, section, value):
-        """Get a metadata value from the given section.
-
-        Parameters
-        ----------
-        section : str
-            Section name.
-        value : str
-            Key name.
-
-        Returns
-        -------
-        value
-            Metadata value.
-        """
-        return self._meta[section][value]
-
     @staticmethod
-    def validate(config):
+    def validate(config: dict[str, Any]) -> None:
         """Ensure babelizer configuration metadata are valid.
 
         Parameters
@@ -262,8 +264,8 @@ class BabelMetadata(Mapping):
             )
 
     @staticmethod
-    def _handle_old_style_entry_points(library):
-        def _header_ext(language):
+    def _handle_old_style_entry_points(library: dict[str, Any]) -> dict[str, Any]:
+        def _header_ext(language: str) -> str:
             try:
                 return {"c": ".h", "c++": ".hxx"}[language]
             except KeyError:
@@ -275,20 +277,20 @@ class BabelMetadata(Mapping):
 
         libraries = {}
         for entry_point in entry_points:
-            babelized_class, library, class_name = BabelMetadata.parse_entry_point(
+            babelized_class, library_name, class_name = BabelMetadata.parse_entry_point(
                 entry_point
             )
             libraries[babelized_class] = {
                 "language": language,
-                "library": library,
-                "header": library + _header_ext(language),
+                "library": library_name,
+                "header": library_name + _header_ext(language),
                 "entry_point": class_name,
             }
 
         return libraries
 
     @staticmethod
-    def _handle_old_style_info(info):
+    def _handle_old_style_info(info: dict[str, Any]) -> dict[str, Any]:
         return {
             "package_author": info["plugin_author"],
             "package_author_email": info["plugin_author_email"],
@@ -298,7 +300,7 @@ class BabelMetadata(Mapping):
         }
 
     @staticmethod
-    def norm(config):
+    def norm(config: dict[str, Any]) -> dict[str, Any]:
         """Ensure current style metadata are used in babelizer configuration.
 
         Parameters
@@ -311,7 +313,7 @@ class BabelMetadata(Mapping):
         dict
             A dict of babelizer configuration metadata.
         """
-        build = defaultdict(list)
+        build: dict[str, list[str]] = defaultdict(list)
         with suppress(KeyError):
             build.update(config["build"])
 
@@ -349,7 +351,7 @@ class BabelMetadata(Mapping):
             },
         }
 
-    def dump(self, fp, fmt="toml"):
+    def dump(self, fp: io.TextIOBase, fmt: str = "toml") -> None:
         """Write serialized metadata to a file.
 
         Parameters
@@ -361,7 +363,7 @@ class BabelMetadata(Mapping):
         """
         print(self.format(fmt=fmt), file=fp, end="")
 
-    def format(self, fmt="toml"):
+    def format(self, fmt: str = "toml") -> str:
         """Serialize metadata to output format.
 
         Parameters
@@ -376,7 +378,7 @@ class BabelMetadata(Mapping):
         """
         return getattr(self, f"format_{fmt}")()
 
-    def format_toml(self):
+    def format_toml(self) -> str:
         """Serialize metadata as TOML.
 
         Returns
@@ -387,7 +389,7 @@ class BabelMetadata(Mapping):
         return tomli_w.dumps(self._meta, multiline_strings=True)
 
     @staticmethod
-    def parse_entry_point(specifier):
+    def parse_entry_point(specifier: str) -> tuple[str, str, str]:
         """Parse an entry point specifier into its parts.
 
         Parameters
@@ -413,7 +415,7 @@ class BabelMetadata(Mapping):
 
         >>> BabelMetadata.parse_entry_point("bar:Baz")
         Traceback (most recent call last):
-        ,,,
+        ...
         babelizer.errors.ValidationError: bad entry point specifier (bar:Baz). specifier must be of the form name=module:class
         """
         try:
@@ -426,7 +428,7 @@ class BabelMetadata(Mapping):
 
         return name, module, obj
 
-    def as_cookiecutter_context(self):
+    def as_cookiecutter_context(self) -> dict[str, Any]:
         """Format metadata in cookiecutter context.
 
         Returns

@@ -1,7 +1,11 @@
+from __future__ import annotations
+
+from collections.abc import Mapping
 from datetime import datetime
+from typing import Any
 
 
-def render(plugin_metadata) -> str:
+def render(plugin_metadata: Mapping[str, Any]) -> str:
     """Render LICENSE.rst."""
     license_name = plugin_metadata["info"]["package_license"]
     kwds = {

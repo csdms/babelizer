@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 import os
+from collections.abc import Mapping
+from typing import Any
 
 
-def render(plugin_metadata) -> str:
+def render(plugin_metadata: Mapping[str, Any]) -> str:
     """Render a .gitignore file."""
     package_name = plugin_metadata["package"]["name"]
 
