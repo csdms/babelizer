@@ -2,12 +2,15 @@
 
 import contextlib
 import os
-import pathlib
 import sys
+from collections.abc import Generator
+from typing import Any
 
 import git
 from cookiecutter.exceptions import OutputDirExistsException
 from cookiecutter.main import cookiecutter
+
+from babelizer.metadata import BabelMetadata
 
 try:
     import black as blk
@@ -21,11 +24,8 @@ if sys.version_info >= (3, 11):  # pragma: no cover (PY11+)
     import tomllib
 else:  # pragma: no cover (<PY311)
     import tomli as tomllib
-if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
-    import importlib.resources as importlib_resources
-else:  # pragma: no cover (<PY312)
-    import importlib_resources
 
+from babelizer._datadir import get_datadir
 from babelizer._files.bmi_py import render as render_bmi
 from babelizer._files.gitignore import render as render_gitignore
 from babelizer._files.init_py import render as render_init
@@ -36,13 +36,13 @@ from babelizer.errors import RenderError
 
 
 def render(
-    plugin_metadata,
-    output,
-    template=None,
-    clobber=False,
-    version="0.1",
-    make_pretty=False,
-):
+    plugin_metadata: BabelMetadata,
+    output: str,
+    template: str | None = None,
+    clobber: bool = False,
+    version: str = "0.1",
+    make_pretty: bool = False,
+) -> str:
     """Generate a babelized library.
 
     Parameters
@@ -71,7 +71,7 @@ def render(
         Raised if output directory exists and clobber is not set.
     """
     if template is None:
-        template = str(importlib_resources.files("babelizer") / "data")
+        template = get_datadir()
 
     context = plugin_metadata.as_cookiecutter_context()
     context["files"] = {
@@ -92,16 +92,21 @@ def render(
     except OutputDirExistsException as err:
         raise OutputDirExistsError(", ".join(err.args))
 
-    with open(path / "babel.toml", "w") as fp:
+    with open(os.path.join(path, "babel.toml"), "w") as fp:
         plugin_metadata.dump(fp, fmt="toml")
 
     if make_pretty and MAKE_PRETTY:
         prettify_python(path)
 
-    return path.resolve()
+    return os.path.realpath(path)
 
 
-def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
+def render_plugin_repo(
+    template: str,
+    context: dict[str, Any] | None = None,
+    output_dir: str = ".",
+    clobber: bool = False,
+) -> str:
     """Render a repository for a pymt plugin.
 
     Parameters
@@ -120,7 +125,6 @@ def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
     path
         Absolute path to the newly-created repository.
     """
-    output_dir = pathlib.Path(output_dir)
     context = context or {}
 
     try:
@@ -138,8 +142,8 @@ def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
 
     # path = os.path.join(output_dir, "{}".format(context["package_name"]))
     # if not os.path.isdir(path):
-    path = output_dir / f"{name}"
-    if not path.is_dir():
+    path = os.path.join(output_dir, name)
+    if not os.path.isdir(path):
         raise RenderError(f"error creating {path}")
 
     git.Repo.init(path)
@@ -148,7 +152,7 @@ def render_plugin_repo(template, context=None, output_dir=".", clobber=False):
 
 
 @contextlib.contextmanager
-def as_cwd(path):
+def as_cwd(path: str) -> Generator[None, None, None]:
     """Change directory context.
 
     Parameters
@@ -162,7 +166,7 @@ def as_cwd(path):
     os.chdir(prev_cwd)
 
 
-def blacken_file(filepath):
+def blacken_file(filepath: str) -> None:
     """Format a Python file with ``black``.
 
     Parameters
@@ -182,7 +186,7 @@ def blacken_file(filepath):
             fp.write(new_contents)
 
 
-def prettify_python(path_to_repo):
+def prettify_python(path_to_repo: str) -> None:
     """Format files in babelized project with ``black``.
 
     Parameters
@@ -190,15 +194,14 @@ def prettify_python(path_to_repo):
     path_to_repo : str
         Path-like object to babelized project.
     """
-    path_to_repo = pathlib.Path(path_to_repo)
-    with open(path_to_repo / "babel.toml") as fp:
+    with open(os.path.join(path_to_repo, "babel.toml")) as fp:
         meta = tomllib.loads(fp.read())
     module_name = meta["package"]["name"]
 
     files_to_fix = [
-        path_to_repo / module_name / "_bmi.py",
-        path_to_repo / module_name / "__init__.py",
-        path_to_repo / "docs" / "conf.py",
+        os.path.join(path_to_repo, module_name, "_bmi.py"),
+        os.path.join(path_to_repo, module_name, "__init__.py"),
+        os.path.join(path_to_repo, "docs", "conf.py"),
     ]
 
     config = isort.Config(quiet=True)

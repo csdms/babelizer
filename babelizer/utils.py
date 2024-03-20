@@ -5,14 +5,16 @@ from __future__ import annotations
 import pathlib
 import subprocess
 import sys
-from collections.abc import Iterator
+from collections.abc import Generator
+from collections.abc import Iterable
+from collections.abc import Sequence
 from contextlib import contextmanager
 from contextlib import suppress
 
 from babelizer.errors import SetupPyError
 
 
-def execute(args):
+def execute(args: Sequence[str]) -> subprocess.CompletedProcess[bytes]:
     """Run a command through the ``subprocess`` module.
 
     Parameters
@@ -28,7 +30,7 @@ def execute(args):
     return subprocess.run(args, capture_output=True, check=True)
 
 
-def setup_py(*args):
+def setup_py(*args: str) -> list[str]:
     """Format the command to build/install the babelized package.
 
     Returns
@@ -67,7 +69,7 @@ def get_setup_py_version() -> str | None:
 
 
 @contextmanager
-def save_files(files: Iterator[str]):
+def save_files(files: Iterable[str]) -> Generator[dict[str, str], None, None]:
     """Generate repository files through a context.
 
     Parameters

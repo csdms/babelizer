@@ -60,7 +60,7 @@ numpy_inc = run_command(
     return (2 * os.linesep).join(contents)
 
 
-def _render_install_block(install: Iterable[str]):
+def _render_install_block(install: Iterable[str]) -> str:
     install_sources = defaultdict(list)
     for root, fname in (os.path.split(src) for src in install):
         install_sources[root].append(fname)

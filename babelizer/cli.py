@@ -1,10 +1,15 @@
 """The command line interface to the babelizer."""
 
+from __future__ import annotations
+
 import fnmatch
+import io
 import os
 import pathlib
 import tempfile
+from collections.abc import Collection
 from functools import partial
+from typing import cast
 
 import click
 import git
@@ -30,8 +35,8 @@ err = partial(click.secho, fg="red", err=True)
 class BabelizerAbort(click.Abort):
     """Exception raised when a user interrupts the babelizer."""
 
-    def __init__(self, message):
-        err(str(message))
+    def __init__(self, message: str):
+        err(message)
 
 
 @click.group()
@@ -42,7 +47,7 @@ class BabelizerAbort(click.Abort):
     type=click.Path(exists=True, file_okay=False, dir_okay=True, readable=True),
     help="Change to directory, then execute.",
 )
-def babelize(cd):
+def babelize(cd: str) -> None:
     """Wrap BMI libraries with Python bindings."""
     os.chdir(cd)
 
@@ -71,12 +76,14 @@ def babelize(cd):
     help="The initial version of the babelized package",
 )
 @click.argument("meta", type=click.File(mode="r"))
-def init(meta, template, quiet, verbose, package_version):
+def init(
+    meta: click.File, template: str, quiet: bool, verbose: bool, package_version: str
+) -> None:
     """Initialize a repository with babelized project files.
 
     META is babelizer configuration information, usually saved to a file.
     """
-    output = pathlib.Path(".")
+    output = "."
     template = template or get_datadir()
 
     if not quiet:
@@ -84,9 +91,9 @@ def init(meta, template, quiet, verbose, package_version):
 
     fmt = pathlib.Path(meta.name).suffix[1:] or "toml"
     try:
-        babel_metadata = BabelMetadata.from_stream(meta, fmt=fmt)
+        babel_metadata = BabelMetadata.from_stream(cast(io.TextIOBase, meta), fmt=fmt)
     except (ScanError, ValidationError) as error:
-        raise BabelizerAbort(error)
+        raise BabelizerAbort(str(error))
 
     try:
         new_folder = render(
@@ -97,13 +104,12 @@ def init(meta, template, quiet, verbose, package_version):
             version=package_version,
         )
     except (ValidationError, OutputDirExistsError) as error:
-        raise BabelizerAbort(error)
+        raise BabelizerAbort(str(error))
 
     if not quiet:
         out(
-            "Don't forget to drop model metadata files into {}".format(
-                new_folder / "meta"
-            )
+            "Don't forget to drop model metadata files into"
+            f" {os.path.join(new_folder, 'meta')}"
         )
     repo = git.Repo(new_folder)
     repo.git.add("--all")
@@ -133,13 +139,17 @@ def init(meta, template, quiet, verbose, package_version):
 @click.option(
     "--set-version", default=None, help="Set the version of the updated package"
 )
-def update(template, quiet, verbose, set_version):
+def update(
+    template: str | None, quiet: bool, verbose: bool, set_version: str | None
+) -> None:
     """Update an existing babelized project."""
-    package_path = pathlib.Path(".").resolve()
 
+    package_path = os.path.realpath(".")
     for fname in ("babel.toml", "babel.yaml", "plugin.yaml"):
-        if (package_path / fname).is_file():
-            metadata_path = package_path / fname
+        # if (package_path / fname).is_file():
+        #     metadata_path = package_path / fname
+        if os.path.isfile(os.path.join(package_path, fname)):
+            metadata_path = os.path.join(package_path, fname)
             break
     else:
         metadata_path = None
@@ -156,7 +166,7 @@ def update(template, quiet, verbose, set_version):
     try:
         babel_metadata = BabelMetadata.from_path(metadata_path)
     except ValidationError as error:
-        raise BabelizerAbort(error)
+        raise BabelizerAbort(str(error))
 
     try:
         version = set_version or get_setup_py_version()
@@ -170,12 +180,14 @@ def update(template, quiet, verbose, set_version):
                 ]
             )
         )
+    version = "0.1.0" if version is None else version
 
     out(f"re-rendering {package_path}")
     with save_files(["CHANGES.rst", "CREDITS.rst"]):
         render(
             babel_metadata,
-            package_path.parent,
+            os.path.dirname(package_path),
+            # package_path.parent,
             template=template,
             clobber=True,
             version=version,
@@ -196,22 +208,21 @@ def update(template, quiet, verbose, set_version):
 
     if not quiet:
         out(
-            "Don't forget to drop model metadata files into {}".format(
-                package_path / "meta"
-            )
+            "Don't forget to drop model metadata files into"
+            f" {os.path.join(package_path, 'meta')}"
         )
 
     print(package_path)
 
 
 @babelize.command()
-def sample_config():
+def sample_config() -> None:
     """Generate the babelizer configuration file."""
     print_sample_config()
 
 
 @babelize.command()
-def sample_license():
+def sample_license() -> None:
     """Generate a license file."""
     context = {
         "info": {
@@ -224,7 +235,7 @@ def sample_license():
 
 
 @babelize.command()
-def sample_gitignore():
+def sample_gitignore() -> None:
     """Generate a .gitignore file."""
     context = {
         "package": {"name": "springfield_monorail"},
@@ -235,7 +246,7 @@ def sample_gitignore():
 
 @babelize.command()
 @click.argument("extension", nargs=-1)
-def sample_meson_build(extension):
+def sample_meson_build(extension: Collection[str]) -> None:
     """Generate a meson.build file."""
     if len(extension) == 0:
         contents = render_meson_build(
@@ -259,7 +270,7 @@ def sample_meson_build(extension):
 
 
 @babelize.command()
-def sample_readme():
+def sample_readme() -> None:
     context = {
         "cookiecutter": {
             "language": "python",
@@ -280,26 +291,27 @@ def sample_readme():
     print(render_readme(context))
 
 
-def _get_dir_contents(base, trunk=None):
-    base = pathlib.Path(base)
+def _get_dir_contents(base: str, trunk: str | None = None) -> set[str]:
     files = set()
-    for item in base.iterdir():
-        if item.is_dir():
+    for item in os.listdir(base):
+        if os.path.isdir(item):
             files |= _get_dir_contents(item, trunk=trunk)
         else:
-            files.add(str(item.relative_to(trunk)))
+            files.add(os.path.relpath(item, start=trunk))
 
     return files
 
 
-def _repo_contents(base):
-    repo = git.Repo(str(base))
+def _repo_contents(base: str) -> set[str]:
+    repo = git.Repo(base)
     return set(
         repo.git.ls_tree("--full-tree", "-r", "--name-only", "HEAD").splitlines()
     )
 
 
-def _generated_files(babel_metadata, template=None, version="0.1"):
+def _generated_files(
+    babel_metadata: BabelMetadata, template: str | None = None, version: str = "0.1"
+) -> set[str]:
     with tempfile.TemporaryDirectory() as tmpdir:
         new_folder = render(
             babel_metadata,

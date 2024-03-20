@@ -1,11 +1,11 @@
 import os
+from collections.abc import Mapping
+from typing import Any
 
 
-def render(plugin_metadata) -> str:
+def render(plugin_metadata: Mapping[str, Any]) -> str:
     """Render _bmi.py."""
-    languages = {
-        library["language"] for library in plugin_metadata._meta["library"].values()
-    }
+    languages = {library["language"] for library in plugin_metadata["library"].values()}
     assert len(languages) == 1
     language = languages.pop()
 
@@ -15,22 +15,18 @@ def render(plugin_metadata) -> str:
         return _render_bmi_c(plugin_metadata)
 
 
-def _render_bmi_c(plugin_metadata) -> str:
+def _render_bmi_c(plugin_metadata: Mapping[str, Any]) -> str:
     """Render _bmi.py for a non-python library."""
-    languages = [
-        library["language"] for library in plugin_metadata._meta["library"].values()
-    ]
+    languages = [library["language"] for library in plugin_metadata["library"].values()]
     language = languages[0]
     assert language in ("c", "c++", "fortran")
 
     imports = [
-        f"from {plugin_metadata.get('package', 'name')}.lib import {cls}"
-        for cls in plugin_metadata._meta["library"]
+        f"from {plugin_metadata['package']['name']}.lib import {cls}"
+        for cls in plugin_metadata["library"]
     ]
 
-    names = [
-        f"    {cls!r},".replace("'", '"') for cls in plugin_metadata._meta["library"]
-    ]
+    names = [f"    {cls!r},".replace("'", '"') for cls in plugin_metadata["library"]]
 
     return f"""\
 {os.linesep.join(sorted(imports))}
@@ -41,11 +37,9 @@ __all__ = [
 """
 
 
-def _render_bmi_py(plugin_metadata) -> str:
+def _render_bmi_py(plugin_metadata: Mapping[str, Any]) -> str:
     """Render _bmi.py for a python library."""
-    languages = [
-        library["language"] for library in plugin_metadata._meta["library"].values()
-    ]
+    languages = [library["language"] for library in plugin_metadata["library"].values()]
     language = languages[0]
     assert language == "python"
 
@@ -60,7 +54,7 @@ else:  # pragma: no cover (<PY312)
 
     imports = [
         f"from {component['library']} import {component['entry_point']} as {cls}"
-        for cls, component in plugin_metadata._meta["library"].items()
+        for cls, component in plugin_metadata["library"].items()
     ]
 
     rename = [
@@ -70,12 +64,10 @@ else:  # pragma: no cover (<PY312)
 """.replace(
             "'", '"'
         )
-        for cls in plugin_metadata._meta["library"]
+        for cls in plugin_metadata["library"]
     ]
 
-    names = [
-        f"    {cls!r},".replace("'", '"') for cls in plugin_metadata._meta["library"]
-    ]
+    names = [f"    {cls!r},".replace("'", '"') for cls in plugin_metadata["library"]]
 
     return f"""\
 {header}

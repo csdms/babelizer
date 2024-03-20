@@ -1,17 +1,17 @@
 import os
+from collections.abc import Mapping
+from typing import Any
 
 
-def render(plugin_metadata) -> str:
+def render(plugin_metadata: Mapping[str, Any]) -> str:
     """Render lib/__init__.py."""
-    package_name = plugin_metadata.get("package", "name")
+    package_name = plugin_metadata["package"]["name"]
     imports = [
         f"from {package_name}.lib.{cls.lower()} import {cls}"
-        for cls in plugin_metadata._meta["library"]
+        for cls in plugin_metadata["library"]
     ]
 
-    names = [
-        f"    {cls!r},".replace("'", '"') for cls in plugin_metadata._meta["library"]
-    ]
+    names = [f"    {cls!r},".replace("'", '"') for cls in plugin_metadata["library"]]
 
     return f"""\
 {os.linesep.join(sorted(imports))}
