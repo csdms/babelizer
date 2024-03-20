@@ -1,4 +1,5 @@
 """Render a new babelized project."""
+from __future__ import annotations
 
 import contextlib
 import os
