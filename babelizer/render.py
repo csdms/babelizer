@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-import contextlib
+import datetime
 import os
 import sys
-from collections.abc import Generator
 from typing import Any
 
 import git
@@ -38,6 +37,51 @@ from babelizer.errors import RenderError
 
 
 def render(
+    plugin_metadata: BabelMetadata,
+    output: str,
+    template: str | None = None,
+    clobber: bool = False,
+    version: str = "0.1",
+    make_pretty: bool = False,
+) -> str:
+    from babelizer._cookiecutter import cookiecutter
+
+    if template is None:
+        template = get_datadir()
+
+    context = {
+        "cookiecutter": {
+            "files": {
+                "_bmi.py": render_bmi(plugin_metadata),
+                "__init__.py": render_init(plugin_metadata),
+                "lib/__init__.py": render_lib_init(plugin_metadata),
+                ".gitignore": render_gitignore(plugin_metadata),
+                "LICENSE.rst": render_license(plugin_metadata),
+            },
+            "now": datetime.datetime.now(),
+        }
+        | plugin_metadata.as_cookiecutter_context()
+    }
+
+    cookiecutter(
+        template,
+        extra_context=context,
+        output_dir=output,
+        no_input=True,
+        overwrite_if_exists=clobber,
+    )
+
+    path = os.path.realpath(output)
+
+    with open(os.path.join(path, "babel.toml"), "w") as fp:
+        plugin_metadata.dump(fp, fmt="toml")
+
+    git.Repo.init(path)
+
+    return path
+
+
+def render_with_cookiecutter(
     plugin_metadata: BabelMetadata,
     output: str,
     template: str | None = None,
@@ -151,21 +195,6 @@ def render_plugin_repo(
     git.Repo.init(path)
 
     return path
-
-
-@contextlib.contextmanager
-def as_cwd(path: str) -> Generator[None, None, None]:
-    """Change directory context.
-
-    Parameters
-    ----------
-    path : str
-        Path-like object to a directory.
-    """
-    prev_cwd = os.getcwd()
-    os.chdir(path)
-    yield
-    os.chdir(prev_cwd)
 
 
 def blacken_file(filepath: str) -> None:
