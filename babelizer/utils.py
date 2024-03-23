@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import pathlib
 import subprocess
 import sys
@@ -90,3 +91,18 @@ def save_files(files: Iterable[str]) -> Generator[dict[str, str], None, None]:
     for file_ in contents:
         with open(file_, "w") as fp:
             fp.write(contents[file_])
+
+
+@contextmanager
+def as_cwd(path: str) -> Generator[None, None, None]:
+    """Change directory context.
+
+    Parameters
+    ----------
+    path : str
+        Path-like object to a directory.
+    """
+    prev_cwd = os.getcwd()
+    os.chdir(path)
+    yield
+    os.chdir(prev_cwd)
