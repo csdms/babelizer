@@ -83,8 +83,7 @@ def init(
 
     META is babelizer configuration information, usually saved to a file.
     """
-    output = "."
-    template = template or get_datadir()
+    template = template or os.path.join(get_datadir(), "{{cookiecutter.package_name}}")
 
     if not quiet:
         out(f"reading template from {template}")
@@ -94,6 +93,8 @@ def init(
         babel_metadata = BabelMetadata.from_stream(cast(io.TextIOBase, meta), fmt=fmt)
     except (ScanError, ValidationError) as error:
         raise BabelizerAbort(str(error))
+
+    output = babel_metadata["package"]["name"]
 
     try:
         new_folder = render(
@@ -111,6 +112,7 @@ def init(
             "Don't forget to drop model metadata files into"
             f" {os.path.join(new_folder, 'meta')}"
         )
+
     repo = git.Repo(new_folder)
     repo.git.add("--all")
     repo.index.commit("Initial commit")
