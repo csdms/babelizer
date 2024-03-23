@@ -131,7 +131,7 @@ class BabelMetadata(Mapping[str, Any]):
 
         self._meta = BabelMetadata.norm(config)
 
-    def __getitem__(self, key: str) -> str:
+    def __getitem__(self, key: str) -> dict[str, Any]:
         return self._meta[key]
 
     def __iter__(self) -> Generator[str, None, None]:
