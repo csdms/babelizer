@@ -125,6 +125,8 @@ def test_cli(session: nox.Session) -> None:
     session.run("babelize", "init", "--help")
     session.run("babelize", "update", "--help")
     session.run("babelize", "sample-config")
+    for language in ("c", "cxx", "fortran"):
+        session.run("babelize", "sample-cython", f"--language={language}")
     session.run("babelize", "sample-gitignore")
     session.run("babelize", "sample-license")
     session.run("babelize", "sample-meson-build")
