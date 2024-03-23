@@ -59,7 +59,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "{{ cookiecutter.package_name }}"
-copyright = "{% now 'local', '%Y' %}, {{ cookiecutter.info.full_name }}"
+copyright = "{{ cookiecutter.now|datetimeformat('%Y') }}, {{ cookiecutter.info.full_name }}"
 author = "{{ cookiecutter.info.full_name }}"
 
 # The version info for the project you're documenting, acts as replacement
