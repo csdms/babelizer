@@ -15,6 +15,7 @@ import click
 import git
 
 from babelizer._datadir import get_datadir
+from babelizer._files.cython import render as render_cython
 from babelizer._files.gitignore import render as render_gitignore
 from babelizer._files.license_rst import render as render_license
 from babelizer._files.meson_build import render as render_meson_build
@@ -111,6 +112,7 @@ def init(
             "Don't forget to drop model metadata files into"
             f" {os.path.join(new_folder, 'meta')}"
         )
+
     repo = git.Repo(new_folder)
     repo.git.add("--all")
     repo.index.commit("Initial commit")
@@ -289,6 +291,27 @@ def sample_readme() -> None:
         }
     }
     print(render_readme(context))
+
+
+@babelize.command()
+@click.option(
+    "--language",
+    default="c",
+    type=click.Choice(["c", "cxx", "fortran"], case_sensitive=False),
+)
+def sample_cython(language: str) -> None:
+    context = {
+        "cookiecutter": {
+            "components": {
+                "Monorail": {
+                    "language": language,
+                    "header": "monorail.h",
+                    "entry_point": "new_monorail",
+                },
+            },
+        }
+    }
+    print(render_cython(context))
 
 
 def _get_dir_contents(base: str, trunk: str | None = None) -> set[str]:
