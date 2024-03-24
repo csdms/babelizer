@@ -39,11 +39,15 @@ def cookiecutter(
             target_path = os.path.join(target_dir, render_path(filename, extra_context))
 
             with open(target_path, "w") as fp:
-                fp.write(
-                    env.get_template(os.path.join(rel_path, filename)).render(
-                        **extra_context
-                    )
-                )
+                print(os.path.join(rel_path, filename))
+                _template = env.get_template(os.path.join(rel_path, filename))
+                fp.write(_template.render(**extra_context))
+
+                # fp.write(
+                #     env.get_template(os.path.join(rel_path, filename)).render(
+                #         **extra_context
+                #     )
+                # )
 
     with as_cwd(output_dir):
         run(extra_context)
