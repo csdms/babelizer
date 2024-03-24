@@ -59,6 +59,7 @@ def render(
                 "LICENSE.rst": render_license(plugin_metadata),
             },
             "now": datetime.datetime.now(),
+            "package_version": version,
         }
         | plugin_metadata.as_cookiecutter_context()
     }
