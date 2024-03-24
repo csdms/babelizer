@@ -39,19 +39,21 @@ def cookiecutter(
             target_path = os.path.join(target_dir, render_path(filename, extra_context))
 
             with open(target_path, "w") as fp:
-                print(os.path.join(rel_path, filename))
-                _template = env.get_template(os.path.join(rel_path, filename))
-                fp.write(_template.render(**extra_context))
-
-                # fp.write(
-                #     env.get_template(os.path.join(rel_path, filename)).render(
-                #         **extra_context
-                #     )
-                # )
+                fp.write(
+                    env.get_template(os.path.join(rel_path, filename)).render(
+                        **extra_context
+                    )
+                )
 
     with as_cwd(output_dir):
         run(extra_context)
 
 
 def render_path(path: str, context: dict[str, Any]) -> str:
-    return Template(path).render(**context)
+    rendered_path = Template(path).render(**context)
+
+    root, ext = os.path.splitext(rendered_path)
+    if ext == ".jinja":
+        rendered_path = root
+
+    return rendered_path
