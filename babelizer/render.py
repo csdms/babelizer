@@ -50,19 +50,16 @@ def render(
         template = get_datadir()
 
     context = {
-        "cookiecutter": {
-            "files": {
-                "_bmi.py": render_bmi(plugin_metadata),
-                "__init__.py": render_init(plugin_metadata),
-                "lib/__init__.py": render_lib_init(plugin_metadata),
-                ".gitignore": render_gitignore(plugin_metadata),
-                "LICENSE.rst": render_license(plugin_metadata),
-            },
-            "now": datetime.datetime.now(),
-            "package_version": version,
-        }
-        | plugin_metadata.as_cookiecutter_context()
-    }
+        "files": {
+            "_bmi.py": render_bmi(plugin_metadata),
+            "__init__.py": render_init(plugin_metadata),
+            "lib/__init__.py": render_lib_init(plugin_metadata),
+            ".gitignore": render_gitignore(plugin_metadata),
+            "LICENSE.rst": render_license(plugin_metadata),
+        },
+        "now": datetime.datetime.now(),
+        "package_version": version,
+    } | {k: plugin_metadata[k] for k in plugin_metadata}
 
     cookiecutter(
         template,

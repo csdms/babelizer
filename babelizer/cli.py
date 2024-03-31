@@ -68,7 +68,7 @@ def babelize(cd: str) -> None:
 @click.option(
     "--template",
     default=None,
-    help="Location of cookiecutter template",
+    help="Location of templates",
 )
 @click.option(
     "--package-version",
@@ -136,7 +136,7 @@ def init(
 @click.option(
     "--template",
     default=None,
-    help="Location of cookiecutter template",
+    help="Location of templates",
 )
 @click.option(
     "--set-version", default=None, help="Set the version of the updated package"
@@ -274,21 +274,19 @@ def sample_meson_build(extension: Collection[str]) -> None:
 @babelize.command()
 def sample_readme() -> None:
     context = {
-        "cookiecutter": {
-            "language": "python",
-            "open_source_license": "MIT License",
-            "package_name": "springfield_monorail",
-            "info": {
-                "github_username": "lyle-lanley",
-                "package_author": "Lyle Lanley",
-                "summary": "A Monorail!",
-                "package_license": "MIT License",
-            },
-            "components": {
-                "Monorail": {"library": "monorail"},
-                "Rail": {"library": "rail"},
-            },
-        }
+        "language": "python",
+        "open_source_license": "MIT License",
+        "package_name": "springfield_monorail",
+        "info": {
+            "github_username": "lyle-lanley",
+            "package_author": "Lyle Lanley",
+            "summary": "A Monorail!",
+            "package_license": "MIT License",
+        },
+        "components": {
+            "Monorail": {"library": "monorail"},
+            "Rail": {"library": "rail"},
+        },
     }
     print(render_readme(context))
 

@@ -330,8 +330,12 @@ class BabelMetadata(Mapping[str, Any]):
         if "all" in config["ci"]["os"]:
             config["ci"] = ["linux", "mac", "windows"]
 
+        languages = [lib["language"] for lib in config["library"].values()]
+        language = languages[0]
+
         return {
             "library": libraries,
+            "components": config["library"],
             "build": {
                 "undef_macros": build["undef_macros"],
                 "define_macros": build["define_macros"],
@@ -349,6 +353,10 @@ class BabelMetadata(Mapping[str, Any]):
                 "python_version": sorted(config["ci"]["python_version"]),
                 "os": sorted(config["ci"]["os"]),
             },
+            "package_name": config["package"]["name"],
+            "package_requirements": ",".join(config["package"]["requirements"]),
+            "language": language,
+            "open_source_license": config["info"]["package_license"],
         }
 
     def dump(self, fp: io.TextIOBase, fmt: str = "toml") -> None:

@@ -10,6 +10,6 @@ from babelizer._datadir import get_datadir
 
 def render(context: dict[str, Any]) -> str:
     env = Environment(loader=FileSystemLoader(get_datadir()))
-    template = env.get_template("{{cookiecutter.package_name}}/README.rst")
+    template = env.get_template("templates/README.rst")
 
     return template.render(**context)
