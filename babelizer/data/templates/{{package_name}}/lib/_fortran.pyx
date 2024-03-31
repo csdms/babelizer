@@ -123,7 +123,7 @@ cpdef to_string(bytes):
     except AttributeError:
         return bytes
 
-{%- for babelized_class in cookiecutter.components %}
+{%- for babelized_class in components %}
 
 # start: {{ babelized_class|lower }}.pyx
 

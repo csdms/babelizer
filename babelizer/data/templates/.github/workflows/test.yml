@@ -19,8 +19,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [{{ cookiecutter.ci.os | join(", ") }}]
-        python-version: [{{ cookiecutter.ci.python_version | join(", ") }}]
+        os: [{{ ci.os | join(", ") }}]
+        python-version: [{{ ci.python_version | join(", ") }}]
 
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +51,7 @@ jobs:
 
       - name: Test
         run: |
-          python -c 'import {{ cookiecutter.package_name }}'
-          {%- for babelized_class in cookiecutter.components %}
-          bmi-test {{ cookiecutter.package_name }}.bmi:{{ babelized_class }} -vvv
+          python -c 'import {{ package_name }}'
+          {%- for babelized_class in components %}
+          bmi-test {{ package_name }}.bmi:{{ babelized_class }} -vvv
           {%- endfor %}

@@ -1,1 +1,1 @@
-{{cookiecutter.files['LICENSE.rst']}}
+{{ files['LICENSE.rst'] }}

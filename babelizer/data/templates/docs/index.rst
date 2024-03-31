@@ -1,15 +1,15 @@
 .. image:: _static/logo-light.svg
    :align: center
    :scale: 15%
-   :alt: {{ cookiecutter.package_name }}
-   :target: https://{{ cookiecutter.package_name }}.readthedocs.org/
+   :alt: {{ package_name }}
+   :target: https://{{ package_name }}.readthedocs.org/
    :class: only-light
 
 .. image:: _static/logo-dark.svg
    :align: center
    :scale: 15%
-   :alt: {{ cookiecutter.package_name }}
-   :target: https://{{ cookiecutter.package_name }}.readthedocs.org/
+   :alt: {{ package_name }}
+   :target: https://{{ package_name }}.readthedocs.org/
    :class: only-dark
 
 .. include:: ../README.rst
@@ -23,7 +23,7 @@
 
    quickstart
    usage
-   API <api/{{ cookiecutter.package_name }}>
+   API <api/{{ package_name }}>
    babel
 ..   contributing
 

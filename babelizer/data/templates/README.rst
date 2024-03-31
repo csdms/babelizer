@@ -1,29 +1,29 @@
-{{ '=' * cookiecutter.package_name | length }}
-{{ cookiecutter.package_name }}
-{{ '=' * cookiecutter.package_name | length }}
+{{ '=' * package_name | length }}
+{{ package_name }}
+{{ '=' * package_name | length }}
 
-{% set is_open_source = cookiecutter.open_source_license != 'Not open source' -%}
+{% set is_open_source = open_source_license != 'Not open source' -%}
 
 {% if is_open_source %}
 .. image:: https://img.shields.io/badge/CSDMS-Basic%20Model%20Interface-green.svg
         :target: https://bmi.readthedocs.io/
         :alt: Basic Model Interface
 
-.. image:: https://img.shields.io/badge/recipe-{{ cookiecutter.package_name }}-green.svg
-        :target: https://anaconda.org/conda-forge/{{ cookiecutter.package_name }}
+.. image:: https://img.shields.io/badge/recipe-{{ package_name }}-green.svg
+        :target: https://anaconda.org/conda-forge/{{ package_name }}
 
-.. image:: https://readthedocs.org/projects/{{ cookiecutter.package_name | replace("_", "-") }}/badge/?version=latest
-        :target: https://{{ cookiecutter.package_name | replace("_", "-") }}.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/{{ package_name | replace("_", "-") }}/badge/?version=latest
+        :target: https://{{ package_name | replace("_", "-") }}.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/actions/workflows/test.yml/badge.svg
-        :target: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/actions/workflows/test.yml
+.. image:: https://github.com/{{ info.github_username }}/{{ package_name }}/actions/workflows/test.yml/badge.svg
+        :target: https://github.com/{{ info.github_username }}/{{ package_name }}/actions/workflows/test.yml
 
-.. image:: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/actions/workflows/flake8.yml/badge.svg
-        :target: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/actions/workflows/flake8.yml
+.. image:: https://github.com/{{ info.github_username }}/{{ package_name }}/actions/workflows/flake8.yml/badge.svg
+        :target: https://github.com/{{ info.github_username }}/{{ package_name }}/actions/workflows/flake8.yml
 
-.. image:: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/actions/workflows/black.yml/badge.svg
-        :target: https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/actions/workflows/black.yml
+.. image:: https://github.com/{{ info.github_username }}/{{ package_name }}/actions/workflows/black.yml/badge.svg
+        :target: https://github.com/{{ info.github_username }}/{{ package_name }}/actions/workflows/black.yml
 {%- endif %}
 
 
@@ -42,9 +42,9 @@ Python and the Python Modeling Toolkit, PyMT.
   * - Library
     - Component
     - PyMT
-  {% for babelized_class, component in cookiecutter.components|dictsort -%}
+  {% for babelized_class, component in components|dictsort -%}
   * - {{ component.library }}
-    - :class:`~{{ cookiecutter.package_name }}.{{ babelized_class }}`
+    - :class:`~{{ package_name }}.{{ babelized_class }}`
     -
       .. code-block:: pycon
 
@@ -55,8 +55,8 @@ Python and the Python Modeling Toolkit, PyMT.
 
 
 {% if is_open_source %}
-* Free software: {{ cookiecutter.open_source_license }}
-* Documentation: https://{{ cookiecutter.package_name | replace("_", "-") }}.readthedocs.io.
+* Free software: {{ open_source_license }}
+* Documentation: https://{{ package_name | replace("_", "-") }}.readthedocs.io.
 {% endif %}
 
 
@@ -65,22 +65,22 @@ Quickstart
 
 .. start-quickstart
 
-To get started you will need to install the *{{ cookiecutter.package_name }}* package.
+To get started you will need to install the *{{ package_name }}* package.
 Here are two ways to do so.
 
 Install from conda-forge
 ------------------------
 
-If the *{{ cookiecutter.package_name }}* package is distributed on *conda-forge*, install it into your current environment with *conda*.
+If the *{{ package_name }}* package is distributed on *conda-forge*, install it into your current environment with *conda*.
 
 .. code:: bash
 
-  conda install -c conda-forge {{ cookiecutter.package_name }}
+  conda install -c conda-forge {{ package_name }}
 
 Install from source
 -------------------
 
-You can build and install the *{{ cookiecutter.package_name }}* package from source using *conda* and *pip*.
+You can build and install the *{{ package_name }}* package from source using *conda* and *pip*.
 
 First, from the source directory, install package dependencies into your current environment with *conda*.
 
@@ -89,7 +89,7 @@ First, from the source directory, install package dependencies into your current
   conda install -c conda-forge --file requirements.txt --file requirements-build.txt --file requirements-library.txt
 
 Then install the package itself with *pip*.
-{%- if cookiecutter.language == 'python' %}
+{%- if language == 'python' %}
 
 .. code:: bash
 
@@ -115,16 +115,16 @@ There are two ways to use the components provided by this package: directly thro
 Model Interface (BMI), or as a PyMT plugin.
 
 A BMI is provided by each component in this package:
-{%- for babelized_class, component in cookiecutter.components|dictsort -%}
-:class:`~{{ cookiecutter.package_name}}.{{ babelized_class }}`
+{%- for babelized_class, component in components|dictsort -%}
+:class:`~{{ package_name}}.{{ babelized_class }}`
 {% endfor %}.
 
 
-{% for babelized_class, component in cookiecutter.components|dictsort -%}
+{% for babelized_class, component in components|dictsort -%}
 
 .. code-block:: pycon
 
-  >>> from {{ cookiecutter.package_name}} import {{ babelized_class }}
+  >>> from {{ package_name}} import {{ babelized_class }}
   >>> model = {{ babelized_class }}()
   >>> model.get_component_name()  # Get the name of the component
   >>> model.get_output_var_names()  # Get a list of the component's output variables

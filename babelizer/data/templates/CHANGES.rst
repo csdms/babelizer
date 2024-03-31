@@ -6,7 +6,7 @@ Release Notes
 .. towncrier release notes start
 
 
-0.1.0 ({{ cookiecutter.now|datetimeformat('%Y-%m-%d') }})
+0.1.0 ({{ now|datetimeformat('%Y-%m-%d') }})
 ------------------
 
 - Initial release

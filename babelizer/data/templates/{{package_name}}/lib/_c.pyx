@@ -90,7 +90,7 @@ def ok_or_raise(status):
     if status != 0:
         raise RuntimeError('error code {status}'.format(status=status))
 
-{%- for babelized_class, component in cookiecutter.components|dictsort %}
+{%- for babelized_class, component in components|dictsort %}
 
 # start: {{ babelized_class|lower }}.pyx
 

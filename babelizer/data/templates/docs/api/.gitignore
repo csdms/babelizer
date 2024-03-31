@@ -1,2 +1,2 @@
 # auto-generated with sphinx-apidoc
-{{ cookiecutter.package_name }}*.rst
+{{ package_name }}*.rst

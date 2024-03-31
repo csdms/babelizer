@@ -7,7 +7,7 @@ from libcpp.string cimport string
 from libcpp.vector cimport vector
 
 import numpy as np
-{%- for babelized_class, component in cookiecutter.components|dictsort %}
+{%- for babelized_class, component in components|dictsort %}
 
 # start: {{ babelized_class|lower }}.pyx
 

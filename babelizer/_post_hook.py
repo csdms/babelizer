@@ -104,8 +104,8 @@ def remove_trailing_whitespace(path: str | Path) -> None:
 def run(context: dict[str, Any]) -> None:
     PROJECT_DIRECTORY = Path.cwd().resolve()
 
-    package_name = context["cookiecutter"]["package_name"]
-    language = context["cookiecutter"]["language"]
+    package_name = context["package_name"]
+    language = context["language"]
 
     LIB_DIRECTORY = PROJECT_DIRECTORY / Path(package_name, "lib")
 
@@ -138,9 +138,6 @@ def run(context: dict[str, Any]) -> None:
 
     clean_folder(LIB_DIRECTORY, keep=keep)
 
-    # if "Not open source" == "{{ cookiecutter.open_source_license }}":
-    #     remove_file("LICENSE")
-
     if language == "python":
         os.remove(PROJECT_DIRECTORY / "meson.build")
 
@@ -149,7 +146,7 @@ def run(context: dict[str, Any]) -> None:
     if not package_datadir.exists():
         package_datadir.symlink_to(".." / datadir, target_is_directory=True)
 
-    for babelized_class in context["cookiecutter"]["components"]:
+    for babelized_class in context["components"]:
         write_api_yaml(
             PROJECT_DIRECTORY / datadir / babelized_class,
             language=language,

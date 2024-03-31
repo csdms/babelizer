@@ -1,4 +1,4 @@
 Credits
 =======
 
-* {{ cookiecutter.info.full_name }} <{{ cookiecutter.info.email }}>
+* {{ info.full_name }} <{{ info.email }}>

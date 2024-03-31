@@ -3,13 +3,13 @@
 !
 module bmi_interoperability
 
-{%- for _, component in cookiecutter.components|dictsort %}
+{%- for _, component in components|dictsort %}
 
   use, intrinsic :: iso_c_binding
   use bmif_2_0
 
-{%- if cookiecutter.build.libraries %}
-{%- for lib in cookiecutter.build.libraries %}
+{%- if build.libraries %}
+{%- for lib in build.libraries %}
   use {{ lib }}
 {%- endfor %}
 {%- endif %}

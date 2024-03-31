@@ -1,5 +1,5 @@
 [build-system]
-{%- if cookiecutter.language == 'python' %}
+{%- if language == 'python' %}
 build-backend = "setuptools.build_meta"
 requires = [
     "setuptools >=61",
@@ -10,19 +10,19 @@ requires = ["cython", "numpy", "meson-python", "wheel"]
 {% endif %}
 
 [project]
-name = "{{cookiecutter.package_name}}"
+name = "{{package_name}}"
 authors = [
-  {name = "{{cookiecutter.info.full_name}}", email = "{{cookiecutter.info.email}}"},
+  {name = "{{info.full_name}}", email = "{{info.email}}"},
 ]
 maintainers = [
-  {name = "{{cookiecutter.info.full_name}}", email = "{{cookiecutter.info.email}}"},
+  {name = "{{info.full_name}}", email = "{{info.email}}"},
 ]
-description = "PyMT plugin for {{cookiecutter.package_name}}"
+description = "PyMT plugin for {{package_name}}"
 license = {text = "MIT License"}
 classifiers=[
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: {{ cookiecutter.open_source_license }}",
+    "License :: OSI Approved :: {{ open_source_license }}",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3 :: Only",
@@ -38,11 +38,11 @@ dependencies = [
 ]
 
 [project.urls]
-homepage = "https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}"
+homepage = "https://github.com/{{ info.github_username }}/{{ package_name }}"
 
 [project.entry-points."pymt.plugins"]
-{%- for babelized_class, _ in cookiecutter.components|dictsort %}
-{{ babelized_class }} = "{{ cookiecutter.package_name }}.bmi:{{ babelized_class }}"
+{%- for babelized_class, _ in components|dictsort %}
+{{ babelized_class }} = "{{ package_name }}.bmi:{{ babelized_class }}"
 {%- endfor %}
 
 [project.optional-dependencies]
@@ -65,15 +65,15 @@ testing = [
   "bmi-tester>=0.5.4",
 ]
 
-{%- if cookiecutter.language == 'python' %}
+{%- if language == 'python' %}
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["{{cookiecutter.package_name}}*"]
+include = ["{{package_name}}*"]
 {% endif %}
 
 [tool.pytest.ini_options]
 minversion = "5.0"
-testpaths = ["{{ cookiecutter.package_name }}", "tests"]
+testpaths = ["{{ package_name }}", "tests"]
 norecursedirs = [".*", "*.egg*", "build", "dist"]
 addopts = """
     --ignore setup.py
@@ -98,20 +98,20 @@ line_length = 88
 
 [tool.check-manifest]
 ignore = [
-  "{{ cookiecutter.package_name }}/data",
-  "{{ cookiecutter.package_name }}/data/**/*",
+  "{{ package_name }}/data",
+  "{{ package_name }}/data/**/*",
 ]
 
 [tool.towncrier]
 directory = "news"
-package = "{{ cookiecutter.package_name }}"
+package = "{{ package_name }}"
 filename = "CHANGES.rst"
 single_file = true
 underlines = "-^\""
-issue_format = "`#{issue} <https://github.com/{{ cookiecutter.info.github_username }}/{{ cookiecutter.package_name }}/issues/{issue}>`_"
+issue_format = "`#{issue} <https://github.com/{{ info.github_username }}/{{ package_name }}/issues/{issue}>`_"
 title_format = "{version} ({project_date})"
 wrap = true
 
 [tool.zest-releaser]
 tag-format = "v{version}"
-python-file-with-version = "{{ cookiecutter.package_name }}/_version.py"
+python-file-with-version = "{{ package_name }}/_version.py"
