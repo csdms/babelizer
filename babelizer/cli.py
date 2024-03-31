@@ -83,7 +83,7 @@ def init(
 
     META is babelizer configuration information, usually saved to a file.
     """
-    template = template or os.path.join(get_datadir(), "{{cookiecutter.package_name}}")
+    template = template or os.path.join(get_datadir(), "templates")
 
     if not quiet:
         out(f"reading template from {template}")

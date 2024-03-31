@@ -423,7 +423,8 @@ class BabelMetadata(Mapping[str, Any]):
             module, obj = (item.strip() for item in value.split(":"))
         except ValueError:
             raise ValidationError(
-                f"bad entry point specifier ({specifier}). specifier must be of the form name=module:class"
+                f"bad entry point specifier ({specifier}). specifier must be of"
+                " the form name=module:class"
             ) from None
 
         return name, module, obj
