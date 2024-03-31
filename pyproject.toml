@@ -33,7 +33,6 @@ classifiers = [
 ]
 dependencies = [
     "click",
-    "cookiecutter",
     "gitpython",
     "importlib-resources; python_version < '3.12'",
     "jinja2",
