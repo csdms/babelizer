@@ -11,14 +11,6 @@ import git
 
 from babelizer.metadata import BabelMetadata
 
-try:
-    import black as blk
-    import isort
-except ModuleNotFoundError:
-    MAKE_PRETTY = False
-else:
-    MAKE_PRETTY = True
-
 if sys.version_info >= (3, 11):  # pragma: no cover (PY11+)
     import tomllib
 else:  # pragma: no cover (<PY311)
@@ -104,47 +96,3 @@ def render(
     git.Repo.init(path)
 
     return path
-
-
-def blacken_file(filepath: str) -> None:
-    """Format a Python file with ``black``.
-
-    Parameters
-    ----------
-    filepath : str
-        Path-like object to a Python file.
-    """
-    with open(filepath) as fp:
-        try:
-            new_contents = blk.format_file_contents(
-                fp.read(), fast=True, mode=blk.FileMode()
-            )
-        except blk.NothingChanged:
-            new_contents = None
-    if new_contents:
-        with open(filepath, "w") as fp:
-            fp.write(new_contents)
-
-
-def prettify_python(path_to_repo: str) -> None:
-    """Format files in babelized project with ``black``.
-
-    Parameters
-    ----------
-    path_to_repo : str
-        Path-like object to babelized project.
-    """
-    with open(os.path.join(path_to_repo, "babel.toml")) as fp:
-        meta = tomllib.loads(fp.read())
-    module_name = meta["package"]["name"]
-
-    files_to_fix = [
-        os.path.join(path_to_repo, module_name, "_bmi.py"),
-        os.path.join(path_to_repo, module_name, "__init__.py"),
-        os.path.join(path_to_repo, "docs", "conf.py"),
-    ]
-
-    config = isort.Config(quiet=True)
-    for file_to_fix in files_to_fix:
-        isort.api.sort_file(file_to_fix, config=config)
-        blacken_file(file_to_fix)
