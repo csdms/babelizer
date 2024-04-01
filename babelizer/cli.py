@@ -14,7 +14,7 @@ from typing import cast
 import click
 import git
 
-from babelizer._datadir import get_datadir
+from babelizer._datadir import get_template_dir
 from babelizer._files.gitignore import render as render_gitignore
 from babelizer._files.license_rst import render as render_license
 from babelizer._files.meson_build import render as render_meson_build
@@ -83,7 +83,7 @@ def init(
 
     META is babelizer configuration information, usually saved to a file.
     """
-    template = template or os.path.join(get_datadir(), "templates")
+    template = template or get_template_dir()
 
     if not quiet:
         out(f"reading template from {template}")
@@ -160,7 +160,7 @@ def update(
         err("this does not appear to be a babelized folder (missing 'babel.toml')")
         raise click.Abort()
 
-    template = template or get_datadir()
+    template = template or get_template_dir()
 
     if not quiet:
         out(f"reading template from {template}")
@@ -276,7 +276,6 @@ def sample_readme() -> None:
     context = {
         "language": "python",
         "open_source_license": "MIT License",
-        "package_name": "springfield_monorail",
         "info": {
             "github_username": "lyle-lanley",
             "package_author": "Lyle Lanley",
@@ -287,6 +286,7 @@ def sample_readme() -> None:
             "Monorail": {"library": "monorail"},
             "Rail": {"library": "rail"},
         },
+        "package": {"name": "springfield_monorail"},
     }
     print(render_readme(context))
 
