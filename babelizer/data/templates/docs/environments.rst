@@ -18,15 +18,15 @@ should stick with *pip*.
     .. code-block:: bash
 
         conda install mamba -c conda-forge
-        mamba create -n {{ package_name }}
-        mamba activate {{ package_name }}
+        mamba create -n {{ package.name }}
+        mamba activate {{ package.name }}
 
 .. tab:: conda
 
     .. code-block:: bash
 
-        conda create -n {{ package_name }}
-        conda activate {{ package_name }}
+        conda create -n {{ package.name }}
+        conda activate {{ package.name }}
 
 .. tab:: venv
 

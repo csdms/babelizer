@@ -51,7 +51,7 @@ jobs:
 
       - name: Test
         run: |
-          python -c 'import {{ package_name }}'
+          python -c 'import {{ package.name }}'
           {%- for babelized_class in components %}
-          bmi-test {{ package_name }}.bmi:{{ babelized_class }} -vvv
+          bmi-test {{ package.name }}.bmi:{{ babelized_class }} -vvv
           {%- endfor %}

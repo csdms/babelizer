@@ -353,10 +353,7 @@ class BabelMetadata(Mapping[str, Any]):
                 "python_version": sorted(config["ci"]["python_version"]),
                 "os": sorted(config["ci"]["os"]),
             },
-            "package_name": config["package"]["name"],
-            "package_requirements": ",".join(config["package"]["requirements"]),
             "language": language,
-            "open_source_license": config["info"]["package_license"],
         }
 
     def dump(self, fp: io.TextIOBase, fmt: str = "toml") -> None:

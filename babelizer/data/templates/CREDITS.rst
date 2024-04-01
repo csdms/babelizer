@@ -1,4 +1,4 @@
 Credits
 =======
 
-* {{ info.full_name }} <{{ info.email }}>
+* {{ info.package_author }} <{{ info.package_author_email }}>

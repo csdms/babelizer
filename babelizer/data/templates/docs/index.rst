@@ -1,15 +1,15 @@
 .. image:: _static/logo-light.svg
    :align: center
    :scale: 15%
-   :alt: {{ package_name }}
-   :target: https://{{ package_name }}.readthedocs.org/
+   :alt: {{ package.name }}
+   :target: https://{{ package.name }}.readthedocs.org/
    :class: only-light
 
 .. image:: _static/logo-dark.svg
    :align: center
    :scale: 15%
-   :alt: {{ package_name }}
-   :target: https://{{ package_name }}.readthedocs.org/
+   :alt: {{ package.name }}
+   :target: https://{{ package.name }}.readthedocs.org/
    :class: only-dark
 
 .. include:: ../README.rst
@@ -23,7 +23,7 @@
 
    quickstart
    usage
-   API <api/{{ package_name }}>
+   API <api/{{ package.name }}>
    babel
 ..   contributing
 

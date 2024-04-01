@@ -1,2 +1,2 @@
 # auto-generated with sphinx-apidoc
-{{ package_name }}*.rst
+{{ package.name }}*.rst

@@ -5,7 +5,7 @@ from itertools import chain
 
 import nox
 
-PROJECT = "{{ package_name }}"
+PROJECT = "{{ package.name }}"
 ROOT = pathlib.Path(__file__).parent
 PYTHON_VERSIONS = ["3.9", "3.10", "3.11"]
 
@@ -22,7 +22,7 @@ def test(session: nox.Session) -> None:
 {%- for babelized_class, _ in components|dictsort %}
     session.run(
         "bmi-test",
-        "{{ package_name }}.bmi:{{ babelized_class }}",
+        "{{ package.name }}.bmi:{{ babelized_class }}",
         "-vvv",
     )
 {%- endfor %}
@@ -80,7 +80,7 @@ def build_docs(session: nox.Session) -> None:
             "--module-first",
             "-o",
             "docs/api",
-            "{{ package_name }}",
+            "{{ package.name }}",
         )
         session.run(
             "sphinx-build",
@@ -106,7 +106,7 @@ def live_docs(session: nox.Session) -> None:
         "docs/_templates",
         "-o",
         "docs/api",
-        "{{ package_name }}",
+        "{{ package.name }}",
     )
     session.run(
         "sphinx-autobuild",
@@ -188,5 +188,5 @@ def clean_docs(session: nox.Session) -> None:
             shutil.rmtree("html")
 
     with session.chdir(ROOT / "docs"):
-        for p in pathlib.Path("api").rglob("{{ package_name }}*.rst"):
+        for p in pathlib.Path("api").rglob("{{ package.name }}*.rst"):
             p.unlink()

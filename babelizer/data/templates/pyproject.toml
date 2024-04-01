@@ -10,19 +10,19 @@ requires = ["cython", "numpy", "meson-python", "wheel"]
 {% endif %}
 
 [project]
-name = "{{package_name}}"
+name = "{{package.name}}"
 authors = [
-  {name = "{{info.full_name}}", email = "{{info.email}}"},
+  {name = "{{info.package_author}}", email = "{{info.package_author_email}}"},
 ]
 maintainers = [
-  {name = "{{info.full_name}}", email = "{{info.email}}"},
+  {name = "{{info.package_author}}", email = "{{info.package_author_email}}"},
 ]
-description = "PyMT plugin for {{package_name}}"
+description = "PyMT plugin for {{package.name}}"
 license = {text = "MIT License"}
 classifiers=[
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: {{ open_source_license }}",
+    "License :: OSI Approved :: {{ info.package_license }}",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3 :: Only",
@@ -38,11 +38,11 @@ dependencies = [
 ]
 
 [project.urls]
-homepage = "https://github.com/{{ info.github_username }}/{{ package_name }}"
+homepage = "https://github.com/{{ info.github_username }}/{{ package.name }}"
 
 [project.entry-points."pymt.plugins"]
 {%- for babelized_class, _ in components|dictsort %}
-{{ babelized_class }} = "{{ package_name }}.bmi:{{ babelized_class }}"
+{{ babelized_class }} = "{{ package.name }}.bmi:{{ babelized_class }}"
 {%- endfor %}
 
 [project.optional-dependencies]
@@ -68,12 +68,12 @@ testing = [
 {%- if language == 'python' %}
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["{{package_name}}*"]
+include = ["{{package.name}}*"]
 {% endif %}
 
 [tool.pytest.ini_options]
 minversion = "5.0"
-testpaths = ["{{ package_name }}", "tests"]
+testpaths = ["{{ package.name }}", "tests"]
 norecursedirs = [".*", "*.egg*", "build", "dist"]
 addopts = """
     --ignore setup.py
@@ -98,20 +98,20 @@ line_length = 88
 
 [tool.check-manifest]
 ignore = [
-  "{{ package_name }}/data",
-  "{{ package_name }}/data/**/*",
+  "{{ package.name }}/data",
+  "{{ package.name }}/data/**/*",
 ]
 
 [tool.towncrier]
 directory = "news"
-package = "{{ package_name }}"
+package = "{{ package.name }}"
 filename = "CHANGES.rst"
 single_file = true
 underlines = "-^\""
-issue_format = "`#{issue} <https://github.com/{{ info.github_username }}/{{ package_name }}/issues/{issue}>`_"
+issue_format = "`#{issue} <https://github.com/{{ info.github_username }}/{{ package.name }}/issues/{issue}>`_"
 title_format = "{version} ({project_date})"
 wrap = true
 
 [tool.zest-releaser]
 tag-format = "v{version}"
-python-file-with-version = "{{ package_name }}/_version.py"
+python-file-with-version = "{{ package.name }}/_version.py"

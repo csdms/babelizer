@@ -4,27 +4,18 @@ from __future__ import annotations
 
 import datetime
 import os
-import sys
-from typing import Any
 
 import git
 
-from babelizer.metadata import BabelMetadata
-
-if sys.version_info >= (3, 11):  # pragma: no cover (PY11+)
-    import tomllib
-else:  # pragma: no cover (<PY311)
-    import tomli as tomllib
-
 from babelizer._cookiecutter import cookiecutter
-from babelizer._datadir import get_datadir
+from babelizer._datadir import get_template_dir
 from babelizer._files.bmi_py import render as render_bmi
 from babelizer._files.gitignore import render as render_gitignore
 from babelizer._files.init_py import render as render_init
 from babelizer._files.lib_init_py import render as render_lib_init
 from babelizer._files.license_rst import render as render_license
 from babelizer.errors import OutputDirExistsError
-from babelizer.errors import RenderError
+from babelizer.metadata import BabelMetadata
 
 
 def render(
@@ -63,7 +54,7 @@ def render(
         Raised if output directory exists and clobber is not set.
     """
     if template is None:
-        template = get_datadir()
+        template = get_template_dir()
 
     context = {
         "files": {

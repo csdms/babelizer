@@ -1,5 +1,5 @@
 project(
-    '{{ package_name }}',
+    '{{ package.name }}',
 {%- if language == 'c' %}
     'c',
 {%- elif language == 'c++' %}
@@ -32,13 +32,13 @@ numpy_inc = run_command(
 ).stdout().strip()
 incs = include_directories(
     [
-        '{{ package_name }}/lib',
+        '{{ package.name }}/lib',
         # python_inc,
         numpy_inc,
     ]
 )
 
-{% set dependency_list = package_requirements.split(',') -%}
+{% set dependency_list = package.requirements -%}
 deps = [
 {%- for dependency in dependency_list if dependency != '' %}
     compiler.find_library('{{ dependency }}'),
@@ -47,24 +47,24 @@ deps = [
 
 # Files get copied to <python directory>/site-packages/<subdir>
 install_pkg_srcs = [
-    '{{ package_name }}/__init__.py',
-    '{{ package_name }}/_bmi.py',
-    '{{ package_name }}/_version.py',
+    '{{ package.name }}/__init__.py',
+    '{{ package.name }}/_bmi.py',
+    '{{ package.name }}/_version.py',
 ]
 py.install_sources(
     install_pkg_srcs,
-    subdir: '{{ package_name }}',
+    subdir: '{{ package.name }}',
 )
 
 install_lib_srcs = [
-    '{{ package_name }}/lib/__init__.py',
+    '{{ package.name }}/lib/__init__.py',
 {%- for babelized_class in components|list|sort %}
-    '{{ package_name }}/lib/{{ babelized_class|lower }}.pyx',
+    '{{ package.name }}/lib/{{ babelized_class|lower }}.pyx',
 {%- endfor %}
 ]
 py.install_sources(
     install_lib_srcs,
-    subdir: '{{ package_name }}/lib',
+    subdir: '{{ package.name }}/lib',
 )
 
 
@@ -73,16 +73,16 @@ py.extension_module(
     '{{ babelized_class|lower }}',
     [
 {%- if language == 'fortran' %}
-        '{{ package_name }}/lib/bmi_interoperability.f90',
+        '{{ package.name }}/lib/bmi_interoperability.f90',
 {%- endif %}
-        '{{ package_name }}/lib/{{ babelized_class|lower }}.pyx',
+        '{{ package.name }}/lib/{{ babelized_class|lower }}.pyx',
     ],
     dependencies: [
         dependency('{{ component.library }}', method : 'pkg-config'),
     ],
     include_directories: incs,
     install: true,
-    subdir: '{{ package_name }}/lib',
+    subdir: '{{ package.name }}/lib',
 {%- if language == 'c++' %}
     override_options : ['cython_language=cpp'],
 {%- endif %}
@@ -90,10 +90,10 @@ py.extension_module(
 
 install_subdir(
     'meta/{{ babelized_class }}',
-    install_dir: py.get_install_dir() / '{{ package_name }}/data',
+    install_dir: py.get_install_dir() / '{{ package.name }}/data',
 )
 
 {%- endfor %}
 
 # This is a temporary fix for editable installs.
-run_command('cp', '-r', '{{ package_name }}/data', 'build')
+run_command('cp', '-r', '{{ package.name }}/data', 'build')

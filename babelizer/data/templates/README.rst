@@ -1,30 +1,26 @@
-{{ '=' * package_name | length }}
-{{ package_name }}
-{{ '=' * package_name | length }}
+{{ '=' * package.name | length }}
+{{ package.name }}
+{{ '=' * package.name | length }}
 
-{% set is_open_source = open_source_license != 'Not open source' -%}
-
-{% if is_open_source %}
 .. image:: https://img.shields.io/badge/CSDMS-Basic%20Model%20Interface-green.svg
         :target: https://bmi.readthedocs.io/
         :alt: Basic Model Interface
 
-.. image:: https://img.shields.io/badge/recipe-{{ package_name }}-green.svg
-        :target: https://anaconda.org/conda-forge/{{ package_name }}
+.. image:: https://img.shields.io/badge/recipe-{{ package.name }}-green.svg
+        :target: https://anaconda.org/conda-forge/{{ package.name }}
 
-.. image:: https://readthedocs.org/projects/{{ package_name | replace("_", "-") }}/badge/?version=latest
-        :target: https://{{ package_name | replace("_", "-") }}.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/{{ package.name | replace("_", "-") }}/badge/?version=latest
+        :target: https://{{ package.name | replace("_", "-") }}.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://github.com/{{ info.github_username }}/{{ package_name }}/actions/workflows/test.yml/badge.svg
-        :target: https://github.com/{{ info.github_username }}/{{ package_name }}/actions/workflows/test.yml
+.. image:: https://github.com/{{ info.github_username }}/{{ package.name }}/actions/workflows/test.yml/badge.svg
+        :target: https://github.com/{{ info.github_username }}/{{ package.name }}/actions/workflows/test.yml
 
-.. image:: https://github.com/{{ info.github_username }}/{{ package_name }}/actions/workflows/flake8.yml/badge.svg
-        :target: https://github.com/{{ info.github_username }}/{{ package_name }}/actions/workflows/flake8.yml
+.. image:: https://github.com/{{ info.github_username }}/{{ package.name }}/actions/workflows/flake8.yml/badge.svg
+        :target: https://github.com/{{ info.github_username }}/{{ package.name }}/actions/workflows/flake8.yml
 
-.. image:: https://github.com/{{ info.github_username }}/{{ package_name }}/actions/workflows/black.yml/badge.svg
-        :target: https://github.com/{{ info.github_username }}/{{ package_name }}/actions/workflows/black.yml
-{%- endif %}
+.. image:: https://github.com/{{ info.github_username }}/{{ package.name }}/actions/workflows/black.yml/badge.svg
+        :target: https://github.com/{{ info.github_username }}/{{ package.name }}/actions/workflows/black.yml
 
 
 .. start-intro
@@ -44,7 +40,7 @@ Python and the Python Modeling Toolkit, PyMT.
     - PyMT
   {% for babelized_class, component in components|dictsort -%}
   * - {{ component.library }}
-    - :class:`~{{ package_name }}.{{ babelized_class }}`
+    - :class:`~{{ package.name }}.{{ babelized_class }}`
     -
       .. code-block:: pycon
 
@@ -54,10 +50,8 @@ Python and the Python Modeling Toolkit, PyMT.
 .. end-intro
 
 
-{% if is_open_source %}
-* Free software: {{ open_source_license }}
-* Documentation: https://{{ package_name | replace("_", "-") }}.readthedocs.io.
-{% endif %}
+* Free software: {{ info.package_license }}
+* Documentation: https://{{ package.name | replace("_", "-") }}.readthedocs.io.
 
 
 Quickstart
@@ -65,22 +59,22 @@ Quickstart
 
 .. start-quickstart
 
-To get started you will need to install the *{{ package_name }}* package.
+To get started you will need to install the *{{ package.name }}* package.
 Here are two ways to do so.
 
 Install from conda-forge
 ------------------------
 
-If the *{{ package_name }}* package is distributed on *conda-forge*, install it into your current environment with *conda*.
+If the *{{ package.name }}* package is distributed on *conda-forge*, install it into your current environment with *conda*.
 
 .. code:: bash
 
-  conda install -c conda-forge {{ package_name }}
+  conda install -c conda-forge {{ package.name }}
 
 Install from source
 -------------------
 
-You can build and install the *{{ package_name }}* package from source using *conda* and *pip*.
+You can build and install the *{{ package.name }}* package from source using *conda* and *pip*.
 
 First, from the source directory, install package dependencies into your current environment with *conda*.
 
@@ -116,7 +110,7 @@ Model Interface (BMI), or as a PyMT plugin.
 
 A BMI is provided by each component in this package:
 {%- for babelized_class, component in components|dictsort -%}
-:class:`~{{ package_name}}.{{ babelized_class }}`
+:class:`~{{ package.name}}.{{ babelized_class }}`
 {% endfor %}.
 
 
@@ -124,7 +118,7 @@ A BMI is provided by each component in this package:
 
 .. code-block:: pycon
 
-  >>> from {{ package_name}} import {{ babelized_class }}
+  >>> from {{ package.name}} import {{ babelized_class }}
   >>> model = {{ babelized_class }}()
   >>> model.get_component_name()  # Get the name of the component
   >>> model.get_output_var_names()  # Get a list of the component's output variables

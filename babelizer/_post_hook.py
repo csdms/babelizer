@@ -104,7 +104,7 @@ def remove_trailing_whitespace(path: str | Path) -> None:
 def run(context: dict[str, Any]) -> None:
     PROJECT_DIRECTORY = Path.cwd().resolve()
 
-    package_name = context["package_name"]
+    package_name = context["package"]["name"]
     language = context["language"]
 
     LIB_DIRECTORY = PROJECT_DIRECTORY / Path(package_name, "lib")
