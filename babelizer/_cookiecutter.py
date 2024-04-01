@@ -6,6 +6,7 @@ from typing import Any
 
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
+from jinja2 import StrictUndefined
 from jinja2 import Template
 
 from babelizer._post_hook import run
@@ -21,7 +22,7 @@ def cookiecutter(
 ) -> None:
     if extra_context is None:
         extra_context = {}
-    env = Environment(loader=FileSystemLoader(template))
+    env = Environment(loader=FileSystemLoader(template), undefined=StrictUndefined)
 
     def datetime_format(value: datetime, format_: str = "%Y-%M-%D") -> str:
         return value.strftime(format_)
