@@ -9,16 +9,14 @@ To simplify package management in the example,
 we'll use :term:`conda`.
 We'll also use :term:`git` to obtain the model source code.
 
-This is a somewhat long example.
-To break it up,
-here are the steps we'll take:
+Here are the steps we'll take to complete this example:
 
 #. Create a :term:`conda environment` that includes software to compile the
    model and wrap it with the *babelizer*
 #. Clone the `bmi-example-c`_ repository from GitHub and build the
    *heat* model from source
 #. Create a *babelizer* input file describing the *heat* model
-#. Run the *babelizer* to generate Python bindings, then build the bindings
+#. Run the *babelizer* to generate a Python package, then build and install the package
 #. Show the *heat* model running in Python through *pymt*
 
 Before we begin,
@@ -26,18 +24,18 @@ create a directory to hold our work:
 
 .. code:: bash
 
-  $ mkdir build && cd build
+  mkdir example-c && cd example-c
 
 This directory is a starting point;
 we'll make new directories under it as we proceed through the example.
 In the end,
-the directory structure under ``build`` should look like that in Figure 1.
+the directory structure under ``example-c`` should look like that in Figure 1.
 
 .. figure:: _static/babelizer-bmi-example-c.png
     :align: center
     :alt: Directory structure after completing example
 
-    Figure 1: Directory structure after completing example.
+    Figure 1: Directory structure after completing the C example.
 
 Set up a conda environment
 --------------------------
@@ -45,17 +43,18 @@ Set up a conda environment
 Start by setting up a :term:`conda environment` that includes the *babelizer*,
 as well as a toolchain to build and install the model.
 The necessary packages are listed in the conda environment file
-:download:`environment.yml`:
+:download:`environment-c.yml`:
 
-.. include:: environment.yml
+.. include:: environment-c.yml
    :literal:
 
-:download:`Download <environment.yml>` this file
-and create the new environment with:
+:download:`Download <environment-c.yml>` this file
+and place it in the ``example-c`` directory you created above.
+Create the new environment with:
 
 .. code:: bash
 
-  $ conda env create --file=environment.yml
+  conda env create --file environment-c.yml
 
 When this command completes,
 activate the environment
@@ -63,25 +62,26 @@ activate the environment
 
 .. code:: bash
 
-  $ conda activate wrap
+  conda activate wrap-c
 
-The *wrap* environment now contains all the dependencies needed
+The *wrap-c* environment now contains all the dependencies needed
 to build, install, and wrap the *heat* model.
 
 
 Build the *heat* model from source
 ----------------------------------
 
-Clone the `bmi-example-c`_ repository from GitHub:
+From the ``example-c`` directory,
+clone the `bmi-example-c`_ repository from GitHub:
 
 .. code:: bash
 
-  $ git clone https://github.com/csdms/bmi-example-c
+  git clone https://github.com/csdms/bmi-example-c
 
 There are general `instructions`_ in the repository for building and installing
 this package on Linux, macOS, and Windows.
 We'll augment those instructions
-with the note that we're installing into the *wrap* conda environment,
+with the note that we're installing into the *wrap-c* conda environment,
 so the ``CONDA_PREFIX`` environment variable
 should be used to specify the install path.
 
@@ -93,17 +93,17 @@ use these commands to build and install the *heat* model:
 
 .. code:: bash
 
-  $ cd bmi-example-c
-  $ mkdir _build && cd _build
-  $ cmake .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-  $ make install
+  cd bmi-example-c
+  mkdir build && cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+  make install
 
 Verify the install by testing for the existence of the header
 of the library containing the compiled *heat* model:
 
 .. code:: bash
 
-  $ test -f $CONDA_PREFIX/include/bmi_heat.h ; echo $?
+  test -f $CONDA_PREFIX/include/bmi_heat.h ; echo $?
 
 A return of zero indicates success.
 
@@ -111,91 +111,66 @@ Windows
 .......
 
 Building on Windows requires
-Microsoft Visual Studio 2017 or Microsoft Build Tools for Visual Studio 2017.
+Microsoft Visual Studio 2019 or Microsoft Build Tools for Visual Studio 2019.
 To build and install the *heat* model,
 the following commands must be run in a `Developer Command Prompt`_:
 
-.. code::
+.. code:: bat
 
-  > cd bmi-example-c
-  > mkdir _build && cd _build
-  > cmake .. ^
-      -G "NMake Makefiles" ^
-      -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% ^
-      -DCMAKE_BUILD_TYPE=Release
-  > cmake --build . --target install --config Release
+  cd bmi-example-c
+  mkdir build && cd build
+  cmake .. ^
+    -G "NMake Makefiles" ^
+    -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% ^
+    -DCMAKE_BUILD_TYPE=Release
+  cmake --build . --target install --config Release
 
 Verify the install by testing for the existence of the header
 of the library containing the compiled *heat* model:
 
-.. code::
+.. code:: bat
 
-  > if not exist %LIBRARY_INC%\\bmi_heat.h exit 1
+  if not exist %LIBRARY_INC%\\bmi_heat.h exit 1
 
-Create the *babelizer* input file
----------------------------------
+Create a *babelizer* configuration file
+---------------------------------------
 
-The *babelizer* input file provides information to the *babelizer*
+A *babelizer* configuration file provides information to the *babelizer*
 about the model to be wrapped.
-The input file is created with the ``babelize generate`` subcommand.
 
-Return to our initial ``build`` directory and call ``babelize generate`` with:
+Typically, we would use the ``babelize sample-config`` command
+to create a sample configuration file, which could then be edited.
+However, to simplify this example, we have provided a completed
+configuration file for the *heat* model.
+:download:`Download <babel_heatc.toml>` the file
+:download:`babel_heatc.toml` and copy it to the ``build`` directory.
 
-.. code:: bash
-
-  $ cd ../..
-  $ babelize generate \
-      --package=pymt_heatc \
-      --summary="PyMT plugin for the C heat model" \
-      --language=c \
-      --library=bmiheatc \
-      --header=bmi_heat.h \
-      --entry-point=register_bmi_heat \
-      --name=HeatModel \
-      --requirement="" > babel_heatc.toml
-
-In this call,
-the *babelizer* will also fill in default values;
-e.g., author name, author email, GitHub username, and license.
-
-The resulting file, :download:`babel_heatc.toml`,
-will look something like this:
+The configuration file looks like this:
 
 .. include:: babel_heatc.toml
    :literal:
 
-For more information on the entries and sections of the *babelizer* input file,
+For more information on the entries and sections of the *babelizer* configuration file,
 see `Input file <./readme.html#input-file>`_.
 
 
 Wrap the model with the *babelizer*
 -----------------------------------
 
-Generate Python bindings for the model with the ``babelize init`` subcommand:
+From the ``example-c`` directory,
+generate a Python package for the model with the ``babelize init`` command:
 
 .. code:: bash
 
-  $ babelize init babel_heatc.toml
+  babelize init babel_heatc.toml
 
 The results are placed in a new directory, ``pymt_heatc``,
 under the current directory.
 
-.. code:: bash
-
-  $ ls -aF pymt_heatc
-  ./                        MANIFEST.in               recipe/
-  ../                       Makefile                  requirements-build.txt
-  .git/                     README.rst                requirements-library.txt
-  .github/                  babel.toml                requirements-testing.txt
-  .gitignore                docs/                     requirements.txt
-  CHANGES.rst               meta/                     setup.cfg
-  CREDITS.rst               pymt_heatc/               setup.py
-  LICENSE                   pyproject.toml
-
-Before we can build the Python bindings,
+Before we can build and install the Python package,
 we must ensure that the dependencies required by the toolchain,
-as well as any required by the model,
-as specified in the *babelizer* input file (none in this case),
+as well as those required by the model,
+as specified in the *babelizer* configuration file,
 are satisfied.
 
 Change to the ``pymt_heatc`` directory and install dependencies
@@ -203,18 +178,18 @@ into the conda environment:
 
 .. code:: bash
 
-  $ cd pymt_heatc
-  $ conda install -c conda-forge \
-      --file=requirements-build.txt \
-      --file=requirements-testing.txt \
-      --file=requirements-library.txt \
-      --file=requirements.txt
+  cd pymt_heatc
+  conda install -c conda-forge \
+    --file requirements-build.txt \
+    --file requirements-library.txt \
+    --file requirements-testing.txt \
+    --file requirements.txt
 
-Now build the Python bindings with:
+Now build and install the Python package with:
 
 .. code:: bash
 
-  $ make install
+  pip install --no-build-isolation --editable .
 
 This command sets off a long list of messages,
 at the end of which you'll hopefully see:
