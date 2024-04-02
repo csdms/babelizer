@@ -1,0 +1,3 @@
+
+Removed dependency on *cookiecutter* by adding our own implementation
+of a simplified version.
