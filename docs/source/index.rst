@@ -40,7 +40,7 @@ User Guide
 
    readme
    cli
-   example
+   example-c
    example-fortran
    glossary
 
