@@ -71,13 +71,7 @@ def render(
     if os.path.exists(output):
         raise OutputDirExistsError(output)
 
-    cookiecutter(
-        template,
-        extra_context=context,
-        output_dir=output,
-        no_input=True,
-        overwrite_if_exists=clobber,
-    )
+    cookiecutter(template, context=context, output_dir=output)
 
     path = os.path.realpath(output)
 
