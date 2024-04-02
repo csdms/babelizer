@@ -10,7 +10,7 @@ from jinja2 import StrictUndefined
 from jinja2 import Template
 
 from babelizer._post_hook import run
-from babelizer.utils import as_cwd
+from babelizer._utils import as_cwd
 
 
 def cookiecutter(

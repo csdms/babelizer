@@ -19,14 +19,14 @@ from babelizer._files.gitignore import render as render_gitignore
 from babelizer._files.license_rst import render as render_license
 from babelizer._files.meson_build import render as render_meson_build
 from babelizer._files.readme import render as render_readme
+from babelizer._utils import get_setup_py_version
+from babelizer._utils import save_files
 from babelizer.errors import OutputDirExistsError
 from babelizer.errors import ScanError
 from babelizer.errors import SetupPyError
 from babelizer.errors import ValidationError
 from babelizer.metadata import BabelMetadata
 from babelizer.render import render
-from babelizer.utils import get_setup_py_version
-from babelizer.utils import save_files
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
