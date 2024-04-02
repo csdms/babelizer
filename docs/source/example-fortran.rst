@@ -396,7 +396,7 @@ then run it with:
   $ python pymt_heatc_ex.py
 
 Note that here we are actually running the Python script that
-was developed for the :doc:`C example <example>`, not Fortran.
+was developed for the :doc:`C example <example-c>`, not Fortran.
 That is one of the powerful things about wrapping your
 BMI-enabled model and accessing it via PyMT - it provides a
 standardised interface, regardless of the underlying model
@@ -410,7 +410,7 @@ Using the *babelizer*, we wrapped the *heat* model, which is written in Fortran.
 It can now be called as a *pymt* component in Python.
 
 The steps for wrapping a model with the *babelizer* outlined in this example
-can also be applied to models written in C (:doc:`see the example <example>`)
+can also be applied to models written in C (:doc:`see the example <example-c>`)
 and C++.
 
 
