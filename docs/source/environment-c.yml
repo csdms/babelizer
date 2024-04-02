@@ -1,5 +1,5 @@
-# A conda environment file for the babelizer example
-name: wrap
+# A conda environment file for the babelizer C example
+name: wrap-c
 channels:
   - conda-forge
 dependencies:
