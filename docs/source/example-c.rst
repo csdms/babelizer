@@ -342,7 +342,7 @@ then run it with:
 
 .. code:: bash
 
-  $ python pymt_heatc_ex.py
+  python pymt_heatc_ex.py
 
 
 Summary
