@@ -10,5 +10,5 @@ dependencies:
   - c-compiler
   - bmi-c
   - babelizer
-  - bmi-tester>=0.5.9
+  - bmi-tester
   - pymt>=1.3
