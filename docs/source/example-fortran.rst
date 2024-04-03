@@ -9,16 +9,14 @@ To simplify package management in the example,
 we'll use :term:`conda`.
 We'll also use :term:`git` to obtain the model source code.
 
-This is a somewhat long example.
-To break it up,
-here are the steps we'll take:
+Here are the steps we'll take to complete this example:
 
 #. Create a :term:`conda environment` that includes software to compile the
    model and wrap it with the *babelizer*
 #. Clone the `bmi-example-fortran`_ repository from GitHub and build the
    *heat* model from source
 #. Create a *babelizer* input file describing the *heat* model
-#. Run the *babelizer* to generate Python bindings, then build the bindings
+#. Run the *babelizer* to generate a Python package, then build and install the package
 #. Show the *heat* model running in Python through *pymt*
 
 Before we begin,
@@ -26,24 +24,20 @@ create a directory to hold our work:
 
 .. code:: bash
 
-  $ mkdir build && cd build
+  $ mkdir example-f && cd example-f
 
 This directory is a starting point;
-we'll make new directories under it as we proceed through the example.
-In the end,
-the first level of the directory structure under ``build`` should look like this:
+we'll add files and directories to it as we proceed through the example.
+The final directory structure of ``example-c`` should look similar to that below.
 
-.. code::
+.. code:: bash
 
-  .
+  example-f/
   ├── babel_heatf.toml
-  ├── bmi-example-fortran
-  │   └── ...
+  ├── bmi-example-fortran/
   ├── environment-fortran.yml
-  ├── pymt_heatf
-  │   └── ...
-  └── test
-      └── ...
+  ├── pymt_heatf/
+  └── test/
 
 Set up a conda environment
 --------------------------
@@ -57,11 +51,12 @@ The necessary packages are listed in the conda environment file
    :literal:
 
 :download:`Download <environment-fortran.yml>` this file
-and create the new environment with:
+and place it in the ``example-f`` directory you created above.
+Create the new environment with:
 
 .. code:: bash
 
-  $ conda env create --file=environment-fortran.yml
+  conda env create --file environment-fortran.yml
 
 When this command completes,
 activate the environment
@@ -69,20 +64,21 @@ activate the environment
 
 .. code:: bash
 
-  $ conda activate wrap
+  conda activate wrap-f
 
-The *wrap* environment now contains all the dependencies needed
+The *wrap-f* environment now contains all the dependencies needed
 to build, install, and wrap the *heat* model.
 
 
 Build the *heat* model from source
 ----------------------------------
 
-Clone the `bmi-example-fortran`_ repository from GitHub:
+From the ``example-f`` directory,
+clone the `bmi-example-fortran`_ repository from GitHub:
 
 .. code:: bash
 
-  $ git clone https://github.com/csdms/bmi-example-fortran
+  git clone https://github.com/csdms/bmi-example-fortran
 
 There are general `instructions`_ in the repository for building and installing
 this package on Linux, macOS, and Windows.
@@ -93,13 +89,12 @@ should be used to specify the install path.
 
 Note that if you build the model with the
 `Fortran Package Manager <https://fpm.fortran-lang.org/en/index.html>`_
-(fpm), you will end up with a static library (`.a` on Unix, `.lib` on
+(*fpm*), you will end up with a static library (`.a` on Unix, `.lib` on
 Windows) instead of the dynamic library (`.so` on Unix, `.dll` on
 Windows) that the CMake build creates. We are aware of
 issues linking to the compiler runtime libraries from this static
 library, and for this reason we recommend using the CMake build
 routine, as detailed below.
-
 
 Linux and macOS
 ...............
@@ -109,17 +104,17 @@ use these commands to build and install the *heat* model:
 
 .. code:: bash
 
-  $ cd bmi-example-fortran
-  $ mkdir _build && cd _build
-  $ cmake .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
-  $ make install
+  cd bmi-example-fortran
+  mkdir build && cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+  make install
 
 Verify the install by testing for the existence of the module
 file of the library containing the compiled *heat* model:
 
 .. code:: bash
 
-  $ test -f $CONDA_PREFIX/include/bmiheatf.mod ; echo $?
+  test -f $CONDA_PREFIX/include/bmiheatf.mod ; echo $?
 
 A return of zero indicates success.
 
@@ -134,25 +129,24 @@ Building the *heat* model on Windows requires either:
 * Microsoft Visual Studio 2017 or later, or Microsoft Build Tools for
   Visual Studio 2017 or later, in which case the following instructions should be followed.
 
-Open the `Developer Command Prompt`_ and run:
+Open a `Developer Command Prompt`_ and run:
 
-.. code::
+.. code:: bat
 
-  > cd bmi-example-fortran
-  > mkdir _build
-  > cd _build
-  > cmake .. ^
-      -G "NMake Makefiles" ^
-      -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% ^
-      -DCMAKE_BUILD_TYPE=Release
-  > cmake --build . --target install --config Release
+  cd bmi-example-fortran
+  mkdir build && cd build
+  cmake .. ^
+    -G "NMake Makefiles" ^
+    -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% ^
+    -DCMAKE_BUILD_TYPE=Release
+  cmake --build . --target install --config Release
 
 Verify the install by testing for the existence of the module
 file of the library containing the compiled *heat* model:
 
-.. code::
+.. code:: bat
 
-  > if exist %CONDA_PREFIX%\include\bmiheatf.mod echo File exists
+  if exist %CONDA_PREFIX%\include\bmiheatf.mod echo File exists
 
 Note that on Windows systems, the conda package we specified
 called `fortran-compiler` installs a fairly old version of the Flang
@@ -170,126 +164,93 @@ that uses them, to avoid incompatibility issues, and so if you choose
 a different compiler than provided by `fortran-compiler`, you will
 likely have to compile the BMI bindings with this compiler as well.
 
+Create a *babelizer* configuration file
+---------------------------------------
 
-Create the *babelizer* input file
----------------------------------
-
-The *babelizer* input file provides information to the *babelizer*
+A *babelizer* configuration file provides information to the *babelizer*
 about the model to be wrapped.
-The input file is created with the ``babelize generate`` subcommand.
 
-Return to our initial ``build`` directory and call ``babelize generate`` with:
+Typically, we would use the ``babelize sample-config`` command
+to create a sample configuration file, which could then be edited.
+However, to simplify this example, we have provided a completed
+configuration file for the *heat* model.
+:download:`Download <babel_heatf.toml>` the file
+:download:`babel_heatf.toml` and copy it to the ``example-f`` directory.
 
-.. code:: bash
-
-  $ cd ../..
-  $ babelize generate \
-      --package=pymt_heatf \
-      --summary="PyMT plugin for the Fortran heat model" \
-      --language=fortran \
-      --library=bmiheatf \
-      --entry-point=bmi_heat \
-      --name=HeatModel \
-      --requirement="" > babel_heatf.toml
-
-In this call,
-the *babelizer* will also fill in default values;
-e.g., author name, author email, GitHub username, and license.
-
-The resulting file, :download:`babel_heatf.toml`,
-will look something like this:
+The configuration file looks like this:
 
 .. include:: babel_heatf.toml
    :literal:
 
-For more information on the entries and sections of the *babelizer* input file,
+For more information on the entries and sections of the *babelizer* configuration file,
 see `Input file <./readme.html#input-file>`_.
 
 
 Wrap the model with the *babelizer*
 -----------------------------------
 
-Generate Python bindings for the model with the ``babelize init`` subcommand:
+From the ``example-f`` directory,
+generate a Python package for the model with the ``babelize init`` command:
 
 .. code:: bash
 
-  $ babelize init babel_heatf.toml
+  babelize init babel_heatf.toml
 
 The results are placed in a new directory, ``pymt_heatf``,
 under the current directory.
 
-.. code:: bash
+Build and install the wrapped model
+...................................
 
-  $ ls -aF pymt_heatf
-  ./            .gitignore        recipe/
-  ../           LICENSE           requirements-build.txt
-  babel.toml    Makefile          requirements-library.txt
-  CHANGES.rst   MANIFEST.in       requirements-testing.txt
-  CREDITS.rst   meta/             requirements.txt
-  docs/         pymt_heatf/       setup.cfg
-  .git/         pyproject.toml    setup.py
-  .github/      README.rst
-
-Before we can build the Python bindings,
-we must ensure that the dependencies required by the toolchain,
-as well as any required by the model,
-as specified in the *babelizer* input file (none in this case),
-are satisfied.
-
-Change to the ``pymt_heatf`` directory and install dependencies
-into the conda environment:
+Change to the ``pymt_heatf`` directory,
+then build and install the Python package with *pip*:
 
 .. code:: bash
 
-  $ cd pymt_heatf
-  $ conda install -c conda-forge \
-      --file=requirements-build.txt \
-      --file=requirements-testing.txt \
-      --file=requirements-library.txt \
-      --file=requirements.txt
+  cd pymt_heatf
+  pip install ."[dev]"
 
-Now build the Python bindings with:
-
-.. code:: bash
-
-  $ make install
-
-This command sets off a long list of messages,
+The ``pip install`` command sets off a long list of messages,
 at the end of which you'll hopefully see:
 
 .. code:: bash
 
-  Successfully installed pymt-heatf-0.1
-
-Internally, this uses `pip` to install the Python
-package in editable mode.
+  Successfully installed pymt_heatf
 
 Pause a moment to see what we've done.
-Change back to the initial ``build`` directory,
+Change back to the initial ``example-f`` directory,
 make a new ``test`` directory,
 and change to it:
 
 .. code:: bash
 
-  $ cd ..
-  $ mkdir test && cd test
+  cd ..
+  mkdir test && cd test
 
-Start a Python session (e.g. run ``python``) and try the following commands:
+Start a Python session (e.g., run ``python``) and try the following commands:
 
 .. code:: python
 
-  >>> from pymt_heatf import HeatModel
-  >>> m = HeatModel()
-  >>> m.get_component_name()
-  'The 2D Heat Equation'
+  from pymt_heatf import HeatF
+  m = HeatF()
+  m.get_component_name()
+
+You should see:
+
+.. code:: bash
+
+  The 2D Heat Equation
 
 We've imported the *heat* model,
 written in Fortran,
 into Python!
-Exit the Python session (e.g. type ``exit()``)
+Exit the Python session (e.g. type ``exit()``).
+
+Test the BMI
+............
 
 At this point,
-it's a good idea to run the *bmi-tester* (`GitHub repo <bmi-tester>`_)
+it's a good idea to run the *bmi-tester* (`documentation <bmi-tester>`_)
 over the model.
 The *bmi-tester* exercises each BMI method exposed through Python,
 ensuring it works correctly.
@@ -301,16 +262,16 @@ Create a configuration file for *heat* at the command line with:
 
 .. code:: bash
 
-  $ echo "1.5, 8.0, 6, 5" > config.txt
+  echo "1.5, 8.0, 6, 5" > config.txt
 
-or download the file :download:`config.txt <examples/config.txt>`
-(making sure to place it in the ``test`` directory).
+or download the file :download:`config.txt <examples/config.txt>`,
+making sure to place it in the ``test`` directory.
 
-Run the *bmi-tester*:
+From the ``test`` directory, run the *bmi-tester*:
 
 .. code:: bash
 
-  $ bmi-test pymt_heatf:HeatModel --config-file=config.txt --root-dir=. -vvv
+  bmi-test pymt_heatf:HeatF --config-file=config.txt --root-dir=. -vvv
 
 This command sets off a long list of messages,
 ending with
@@ -322,8 +283,8 @@ ending with
 if everything has been built correctly.
 
 
-Add metadata to make a *pymt* component
----------------------------------------
+Make a *pymt* component
+-----------------------
 
 The final step in wrapping the *heat* model
 is to add metadata used by the `Python Modeling Tool`_, *pymt*.
@@ -338,14 +299,19 @@ Recall the *babelizer* outputs the wrapped *heat* model
 to the directory ``pymt_heatf``.
 Under this directory,
 the *babelizer* created a directory for *heat* model metadata,
-``meta/HeatModel``.
+``meta/HeatF``.
 Change back to the ``pymt_heatf`` directory
 and view the current metadata:
 
 .. code:: bash
 
-  $ cd ../pymt_heatf
-  $ ls meta/HeatModel/
+  cd ../pymt_heatf
+  ls meta/HeatModel/
+
+which gives:
+
+.. code:: bash
+
   api.yaml
 
 The file ``api.yaml`` is automatically generated by the *babelizer*.
@@ -360,47 +326,53 @@ other metadata files are needed, including:
 `Descriptions`_ of these files and their roles
 are given in the CSDMS Model Metadata repository.
 Download each of the files using the links in the list above
-and place them in the ``pymt_heatf/meta/HeatModel`` directory
+and place them in the ``pymt_heatf/meta/HeatF`` directory
 alongside ``api.yaml``.
-
-Next, install *pymt*:
+The structure of the ``meta`` directory should look like:
 
 .. code:: bash
 
-  $ conda install -c conda-forge pymt
+  meta/
+  └── HeatF/
+      ├── api.yaml
+      ├── heat.txt
+      ├── info.yaml
+      ├── parameters.yaml
+      └── run.yaml
 
-Then start a Python session and show that the *heat* model
+Run the babelized model in *pymt*
+...................................
+
+Start a Python session and show that the *heat* model
 can be called through *pymt*:
 
 .. code:: python
 
-  >>> from pymt.models import HeatModel
-  >>> m = HeatModel()
-  >>> m.name
-  'The 2D Heat Equation'
+  from pymt.models import HeatF
+  m = HeatF()
+  m.name
+
+You should see:
+
+.. code:: bash
+
+  The 2D Heat Equation
 
 A longer example,
-:download:`pymt_heatc_ex.py <examples/c/pymt_heatc_ex.py>`,
+:download:`pymt_heatf_ex.py <examples/fortran/pymt_heatf_ex.py>`,
 is included in the documentation.
 For easy viewing, it's reproduced here verbatim:
 
-.. include:: examples/c/pymt_heatc_ex.py
+.. include:: examples/fortran/pymt_heatf_ex.py
    :literal:
 
-:download:`Download <examples/c/pymt_heatc_ex.py>` this Python script,
+:download:`Download <examples/fortran/pymt_heatf_ex.py>` this Python script,
 make sure we're still in the `test` directory we just created,
 then run it with:
 
 .. code:: bash
 
-  $ python pymt_heatc_ex.py
-
-Note that here we are actually running the Python script that
-was developed for the :doc:`C example <example-c>`, not Fortran.
-That is one of the powerful things about wrapping your
-BMI-enabled model and accessing it via PyMT - it provides a
-standardised interface, regardless of the underlying model
-and the language it was written in.
+  python pymt_heatf_ex.py
 
 
 Summary
@@ -420,7 +392,7 @@ and C++.
 .. _bmi-example-fortran: https://github.com/csdms/bmi-example-fortran
 .. _instructions: https://github.com/csdms/bmi-example-c/blob/master/README.md
 .. _Developer Command Prompt: https://docs.microsoft.com/en-us/dotnet/framework/tools/developer-command-prompt-for-vs
-.. _bmi-tester: https://github.com/csdms/bmi-tester
+.. _bmi-tester: https://bmi-tester.readthedocs.io
 .. _Python Modeling Tool: https://pymt.readthedocs.io
 .. _CSDMS Model Metadata: https://github.com/csdms/model_metadata
 .. _Descriptions: https://github.com/csdms/model_metadata/blob/develop/README.rst
