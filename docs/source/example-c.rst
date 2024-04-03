@@ -27,15 +27,91 @@ create a directory to hold our work:
   mkdir example-c && cd example-c
 
 This directory is a starting point;
-we'll make new directories under it as we proceed through the example.
-In the end,
-the directory structure under ``example-c`` should look like that in Figure 1.
+we'll add files and directories to it as we proceed through the example.
+At the end,
+the directory structure under ``example-c`` should look similar to that below.
 
-.. figure:: _static/babelizer-bmi-example-c.png
-    :align: center
-    :alt: Directory structure after completing example
+.. code:: bash
 
-    Figure 1: Directory structure after completing the C example.
+  example-c
+  ├── babel_heatc.toml
+  ├── bmi-example-c
+  │   ├── CMakeLists.txt
+  │   ├── LICENSE
+  │   ├── README.md
+  │   ├── heat
+  │   │   ├── CMakeLists.txt
+  │   │   ├── bmi_heat.c
+  │   │   ├── bmi_heat.h
+  │   │   ├── bmi_main.c
+  │   │   ├── bmiheatc.pc.cmake
+  │   │   ├── heat.c
+  │   │   ├── heat.h
+  │   │   ├── heatc.pc.cmake
+  │   │   └── main.c
+  │   └── testing
+  │       ├── CMakeLists.txt
+  │       ├── config.txt
+  │       ├── test_conflicting_instances.c
+  │       ├── test_get_value.c
+  │       ├── test_grid_info.c
+  │       ├── test_initialize_from_file.c
+  │       ├── test_irf.c
+  │       ├── test_print_var_names.c
+  │       ├── test_reinitialize.c
+  │       └── test_set_value.c
+  ├── environment-c.yml
+  ├── pymt_heatc
+  │   ├── CHANGES.rst
+  │   ├── CREDITS.rst
+  │   ├── LICENSE.rst
+  │   ├── MANIFEST.in
+  │   ├── README.rst
+  │   ├── babel.toml
+  │   ├── build
+  │   │   └── HeatC
+  │   │       └── api.yaml
+  │   ├── docs
+  │   │   ├── Makefile
+  │   │   ├── _static
+  │   │   │   ├── logo-dark.svg
+  │   │   │   └── logo-light.svg
+  │   │   ├── api
+  │   │   ├── authors.rst
+  │   │   ├── babel.rst
+  │   │   ├── changelog.rst
+  │   │   ├── conf.py
+  │   │   ├── developer_install.rst
+  │   │   ├── environments.rst
+  │   │   ├── index.rst
+  │   │   ├── license.rst
+  │   │   ├── quickstart.rst
+  │   │   ├── updating.rst
+  │   │   └── usage.rst
+  │   ├── meson.build
+  │   ├── meta
+  │   │   └── HeatC
+  │   │       └── api.yaml
+  │   ├── noxfile.py
+  │   ├── pymt_heatc
+  │   │   ├── __init__.py
+  │   │   ├── _bmi.py
+  │   │   ├── _version.py
+  │   │   ├── data -> ../meta
+  │   │   └── lib
+  │   │       ├── __init__.py
+  │   │       └── heatc.pyx
+  │   ├── pyproject.toml
+  │   ├── requirements-build.txt
+  │   ├── requirements-library.txt
+  │   ├── requirements-testing.txt
+  │   ├── requirements.txt
+  │   └── setup.cfg
+  └── test
+      └── config.txt
+
+  16 directories, 60 files
+
 
 Set up a conda environment
 --------------------------
@@ -171,13 +247,14 @@ Build and install the wrapped model
 ...................................
 
 Change to the ``pymt_heatc`` directory,
-then build and install the Python package with:
+then build and install the Python package with *pip*:
 
 .. code:: bash
 
+  cd pymt_heatc
   pip install ."[dev]"
 
-This command sets off a long list of messages,
+The ``pip install`` command sets off a long list of messages,
 at the end of which you'll hopefully see:
 
 .. code:: bash
