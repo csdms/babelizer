@@ -107,7 +107,7 @@ attr = "babelizer._version.__version__"
 
 [tool.setuptools.package-data]
 babelizer = [
-    "data/*",
+    "data/**/*",
 ]
 
 [tool.setuptools.packages.find]
