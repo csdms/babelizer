@@ -167,29 +167,15 @@ generate a Python package for the model with the ``babelize init`` command:
 The results are placed in a new directory, ``pymt_heatc``,
 under the current directory.
 
-Before we can build and install the Python package,
-we must ensure that the dependencies required by the toolchain,
-as well as those required by the model,
-as specified in the *babelizer* configuration file,
-are satisfied.
+Build and install the wrapped model
+...................................
 
-Change to the ``pymt_heatc`` directory and install dependencies
-into the conda environment:
+Change to the ``pymt_heatc`` directory,
+then build and install the Python package with:
 
 .. code:: bash
 
-  cd pymt_heatc
-  conda install -c conda-forge \
-    --file requirements-build.txt \
-    --file requirements-library.txt \
-    --file requirements-testing.txt \
-    --file requirements.txt
-
-Now build and install the Python package with:
-
-.. code:: bash
-
-  pip install --no-build-isolation --editable .
+  pip install ."[dev]"
 
 This command sets off a long list of messages,
 at the end of which you'll hopefully see:
@@ -199,28 +185,36 @@ at the end of which you'll hopefully see:
   Successfully installed pymt-heatc
 
 Pause a moment to see what we've done.
-Change back to the initial ``build`` directory,
+Change back to the initial ``example-c`` directory,
 make a new ``test`` directory,
 and change to it:
 
 .. code:: bash
 
-  $ cd ..
-  $ mkdir test && cd test
+  cd ..
+  mkdir test && cd test
 
 Start a Python session and try the following commands:
 
 .. code:: python
 
-  >>> from pymt_heatc import HeatModel
-  >>> m = HeatModel()
-  >>> print(m.get_component_name())
+  from pymt_heatc import HeatC
+  m = HeatC()
+  m.get_component_name()
+
+You should see:
+
+.. code:: bash
+
   The 2D Heat Equation
 
 We've imported the *heat* model,
 written in C,
 into Python!
 Exit the Python session.
+
+Test the BMI
+............
 
 At this point,
 it's a good idea to run the *bmi-tester* (`GitHub repo <bmi-tester>`_)
