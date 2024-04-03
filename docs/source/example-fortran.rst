@@ -380,14 +380,14 @@ can be called through *pymt*:
   'The 2D Heat Equation'
 
 A longer example,
-:download:`pymt_heatc_ex.py <examples/pymt_heatc_ex.py>`,
+:download:`pymt_heatc_ex.py <examples/c/pymt_heatc_ex.py>`,
 is included in the documentation.
 For easy viewing, it's reproduced here verbatim:
 
-.. include:: examples/pymt_heatc_ex.py
+.. include:: examples/c/pymt_heatc_ex.py
    :literal:
 
-:download:`Download <examples/pymt_heatc_ex.py>` this Python script,
+:download:`Download <examples/c/pymt_heatc_ex.py>` this Python script,
 make sure we're still in the `test` directory we just created,
 then run it with:
 
