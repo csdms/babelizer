@@ -146,7 +146,7 @@ to create a sample configuration file, which could then be edited.
 However, to simplify this example, we have provided a completed
 configuration file for the *heat* model.
 :download:`Download <babel_heatc.toml>` the file
-:download:`babel_heatc.toml` and copy it to the ``build`` directory.
+:download:`babel_heatc.toml` and copy it to the ``example-c`` directory.
 
 The configuration file looks like this:
 
@@ -198,7 +198,7 @@ and change to it:
   cd ..
   mkdir test && cd test
 
-Start a Python session and try the following commands:
+Start a Python session (e.g., run ``python``) and try the following commands:
 
 .. code:: python
 
@@ -215,7 +215,7 @@ You should see:
 We've imported the *heat* model,
 written in C,
 into Python!
-Exit the Python session.
+Exit the Python session (e.g. type ``exit()``).
 
 Test the BMI
 ............
@@ -262,7 +262,7 @@ is to add metadata used by the `Python Modeling Tool`_, *pymt*.
 CSDMS develops a set of standards,
 the `CSDMS Model Metadata`_,
 that provides a detailed and formalized description of a model.
-The metadata allow *heat* to be run and and :term:`coupled <model coupling>`
+The metadata allow *heat* to be run and be :term:`coupled <model coupling>`
 with other models that expose a BMI and have been similarly wrapped
 with the *babelizer*.
 
