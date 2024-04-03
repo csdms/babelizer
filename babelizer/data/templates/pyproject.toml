@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 requires = [
     "setuptools >=61",
 ]
-{% else %}
+{%- else %}
 build-backend = "mesonpy"
 requires = ["cython", "numpy", "meson-python", "wheel"]
-{% endif %}
+{%- endif %}
 
 [project]
 name = "{{package.name}}"
@@ -66,10 +66,19 @@ testing = [
 ]
 
 {%- if language == 'python' %}
+
+[tool.setuptools.dynamic.version]
+attr = "{{package.name}}._version.__version__"
+
+[tool.setuptools.package-data]
+{{package.name}} = [
+    "data/**/*",
+]
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["{{package.name}}*"]
-{% endif %}
+{%- endif %}
 
 [tool.pytest.ini_options]
 minversion = "5.0"
