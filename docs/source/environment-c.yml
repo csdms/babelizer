@@ -11,3 +11,4 @@ dependencies:
   - bmi-c
   - babelizer
   - bmi-tester>=0.5.9
+  - pymt>=1.3
