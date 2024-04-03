@@ -1,9 +1,13 @@
-[library.HeatModel]
+# See https://babelizer.readthedocs.io/ for more information
+
+# Describe the library being wrapped.
+[library.HeatF]
 language = "fortran"
 library = "bmiheatf"
 header = ""
 entry_point = "bmi_heat"
 
+# Describe compiler options need to build the library being wrapped.
 [build]
 undef_macros = []
 define_macros = []
@@ -12,17 +16,26 @@ library_dirs = []
 include_dirs = []
 extra_compile_args = []
 
+# Describe the newly wrapped package.
 [package]
 name = "pymt_heatf"
-requirements = [""]
+requirements = []
 
 [info]
 github_username = "pymt-lab"
 package_author = "csdms"
 package_author_email = "csdms@colorado.edu"
 package_license = "MIT License"
-summary = "PyMT plugin for the Fortran heat model"
+summary = "PyMT component for the Fortran heat model"
 
 [ci]
-python_version = ["3.9"]
-os = ["linux", "mac", "windows"]
+python_version = [
+    "3.10",
+    "3.11",
+    "3.12",
+]
+os = [
+    "linux",
+    "mac",
+    "windows",
+]
