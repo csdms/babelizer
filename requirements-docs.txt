@@ -1,10 +1,10 @@
 # Requirements extracted from pyproject.toml
 # [project.optional-dependencies.docs]
-sphinx>=4
+furo
+pygments>=2.4
 sphinx-click
 sphinx-copybutton
 sphinx-inline-tabs
-sphinxcontrib.towncrier
-pygments>=2.4
 sphinx-inline-tabs
-furo
+sphinx>=4
+sphinxcontrib.towncrier

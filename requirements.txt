@@ -1,9 +1,10 @@
 # Requirements extracted from pyproject.toml
 # [project.dependencies]
-black
 click
 gitpython
+importlib-resources; python_version < '3.12'
+jinja2
+logoizer@ git+https://github.com/mcflugen/logoizer
 pyyaml
-tomlkit
-isort>=5
-cookiecutter
+tomli-w
+tomli; python_version < '3.11'
