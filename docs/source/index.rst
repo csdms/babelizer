@@ -66,6 +66,7 @@ Additional Information
    authors
    changelog
    contributing
+   code-of-conduct
    license
 
 Help
