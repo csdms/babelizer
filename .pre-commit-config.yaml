@@ -65,6 +65,15 @@ repos:
     - id: end-of-file-fixer
     - id: forbid-new-submodules
     - id: trailing-whitespace
+    - id: name-tests-test
+      exclude: ^external
+    - id: file-contents-sorter
+      files: |
+        (?x)^(
+          requirements(-\w+)?.(in|txt)|
+          external/requirements(-\w+)?.(in|txt)|
+          .gitignore
+        )
 
 - repo: https://github.com/pre-commit/mirrors-mypy
   rev: v1.8.0
