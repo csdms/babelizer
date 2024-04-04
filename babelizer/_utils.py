@@ -11,6 +11,7 @@ from collections.abc import Iterable
 from collections.abc import Sequence
 from contextlib import contextmanager
 from contextlib import suppress
+from typing import Any
 
 from babelizer.errors import SetupPyError
 from babelizer.errors import ValidationError
@@ -148,3 +149,44 @@ def parse_entry_point(specifier: str) -> tuple[str, str, str]:
         ) from None
 
     return name, module, obj
+
+
+def validate_dict_keys(
+    meta: dict[str, Any],
+    required: Iterable[str] | None = None,
+    optional: Iterable[str] | None = None,
+) -> None:
+    """Validate the keys of a dict.
+
+    Parameters
+    ----------
+    meta : dict
+        Configuration metadata
+    required : dict, optional
+        Required keys in configuration.
+    optional : dict, optional
+        Optional keys in configuration.
+
+    Raises
+    ------
+    ValidationError
+        Raised for invalid metadata.
+    """
+    actual = set(meta)
+    required = set() if required is None else set(required)
+    optional = required if optional is None else set(optional)
+    valid = required | optional
+
+    if missing := required - actual:
+        raise ValidationError(
+            "missing required key{}: {}".format(
+                "s" if len(missing) > 1 else "", ", ".join(missing)
+            )
+        )
+
+    if unknown := actual - valid:
+        raise ValidationError(
+            "unknown key{}: {}".format(
+                "s" if len(unknown) > 1 else "", ", ".join(unknown)
+            )
+        )

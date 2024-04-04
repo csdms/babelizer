@@ -9,7 +9,6 @@ import warnings
 from collections import defaultdict
 from collections.abc import Callable
 from collections.abc import Generator
-from collections.abc import Iterable
 from collections.abc import Mapping
 from contextlib import suppress
 from typing import Any
@@ -23,49 +22,9 @@ else:  # pragma: no cover (<PY311)
     import tomli as tomllib
 
 from babelizer._utils import parse_entry_point
+from babelizer._utils import validate_dict_keys
 from babelizer.errors import ScanError
 from babelizer.errors import ValidationError
-
-
-def validate_dict(
-    meta: dict[str, Any],
-    required: Iterable[str] | None = None,
-    optional: Iterable[str] | None = None,
-) -> None:
-    """Validate babelizer configuration metadata.
-
-    Parameters
-    ----------
-    meta : dict
-        Configuration metadata
-    required : dict, optional
-        Required keys in configuration.
-    optional : dict, optional
-        Optional keys in configuration.
-
-    Raises
-    ------
-    ValidationError
-        Raised for invalid metadata.
-    """
-    actual = set(meta)
-    required = set() if required is None else set(required)
-    optional = required if optional is None else set(optional)
-    valid = required | optional
-
-    if missing := required - actual:
-        raise ValidationError(
-            "missing required key{}: {}".format(
-                "s" if len(missing) > 1 else "", ", ".join(missing)
-            )
-        )
-
-    if unknown := actual - valid:
-        raise ValidationError(
-            "unknown key{}: {}".format(
-                "s" if len(unknown) > 1 else "", ", ".join(unknown)
-            )
-        )
 
 
 class BabelMetadata(Mapping[str, Any]):
@@ -197,7 +156,9 @@ class BabelMetadata(Mapping[str, Any]):
         """
         libraries = config["library"]
         if "entry_point" in libraries:
-            validate_dict(libraries, required=("language", "entry_point"), optional={})
+            validate_dict_keys(
+                libraries, required=("language", "entry_point"), optional={}
+            )
             for entry_point in libraries["entry_point"]:
                 try:
                     parse_entry_point(entry_point)
@@ -205,13 +166,13 @@ class BabelMetadata(Mapping[str, Any]):
                     raise ValidationError(f"poorly-formed entry point ({entry_point})")
         else:
             for _babelized_class, library in libraries.items():
-                validate_dict(
+                validate_dict_keys(
                     library,
                     required={"language", "library", "header", "entry_point"},
                     optional={},
                 )
 
-        validate_dict(
+        validate_dict_keys(
             config["build"],
             required=None,
             optional=(
@@ -223,11 +184,13 @@ class BabelMetadata(Mapping[str, Any]):
                 "extra_compile_args",
             ),
         )
-        validate_dict(config["package"], required=("name", "requirements"), optional={})
-        validate_dict(config["ci"], required=("python_version", "os"), optional={})
+        validate_dict_keys(
+            config["package"], required=("name", "requirements"), optional={}
+        )
+        validate_dict_keys(config["ci"], required=("python_version", "os"), optional={})
 
         try:
-            validate_dict(
+            validate_dict_keys(
                 config["info"],
                 required=(
                     "package_author",
@@ -239,7 +202,7 @@ class BabelMetadata(Mapping[str, Any]):
                 optional={},
             )
         except ValidationError:
-            validate_dict(
+            validate_dict_keys(
                 config["info"],
                 required=(
                     "plugin_author",
