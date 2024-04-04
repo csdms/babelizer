@@ -13,6 +13,7 @@ from contextlib import contextmanager
 from contextlib import suppress
 
 from babelizer.errors import SetupPyError
+from babelizer.errors import ValidationError
 
 
 def execute(args: Sequence[str]) -> subprocess.CompletedProcess[bytes]:
@@ -106,3 +107,44 @@ def as_cwd(path: str) -> Generator[None, None, None]:
     os.chdir(path)
     yield
     os.chdir(prev_cwd)
+
+
+def parse_entry_point(specifier: str) -> tuple[str, str, str]:
+    """Parse an entry point specifier into its parts.
+
+    Parameters
+    ----------
+    specifier : str
+        An entry-point specifier.
+
+    Returns
+    -------
+    tuple of str
+        The parts of the entry point as (*name*, *module*, *class*).
+
+    Raises
+    ------
+    ValidationError
+        If the entry point cannot be parsed.
+
+    Examples
+    --------
+    >>> from babelizer.metadata import BabelMetadata
+    >>> BabelMetadata.parse_entry_point("Foo=bar:Baz")
+    ('Foo', 'bar', 'Baz')
+
+    >>> BabelMetadata.parse_entry_point("bar:Baz")
+    Traceback (most recent call last):
+    ...
+    babelizer.errors.ValidationError: bad entry point specifier (bar:Baz). specifier must be of the form name=module:class
+    """
+    try:
+        name, value = (item.strip() for item in specifier.split("="))
+        module, obj = (item.strip() for item in value.split(":"))
+    except ValueError:
+        raise ValidationError(
+            f"bad entry point specifier ({specifier}). specifier must be of"
+            " the form name=module:class"
+        ) from None
+
+    return name, module, obj

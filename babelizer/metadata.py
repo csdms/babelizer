@@ -22,6 +22,7 @@ if sys.version_info >= (3, 11):  # pragma: no cover (PY11+)
 else:  # pragma: no cover (<PY311)
     import tomli as tomllib
 
+from babelizer._utils import parse_entry_point
 from babelizer.errors import ScanError
 from babelizer.errors import ValidationError
 
@@ -209,7 +210,7 @@ class BabelMetadata(Mapping[str, Any]):
             validate_dict(libraries, required=("language", "entry_point"), optional={})
             for entry_point in libraries["entry_point"]:
                 try:
-                    BabelMetadata.parse_entry_point(entry_point)
+                    parse_entry_point(entry_point)
                 except ValidationError:
                     raise ValidationError(f"poorly-formed entry point ({entry_point})")
         else:
@@ -277,9 +278,7 @@ class BabelMetadata(Mapping[str, Any]):
 
         libraries = {}
         for entry_point in entry_points:
-            babelized_class, library_name, class_name = BabelMetadata.parse_entry_point(
-                entry_point
-            )
+            babelized_class, library_name, class_name = parse_entry_point(entry_point)
             libraries[babelized_class] = {
                 "language": language,
                 "library": library_name,
@@ -392,44 +391,3 @@ class BabelMetadata(Mapping[str, Any]):
             Serialized metadata as a TOML-formatted string
         """
         return tomli_w.dumps(self._meta, multiline_strings=True)
-
-    @staticmethod
-    def parse_entry_point(specifier: str) -> tuple[str, str, str]:
-        """Parse an entry point specifier into its parts.
-
-        Parameters
-        ----------
-        specifier : str
-            An entry-point specifier.
-
-        Returns
-        -------
-        tuple of str
-            The parts of the entry point as (*name*, *module*, *class*).
-
-        Raises
-        ------
-        ValidationError
-            If the entry point cannot be parsed.
-
-        Examples
-        --------
-        >>> from babelizer.metadata import BabelMetadata
-        >>> BabelMetadata.parse_entry_point("Foo=bar:Baz")
-        ('Foo', 'bar', 'Baz')
-
-        >>> BabelMetadata.parse_entry_point("bar:Baz")
-        Traceback (most recent call last):
-        ...
-        babelizer.errors.ValidationError: bad entry point specifier (bar:Baz). specifier must be of the form name=module:class
-        """
-        try:
-            name, value = (item.strip() for item in specifier.split("="))
-            module, obj = (item.strip() for item in value.split(":"))
-        except ValueError:
-            raise ValidationError(
-                f"bad entry point specifier ({specifier}). specifier must be of"
-                " the form name=module:class"
-            ) from None
-
-        return name, module, obj

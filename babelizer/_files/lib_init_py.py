@@ -5,15 +5,15 @@ from collections.abc import Mapping
 from typing import Any
 
 
-def render(plugin_metadata: Mapping[str, Any]) -> str:
+def render(context: Mapping[str, Any]) -> str:
     """Render lib/__init__.py."""
-    package_name = plugin_metadata["package"]["name"]
+    package_name = context["package"]["name"]
     imports = [
         f"from {package_name}.lib.{cls.lower()} import {cls}"
-        for cls in plugin_metadata["library"]
+        for cls in context["library"]
     ]
 
-    names = [f"    {cls!r},".replace("'", '"') for cls in plugin_metadata["library"]]
+    names = [f"    {cls!r},".replace("'", '"') for cls in context["library"]]
 
     return f"""\
 {os.linesep.join(sorted(imports))}

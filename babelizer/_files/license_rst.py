@@ -5,13 +5,13 @@ from datetime import datetime
 from typing import Any
 
 
-def render(plugin_metadata: Mapping[str, Any]) -> str:
+def render(context: Mapping[str, Any]) -> str:
     """Render LICENSE.rst."""
-    license_name = plugin_metadata["info"]["package_license"]
+    license_name = context["info"]["package_license"]
     kwds = {
-        "full_name": plugin_metadata["info"]["package_author"],
+        "full_name": context["info"]["package_author"],
         "year": datetime.now().year,
-        "project_short_description": plugin_metadata["info"]["summary"],
+        "project_short_description": context["info"]["summary"],
     }
 
     return LICENSE[license_name].format(**kwds)

@@ -5,11 +5,11 @@ from collections.abc import Mapping
 from typing import Any
 
 
-def render(plugin_metadata: Mapping[str, Any]) -> str:
+def render(context: Mapping[str, Any]) -> str:
     """Render a .gitignore file."""
-    package_name = plugin_metadata["package"]["name"]
+    package_name = context["package"]["name"]
 
-    languages = {library["language"] for library in plugin_metadata["library"].values()}
+    languages = {library["language"] for library in context["library"].values()}
     ignore = {
         "*.egg-info/",
         "*.py[cod]",
@@ -22,7 +22,7 @@ def render(plugin_metadata: Mapping[str, Any]) -> str:
 
     if "python" not in languages:
         ignore |= {"*.o", "*.so"} | {
-            f"{package_name}/lib/{cls.lower()}.c" for cls in plugin_metadata["library"]
+            f"{package_name}/lib/{cls.lower()}.c" for cls in context["library"]
         }
 
     if "fortran" in languages:
