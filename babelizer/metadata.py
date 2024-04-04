@@ -68,16 +68,6 @@ def validate_dict(
         )
 
 
-def _norm_os(name: str) -> str:
-    if name == "linux":
-        name = "ubuntu"
-    elif name == "mac":
-        name = "macos"
-    if not name.endswith("-latest"):
-        name += "-latest"
-    return name
-
-
 class BabelMetadata(Mapping[str, Any]):
     """Library metadata."""
 
