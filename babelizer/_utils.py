@@ -129,11 +129,11 @@ def parse_entry_point(specifier: str) -> tuple[str, str, str]:
 
     Examples
     --------
-    >>> from babelizer.metadata import BabelMetadata
-    >>> BabelMetadata.parse_entry_point("Foo=bar:Baz")
+    >>> from babelizer._utils import parse_entry_point
+    >>> parse_entry_point("Foo=bar:Baz")
     ('Foo', 'bar', 'Baz')
 
-    >>> BabelMetadata.parse_entry_point("bar:Baz")
+    >>> parse_entry_point("bar:Baz")
     Traceback (most recent call last):
     ...
     babelizer.errors.ValidationError: bad entry point specifier (bar:Baz). specifier must be of the form name=module:class
