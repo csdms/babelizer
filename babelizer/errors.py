@@ -35,7 +35,9 @@ class ScanError(BabelizeError):
 class OutputDirExistsError(BabelizeError):
     """An exception used when the directory for babelized output exists."""
 
-    pass
+    def __str__(self) -> str:
+        """Render a user-readable error message."""
+        return f"output directory exists: {self._message}"
 
 
 class SetupPyError(BabelizeError):

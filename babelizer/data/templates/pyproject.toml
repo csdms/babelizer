@@ -1,0 +1,126 @@
+[build-system]
+{%- if language == 'python' %}
+build-backend = "setuptools.build_meta"
+requires = [
+    "setuptools >=61",
+]
+{%- else %}
+build-backend = "mesonpy"
+requires = ["cython", "numpy", "meson-python", "wheel"]
+{%- endif %}
+
+[project]
+name = "{{package.name}}"
+authors = [
+  {name = "{{info.package_author}}", email = "{{info.package_author_email}}"},
+]
+maintainers = [
+  {name = "{{info.package_author}}", email = "{{info.package_author_email}}"},
+]
+description = "PyMT plugin for {{package.name}}"
+license = {text = "MIT License"}
+classifiers=[
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: {{ info.package_license }}",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.10"
+keywords=["bmi", "pymt"]
+dynamic = ["version"]
+dependencies = [
+  "numpy",
+]
+
+[project.urls]
+homepage = "https://github.com/{{ info.github_username }}/{{ package.name }}"
+
+[project.entry-points."pymt.plugins"]
+{%- for babelized_class, _ in components|dictsort %}
+{{ babelized_class }} = "{{ package.name }}.bmi:{{ babelized_class }}"
+{%- endfor %}
+
+[project.optional-dependencies]
+dev = [
+  "meson",
+  "meson-python",
+  "ninja",
+  "nox",
+]
+docs = [
+  "sphinx>=4",
+  "sphinx-copybutton",
+  "sphinx-inline-tabs",
+  "sphinxcontrib.towncrier",
+  "pygments>=2.4",
+  "sphinx-inline-tabs",
+  "furo",
+]
+testing = [
+  "bmi-tester>=0.5.4",
+]
+
+{%- if language == 'python' %}
+
+[tool.setuptools.dynamic.version]
+attr = "{{package.name}}._version.__version__"
+
+[tool.setuptools.package-data]
+{{package.name}} = [
+    "data/**/*",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["{{package.name}}*"]
+{%- endif %}
+
+[tool.pytest.ini_options]
+minversion = "5.0"
+testpaths = ["{{ package.name }}", "tests"]
+norecursedirs = [".*", "*.egg*", "build", "dist"]
+addopts = """
+    --ignore setup.py
+    --tb native
+    --strict
+    --durations 16
+    --doctest-modules
+    -vvv
+"""
+doctest_optionflags = [
+    "NORMALIZE_WHITESPACE",
+    "IGNORE_EXCEPTION_DETAIL",
+    "ALLOW_UNICODE"
+]
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+line_length = 88
+
+[tool.check-manifest]
+ignore = [
+  "{{ package.name }}/data",
+  "{{ package.name }}/data/**/*",
+]
+
+[tool.towncrier]
+directory = "news"
+package = "{{ package.name }}"
+filename = "CHANGES.rst"
+single_file = true
+underlines = "-^\""
+issue_format = "`#{issue} <https://github.com/{{ info.github_username }}/{{ package.name }}/issues/{issue}>`_"
+title_format = "{version} ({project_date})"
+wrap = true
+
+[tool.zest-releaser]
+tag-format = "v{version}"
+python-file-with-version = "{{ package.name }}/_version.py"

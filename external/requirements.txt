@@ -1,12 +1,12 @@
-bmi-tester>=0.5.4
 bmi-c
 bmi-cxx
 bmi-fortran
+bmi-tester>=0.5.4
 bmipy
-cmake
 c-compiler
+cmake
 cxx-compiler
 fortran-compiler
 make
-pkg-config
 pip
+pkg-config
