@@ -21,11 +21,11 @@ from babelizer._files.meson_build import render as render_meson_build
 from babelizer._files.readme import render as render_readme
 from babelizer._utils import get_setup_py_version
 from babelizer._utils import save_files
+from babelizer.config import BabelConfig
 from babelizer.errors import OutputDirExistsError
 from babelizer.errors import ScanError
 from babelizer.errors import SetupPyError
 from babelizer.errors import ValidationError
-from babelizer.metadata import BabelMetadata
 from babelizer.render import render
 
 out = partial(click.secho, bold=True, err=True)
@@ -90,15 +90,15 @@ def init(
 
     fmt = pathlib.Path(meta.name).suffix[1:] or "toml"
     try:
-        babel_metadata = BabelMetadata.from_stream(cast(io.TextIOBase, meta), fmt=fmt)
+        babel_config = BabelConfig.from_stream(cast(io.TextIOBase, meta), fmt=fmt)
     except (ScanError, ValidationError) as error:
         raise BabelizerAbort(str(error))
 
-    output = babel_metadata["package"]["name"]
+    output = babel_config["package"]["name"]
 
     try:
         new_folder = render(
-            babel_metadata,
+            babel_config,
             output,
             template=template,
             clobber=False,
@@ -149,14 +149,14 @@ def update(
     package_path = os.path.realpath(".")
     for fname in ("babel.toml", "babel.yaml", "plugin.yaml"):
         # if (package_path / fname).is_file():
-        #     metadata_path = package_path / fname
+        #     config_path = package_path / fname
         if os.path.isfile(os.path.join(package_path, fname)):
-            metadata_path = os.path.join(package_path, fname)
+            config_path = os.path.join(package_path, fname)
             break
     else:
-        metadata_path = None
+        config_path = None
 
-    if not metadata_path:
+    if not config_path:
         err("this does not appear to be a babelized folder (missing 'babel.toml')")
         raise click.Abort()
 
@@ -166,7 +166,7 @@ def update(
         out(f"reading template from {template}")
 
     try:
-        babel_metadata = BabelMetadata.from_path(metadata_path)
+        babel_config = BabelConfig.from_path(config_path)
     except ValidationError as error:
         raise BabelizerAbort(str(error))
 
@@ -187,7 +187,7 @@ def update(
     out(f"re-rendering {package_path}")
     with save_files(["CHANGES.rst", "CREDITS.rst"]):
         render(
-            babel_metadata,
+            babel_config,
             os.path.dirname(package_path),
             # package_path.parent,
             template=template,
@@ -196,7 +196,7 @@ def update(
         )
 
     extra_files = _repo_contents(package_path) - _generated_files(
-        babel_metadata, template=template, version=version
+        babel_config, template=template, version=version
     )
 
     ignore = ["meta*", "notebooks*", "docs*", "**/data"]
@@ -310,11 +310,11 @@ def _repo_contents(base: str) -> set[str]:
 
 
 def _generated_files(
-    babel_metadata: BabelMetadata, template: str | None = None, version: str = "0.1"
+    babel_config: BabelConfig, template: str | None = None, version: str = "0.1"
 ) -> set[str]:
     with tempfile.TemporaryDirectory() as tmpdir:
         new_folder = render(
-            babel_metadata,
+            babel_config,
             tmpdir,
             template=template,
             version=version,

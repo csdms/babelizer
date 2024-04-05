@@ -10,7 +10,7 @@ else:  # pragma: no cover (<PY311)
 from click.testing import CliRunner
 
 from babelizer.cli import babelize
-from babelizer.metadata import BabelMetadata
+from babelizer.config import BabelConfig
 
 
 def test_help():
@@ -67,7 +67,7 @@ def test_generate_gives_valid_toml():
     assert result.exit_code == 0
 
     config = tomllib.loads(result.output)
-    BabelMetadata.validate(config)
+    BabelConfig.validate(config)
 
 
 def test_init_noargs():

@@ -161,7 +161,7 @@ def validate_dict_keys(
     Parameters
     ----------
     meta : dict
-        Configuration metadata
+        Dictionary to validate.
     required : dict, optional
         Required keys in configuration.
     optional : dict, optional
@@ -170,7 +170,7 @@ def validate_dict_keys(
     Raises
     ------
     ValidationError
-        Raised for invalid metadata.
+        Raised for invalid dict.
     """
     actual = set(meta)
     required = set() if required is None else set(required)

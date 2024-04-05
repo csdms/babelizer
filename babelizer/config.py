@@ -1,4 +1,4 @@
-"""Library metadata used by the babelizer to wrap libraries."""
+"""Library configuration used by the babelizer to wrap libraries."""
 
 from __future__ import annotations
 
@@ -27,8 +27,8 @@ from babelizer.errors import ScanError
 from babelizer.errors import ValidationError
 
 
-class BabelMetadata(Mapping[str, Any]):
-    """Library metadata."""
+class BabelConfig(Mapping[str, Any]):
+    """Babelizer configuration."""
 
     LOADERS: dict[str, Callable[[str], dict[str, Any]]] = {
         "yaml": yaml.safe_load,
@@ -44,7 +44,7 @@ class BabelMetadata(Mapping[str, Any]):
         plugin: dict[str, Any] | None = None,
         ci: dict[str, Any] | None = None,
     ):
-        """Metadata used by the babelizer to wrap a library.
+        """Configuration used by the babelizer to wrap a library.
 
         Parameters
         ----------
@@ -77,9 +77,9 @@ class BabelMetadata(Mapping[str, Any]):
             "ci": dict(ci or {}),
         }
 
-        BabelMetadata.validate(config)
+        BabelConfig.validate(config)
 
-        self._meta = BabelMetadata.norm(config)
+        self._meta = BabelConfig.norm(config)
 
     def __getitem__(self, key: str) -> dict[str, Any]:
         return self._meta[key]
@@ -91,8 +91,8 @@ class BabelMetadata(Mapping[str, Any]):
         return len(self._meta)
 
     @classmethod
-    def from_stream(cls, stream: io.TextIOBase, fmt: str = "toml") -> BabelMetadata:
-        """Create an instance of BabelMetadata from a file-like object.
+    def from_stream(cls, stream: io.TextIOBase, fmt: str = "toml") -> BabelConfig:
+        """Create an instance of BabelConfig from a file-like object.
 
         Parameters
         ----------
@@ -103,28 +103,28 @@ class BabelMetadata(Mapping[str, Any]):
 
         Returns
         -------
-        BabelMetadata
-            A BabelMetadata instance.
+        BabelConfig
+            A BabelConfig instance.
         """
         try:
-            loader = BabelMetadata.LOADERS[fmt]
+            loader = BabelConfig.LOADERS[fmt]
         except KeyError:
             raise ValueError(f"unrecognized format ({fmt})")
 
         try:
             meta = loader(stream.read())
         except yaml.scanner.ScannerError as error:
-            raise ScanError(f"unable to scan yaml-formatted metadata file:\n{error}")
+            raise ScanError(f"unable to scan yaml-formatted config file:\n{error}")
         except tomllib.TOMLDecodeError as error:
-            raise ScanError(f"unable to scan toml-formatted metadata file:\n{error}")
+            raise ScanError(f"unable to scan toml-formatted config file:\n{error}")
         else:
             if not isinstance(meta, dict):
-                raise ValidationError("metadata file does not contain a mapping object")
+                raise ValidationError("config file does not contain a mapping object")
         return cls(**meta)
 
     @classmethod
-    def from_path(cls, filepath: str) -> BabelMetadata:
-        """Create an instance of BabelMetadata from a path-like object.
+    def from_path(cls, filepath: str) -> BabelConfig:
+        """Create an instance of BabelConfig from a path-like object.
 
         Parameters
         ----------
@@ -133,26 +133,26 @@ class BabelMetadata(Mapping[str, Any]):
 
         Returns
         -------
-            A BabelMetadata instance.
+            A BabelConfig instance.
         """
         path = pathlib.Path(filepath)
 
         with open(filepath) as fp:
-            return BabelMetadata.from_stream(fp, fmt=path.suffix[1:])
+            return BabelConfig.from_stream(fp, fmt=path.suffix[1:])
 
     @staticmethod
     def validate(config: dict[str, Any]) -> None:
-        """Ensure babelizer configuration metadata are valid.
+        """Ensure babelizer configuration is valid.
 
         Parameters
         ----------
         config : dict
-            Metadata to babelize a library.
+            Configuration to babelize a library.
 
         Raises
         ------
         ValidationError
-            If metadata are not valid.
+            If configuration is not valid.
         """
         libraries = config["library"]
         if "entry_point" in libraries:
@@ -253,29 +253,29 @@ class BabelMetadata(Mapping[str, Any]):
 
     @staticmethod
     def norm(config: dict[str, Any]) -> dict[str, Any]:
-        """Ensure current style metadata are used in babelizer configuration.
+        """Ensure current style is used in babelizer configuration.
 
         Parameters
         ----------
         config : dict
-            Metadata to babelize a library.
+            Configuration to babelize a library.
 
         Return
         ------
         dict
-            A dict of babelizer configuration metadata.
+            A dict of babelizer configuration.
         """
         build: dict[str, list[str]] = defaultdict(list)
         with suppress(KeyError):
             build.update(config["build"])
 
         if "entry_point" in config["library"]:
-            libraries = BabelMetadata._handle_old_style_entry_points(config["library"])
+            libraries = BabelConfig._handle_old_style_entry_points(config["library"])
         else:
             libraries = {k: dict(v) for k, v in config["library"].items()}
 
         if "plugin_author" in config["info"]:
-            info = BabelMetadata._handle_old_style_info(config["info"])
+            info = BabelConfig._handle_old_style_info(config["info"])
         else:
             info = config["info"]
 
@@ -309,7 +309,7 @@ class BabelMetadata(Mapping[str, Any]):
         }
 
     def dump(self, fp: io.TextIOBase, fmt: str = "toml") -> None:
-        """Write serialized metadata to a file.
+        """Write serialized configuration to a file.
 
         Parameters
         ----------
@@ -321,7 +321,7 @@ class BabelMetadata(Mapping[str, Any]):
         print(self.format(fmt=fmt), file=fp, end="")
 
     def format(self, fmt: str = "toml") -> str:
-        """Serialize metadata to output format.
+        """Serialize configuration to output format.
 
         Parameters
         ----------
@@ -330,17 +330,17 @@ class BabelMetadata(Mapping[str, Any]):
 
         Returns
         -------
-        metadata : str
-            Serialized metadata.
+        config : str
+            Serialized configuration.
         """
         return getattr(self, f"format_{fmt}")()
 
     def format_toml(self) -> str:
-        """Serialize metadata as TOML.
+        """Serialize configuration as TOML.
 
         Returns
         -------
         str
-            Serialized metadata as a TOML-formatted string
+            Serialized configuration as a TOML-formatted string
         """
         return tomli_w.dumps(self._meta, multiline_strings=True)

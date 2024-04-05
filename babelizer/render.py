@@ -14,12 +14,12 @@ from babelizer._files.gitignore import render as render_gitignore
 from babelizer._files.init_py import render as render_init
 from babelizer._files.lib_init_py import render as render_lib_init
 from babelizer._files.license_rst import render as render_license
+from babelizer.config import BabelConfig
 from babelizer.errors import OutputDirExistsError
-from babelizer.metadata import BabelMetadata
 
 
 def render(
-    plugin_metadata: BabelMetadata,
+    babel_config: BabelConfig,
     output: str,
     template: str | None = None,
     clobber: bool = False,
@@ -30,8 +30,8 @@ def render(
 
     Parameters
     ----------
-    plugin_metadata : BabelMetadata
-        The metadata used to babelize the library.
+    babel_config : BabelConfig
+        The configuration used to babelize the library.
     output : str
         Name of the directory that will be the new repository.
     template : str, optional
@@ -58,15 +58,15 @@ def render(
 
     context = {
         "files": {
-            "_bmi.py": render_bmi(plugin_metadata),
-            "__init__.py": render_init(plugin_metadata),
-            "lib/__init__.py": render_lib_init(plugin_metadata),
-            ".gitignore": render_gitignore(plugin_metadata),
-            "LICENSE.rst": render_license(plugin_metadata),
+            "_bmi.py": render_bmi(babel_config),
+            "__init__.py": render_init(babel_config),
+            "lib/__init__.py": render_lib_init(babel_config),
+            ".gitignore": render_gitignore(babel_config),
+            "LICENSE.rst": render_license(babel_config),
         },
         "now": datetime.datetime.now(),
         "package_version": version,
-    } | {k: plugin_metadata[k] for k in plugin_metadata}
+    } | {k: babel_config[k] for k in babel_config}
 
     if os.path.exists(output):
         raise OutputDirExistsError(output)
@@ -76,7 +76,7 @@ def render(
     path = os.path.realpath(output)
 
     with open(os.path.join(path, "babel.toml"), "w") as fp:
-        plugin_metadata.dump(fp, fmt="toml")
+        babel_config.dump(fp, fmt="toml")
 
     git.Repo.init(path)
 
