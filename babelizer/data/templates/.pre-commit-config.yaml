@@ -11,7 +11,8 @@ repos:
     minimum_pre_commit_version: 2.9.2
     require_serial: true
     types_or: [python, pyi]
-    exclude: ^babelizer/data
+    args: ["--extend-exclude=setup_utils.py"]
+    exclude: ^setup_utils.py
   - id: black-jupyter
     name: black-jupyter
     description:
@@ -22,7 +23,7 @@ repos:
     require_serial: true
     types_or: [python, pyi, jupyter]
     additional_dependencies: [".[jupyter]"]
-    exclude: ^babelizer/data
+    exclude: ^setup_utils.py
 
 - repo: https://github.com/pycqa/flake8
   rev: 7.0.0
@@ -32,53 +33,35 @@ repos:
     - flake8-bugbear
     - flake8-comprehensions
     - flake8-simplify
-    exclude: ^babelizer/data
 
 - repo: https://github.com/asottile/pyupgrade
   rev: v3.15.2
   hooks:
   - id: pyupgrade
     args: [--py310-plus]
-    exclude: ^babelizer/data
 
 - repo: https://github.com/PyCQA/isort
   rev: 5.13.2
   hooks:
   - id: isort
     files: \.py$
-    exclude: ^babelizer/data
     args: [--force-single-line-imports]
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.5.0
   hooks:
     - id: check-builtin-literals
-      exclude: ^babelizer/data
     - id: check-added-large-files
     - id: check-case-conflict
     - id: check-toml
-      exclude: ^babelizer/data
     - id: check-yaml
-      exclude: ^babelizer/data
     - id: debug-statements
-      exclude: ^babelizer/data
     - id: end-of-file-fixer
     - id: forbid-new-submodules
     - id: trailing-whitespace
-    - id: name-tests-test
-      exclude: ^external
-    - id: file-contents-sorter
-      files: |
-        (?x)^(
-          requirements(-\w+)?.(in|txt)|
-          external/requirements(-\w+)?.(in|txt)|
-          .gitignore
-        )
 
 - repo: https://github.com/pre-commit/mirrors-mypy
   rev: v1.9.0
   hooks:
   - id: mypy
     additional_dependencies: [types-all]
-    files: babelizer/.*\.py$
-    exclude: ^babelizer/data

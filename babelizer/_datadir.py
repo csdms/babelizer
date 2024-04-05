@@ -10,3 +10,7 @@ else:  # pragma: no cover (<PY312)
 
 def get_datadir() -> str:
     return str(importlib_resources.files("babelizer") / "data")
+
+
+def get_template_dir() -> str:
+    return str(importlib_resources.files("babelizer") / "data" / "templates")

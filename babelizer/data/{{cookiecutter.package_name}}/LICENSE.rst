@@ -1,1 +1,0 @@
-{{cookiecutter.files['LICENSE.rst']}}

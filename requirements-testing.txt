@@ -1,8 +1,9 @@
 # Requirements extracted from pyproject.toml
 # [project.optional-dependencies.testing]
+bmi-tester>=0.5.9
+coverage[toml]
+coveralls
 pytest
 pytest-cov
 pytest-datadir
 pytest-xdist
-coverage[toml]
-coveralls

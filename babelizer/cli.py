@@ -14,19 +14,19 @@ from typing import cast
 import click
 import git
 
-from babelizer._datadir import get_datadir
+from babelizer._datadir import get_template_dir
 from babelizer._files.gitignore import render as render_gitignore
 from babelizer._files.license_rst import render as render_license
 from babelizer._files.meson_build import render as render_meson_build
 from babelizer._files.readme import render as render_readme
+from babelizer._utils import get_setup_py_version
+from babelizer._utils import save_files
+from babelizer.config import BabelConfig
 from babelizer.errors import OutputDirExistsError
 from babelizer.errors import ScanError
 from babelizer.errors import SetupPyError
 from babelizer.errors import ValidationError
-from babelizer.metadata import BabelMetadata
 from babelizer.render import render
-from babelizer.utils import get_setup_py_version
-from babelizer.utils import save_files
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
@@ -68,7 +68,7 @@ def babelize(cd: str) -> None:
 @click.option(
     "--template",
     default=None,
-    help="Location of cookiecutter template",
+    help="Location of templates",
 )
 @click.option(
     "--package-version",
@@ -83,21 +83,22 @@ def init(
 
     META is babelizer configuration information, usually saved to a file.
     """
-    output = "."
-    template = template or get_datadir()
+    template = template or get_template_dir()
 
     if not quiet:
         out(f"reading template from {template}")
 
     fmt = pathlib.Path(meta.name).suffix[1:] or "toml"
     try:
-        babel_metadata = BabelMetadata.from_stream(cast(io.TextIOBase, meta), fmt=fmt)
+        babel_config = BabelConfig.from_stream(cast(io.TextIOBase, meta), fmt=fmt)
     except (ScanError, ValidationError) as error:
         raise BabelizerAbort(str(error))
 
+    output = babel_config["package"]["name"]
+
     try:
         new_folder = render(
-            babel_metadata,
+            babel_config,
             output,
             template=template,
             clobber=False,
@@ -111,6 +112,7 @@ def init(
             "Don't forget to drop model metadata files into"
             f" {os.path.join(new_folder, 'meta')}"
         )
+
     repo = git.Repo(new_folder)
     repo.git.add("--all")
     repo.index.commit("Initial commit")
@@ -134,7 +136,7 @@ def init(
 @click.option(
     "--template",
     default=None,
-    help="Location of cookiecutter template",
+    help="Location of templates",
 )
 @click.option(
     "--set-version", default=None, help="Set the version of the updated package"
@@ -147,24 +149,24 @@ def update(
     package_path = os.path.realpath(".")
     for fname in ("babel.toml", "babel.yaml", "plugin.yaml"):
         # if (package_path / fname).is_file():
-        #     metadata_path = package_path / fname
+        #     config_path = package_path / fname
         if os.path.isfile(os.path.join(package_path, fname)):
-            metadata_path = os.path.join(package_path, fname)
+            config_path = os.path.join(package_path, fname)
             break
     else:
-        metadata_path = None
+        config_path = None
 
-    if not metadata_path:
+    if not config_path:
         err("this does not appear to be a babelized folder (missing 'babel.toml')")
         raise click.Abort()
 
-    template = template or get_datadir()
+    template = template or get_template_dir()
 
     if not quiet:
         out(f"reading template from {template}")
 
     try:
-        babel_metadata = BabelMetadata.from_path(metadata_path)
+        babel_config = BabelConfig.from_path(config_path)
     except ValidationError as error:
         raise BabelizerAbort(str(error))
 
@@ -185,7 +187,7 @@ def update(
     out(f"re-rendering {package_path}")
     with save_files(["CHANGES.rst", "CREDITS.rst"]):
         render(
-            babel_metadata,
+            babel_config,
             os.path.dirname(package_path),
             # package_path.parent,
             template=template,
@@ -194,7 +196,7 @@ def update(
         )
 
     extra_files = _repo_contents(package_path) - _generated_files(
-        babel_metadata, template=template, version=version
+        babel_config, template=template, version=version
     )
 
     ignore = ["meta*", "notebooks*", "docs*", "**/data"]
@@ -272,21 +274,19 @@ def sample_meson_build(extension: Collection[str]) -> None:
 @babelize.command()
 def sample_readme() -> None:
     context = {
-        "cookiecutter": {
-            "language": "python",
-            "open_source_license": "MIT License",
-            "package_name": "springfield_monorail",
-            "info": {
-                "github_username": "lyle-lanley",
-                "package_author": "Lyle Lanley",
-                "summary": "A Monorail!",
-                "package_license": "MIT License",
-            },
-            "components": {
-                "Monorail": {"library": "monorail"},
-                "Rail": {"library": "rail"},
-            },
-        }
+        "language": "python",
+        "open_source_license": "MIT License",
+        "info": {
+            "github_username": "lyle-lanley",
+            "package_author": "Lyle Lanley",
+            "summary": "A Monorail!",
+            "package_license": "MIT License",
+        },
+        "components": {
+            "Monorail": {"library": "monorail"},
+            "Rail": {"library": "rail"},
+        },
+        "package": {"name": "springfield_monorail"},
     }
     print(render_readme(context))
 
@@ -310,11 +310,11 @@ def _repo_contents(base: str) -> set[str]:
 
 
 def _generated_files(
-    babel_metadata: BabelMetadata, template: str | None = None, version: str = "0.1"
+    babel_config: BabelConfig, template: str | None = None, version: str = "0.1"
 ) -> set[str]:
     with tempfile.TemporaryDirectory() as tmpdir:
         new_folder = render(
-            babel_metadata,
+            babel_config,
             tmpdir,
             template=template,
             version=version,
