@@ -215,12 +215,13 @@ For example, the above *babel.toml* was generated with:
 Library section
 ^^^^^^^^^^^^^^^
 
-The *library* section specifies information about the library being babelized.
+The *library* section provides information about the library being *babelized*.
 
 Name
 """"
 
-The name of the babelized class.
+The name of the *babelized* class is integrated into the *library* table header;
+in the example above, ``Monorail``.
 This will be a Python class,
 so it should follow Python naming conventions such as camel-case typing.
 
@@ -230,17 +231,12 @@ Language
 The programming language of the library (possible values are "c", "c++",
 "fortran", and "python").
 
-.. code:: toml
-
-  [library]
-  language = "c"
-
 Library
 """""""
 
 The name of the BMI library to wrap.
 This is the text passed to the linker through the `-l` option;
-for example, use "foo" for a library *libfoo.a*.
+for example, use "bmimonorail" for a library *libbmimonorail.a*.
 
 Header
 """"""
@@ -257,24 +253,22 @@ this is typically the name of a class that implements the BMI.
 For procedural languages,
 this is typically a function.
 
-An example of a C++ library (*bmi_child*), exposing a class *BmiChild* (which
+An example of a C++ library (*bmi_child*), exposing a class *BmiChild* (that
 implements a BMI) might look like the following:
 
 .. code:: toml
 
-   [library]
-   [library.Child]
-   language = "c++"
-   library = "bmi_child"
-   header = "bmi_child.hxx"
-   entry_point = "BmiChild"
+  [library.Child]
+  language = "c++"
+  library = "bmi_child"
+  header = "bmi_child.hxx"
+  entry_point = "BmiChild"
 
-whereas a C library (*bmi_cem*), exposing a function *register_bmi_cem* (which
+whereas a C library (*bmi_cem*), exposing a function *register_bmi_cem* (that
 implements a BMI) might look like:
 
 .. code:: toml
 
-   [library]
    [library.Cem]
    language = "c"
    library = "bmi_cem"
@@ -284,30 +278,23 @@ implements a BMI) might look like:
 Build section
 ^^^^^^^^^^^^^
 
-In the build section the user can specify flags to pass to the compiler
+In the *build* section, specify flags to pass to the compiler
 when building the extension.
 
 Package section
 ^^^^^^^^^^^^^^^
 
-Name and extra requirements needed to build the babelized library.
+The *package* section provides the name and extra requirements needed to build the *babelized* library.
 
 Name
 """"
 
-Name to use for the wrapped package. This is used when creating the new
-package *<package_name>*. For example, the following will create
-a new package, *pymt_foo*.
-
-.. code:: toml
-
-  [package]
-  name = "pymt_foo"
+The name to use for the Python package output from the *babelizer*.
 
 Requirements
 """"""""""""
 
-List of packages required by the library being wrapped. For example, the
+A list of packages required by the library being wrapped. For example, the
 following indicates that the packages *foo* and *bar* are dependencies
 for the package.
 
@@ -349,17 +336,10 @@ Summary
 
 A short description of the wrapped library.
 
-Ci section
+CI section
 ^^^^^^^^^^
 
 Information about how to set up continuous integration.
-
-.. code:: toml
-
-    [ci]
-    python_version = ["3.7", "3.8", "3.9"]
-    os = ["linux", "mac", "windows"]
-
 
 Python version
 """"""""""""""
@@ -369,20 +349,19 @@ A list of Python versions to build and test the generated project with.
 Operating system
 """"""""""""""""
 
-A list of operating systems to build the generate project on. Supported values are
+A list of operating systems on which to build the generated project. Supported values are
 *linux*, *mac*, and *windows*.
 
-Example babel.toml
-^^^^^^^^^^^^^^^^^^
+Example configuration file
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Below is an example of a *babel.toml* file that describes a shared library,
+Below is an example of a *babelizer* configuration file that describes a shared library,
 written in C. In this example, the library, *bmi_hydrotrend*, exposes the
 function *register_bmi_hydrotrend* that implements a BMI for a component
 called *hydrotrend*.
 
 .. code:: toml
 
-    [library]
     [library.Hydrotrend]
     language = "c"
     library = "bmi_hydrotrend"
@@ -405,25 +384,21 @@ called *hydrotrend*.
     github_username = "pymt-lab"
     package_author = "csdms"
     package_author_email = "csdms@colorado.edu"
-    package_license = "MIT"
+    package_license = "MIT License"
     summary = "PyMT plugin for hydrotrend"
 
     [ci]
-    python_version = ["3.7", "3.8", "3.9"]
+    python_version = ["3.10", "3.11", "3.12"]
     os = ["linux", "mac", "windows"]
 
-You can use the ``babelize sample-config`` command to generate
-a sample *babel.toml* file to get you started. For example,
-the above *babel.toml* can be generated with the following,
-
-.. code:: bash
-
-  babelize sample-config
+For other examples of *babelizer* configuration files,
+see the directories under the `external/tests <https://github.com/csdms/babelizer/tree/develop/external/tests>`_
+directory of the *babelizer* repository.
 
 Use
 ---
 
-Generate Python bindings for a library that implements a BMI,
+Generate a Python package for a library that implements a BMI,
 sending output to the current directory
 
 .. code:: bash
@@ -436,8 +411,8 @@ Update an existing repository
 
   babelize update
 
-For a complete example of using the *babelizer*
-to wrap a C library exposing a BMI,
+For complete examples of using the *babelizer*
+to wrap C and Fortran libraries exposing a BMI,
 see the User Guide of the `documentation`_.
 
 
