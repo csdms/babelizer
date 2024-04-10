@@ -156,42 +156,61 @@ An example of a blank *babel.toml* file:
 
 .. code:: toml
 
-    [library]
-    [library."<name>"]
-    language = "c"
-    library = ""
-    header = ""
-    entry_point = ""
+  # See https://babelizer.readthedocs.io/ for more information
 
-    [build]
-    undef_macros = []
-    define_macros = []
-    libraries = []
-    library_dirs = []
-    include_dirs = []
-    extra_compile_args = []
+  # Describe the library being wrapped.
+  [library.Monorail]
+  language = "c"
+  library = "bmimonorail"
+  header = "monorail.h"
+  entry_point = "register_monorail"
 
-    [package]
-    name = ""
-    requirements = []
+  # Describe compiler options to build the library being wrapped.
+  [build]
+  undef_macros = []
+  define_macros = []
+  libraries = []
+  library_dirs = []
+  include_dirs = []
+  extra_compile_args = []
 
-    [info]
-    github_username = "pymt-lab"
-    package_author = "csdms"
-    package_author_email = "csdms@colorado.edu"
-    package_license = "MIT"
-    summary = ""
+  # Describe the newly wrapped package.
+  [package]
+  name = "springfield_monorail"
+  requirements = ["three_million_dollars"]
 
-    [ci]
-    python_version = ["3.9"]
-    os = ["linux", "mac", "windows"]
+  # Provide author and package information.
+  [info]
+  github_username = "lyle-lanley"
+  package_author = "Lyle Lanley"
+  package_author_email = "lyle@monorail.com"
+  package_license = "MIT License"
+  summary = '''
+  Well, sir, there's nothing on Earth like a genuine,
+  bona fide, electrified, six-car monorail. What'd I say?
+  Monorail! What's it called? Monorail! That's right! Monorail!
+  '''
 
-You can generate *babel.toml* files using the *babelize generate* command.
+  # Set continuous integration options.
+  [ci]
+  python_version = [
+      "3.10",
+      "3.11",
+      "3.12",
+  ]
+  os = [
+      "linux",
+      "mac",
+      "windows",
+  ]
+
+
+You can generate *babelizer* configuration files using the ``babelize sample-config`` command.
 For example, the above *babel.toml* was generated with:
 
 .. code:: bash
 
-  babelize generate > babel.toml
+  babelize sample-config > babel.toml
 
 Library section
 ^^^^^^^^^^^^^^^
