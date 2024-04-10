@@ -143,12 +143,6 @@ install *babelizer* into the current environment:
 
   pip install -e .
 
-or using *conda*:
-
-.. code:: bash
-
-  conda install --file=requirements.txt -c conda-forge
-
 
 Input file
 ----------
