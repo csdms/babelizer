@@ -144,10 +144,10 @@ install *babelizer* into the current environment:
   pip install -e .
 
 
-Input file
-----------
+Configuration file
+------------------
 
-The *babelizer* requires a single *toml*-formatted input file that describes
+The *babelizer* requires a single *toml*-formatted configuration file that describes
 the library to wrap. This file is typically named *babel.toml*.
 An example of a blank *babel.toml* file:
 
