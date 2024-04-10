@@ -120,8 +120,8 @@ base Python installation. This can be done with *conda*:
 
 .. code:: bash
 
-    $ conda create -n babelizer python=3
-    $ conda activate babelizer
+  conda create -n babelizer python=3
+  conda activate babelizer
 
 Stable Release
 ^^^^^^^^^^^^^^
@@ -130,7 +130,7 @@ The *babelizer* and its dependencies are best installed with *conda*:
 
 .. code:: bash
 
-    $ conda install babelizer -c conda-forge
+  conda install babelizer -c conda-forge
 
 From Source
 ^^^^^^^^^^^
@@ -141,13 +141,13 @@ install *babelizer* into the current environment:
 
 .. code:: bash
 
-    $ pip install -e .
+  pip install -e .
 
 or using *conda*:
 
 .. code:: bash
 
-    $ conda install --file=requirements.txt -c conda-forge
+  conda install --file=requirements.txt -c conda-forge
 
 
 Input file
@@ -194,7 +194,7 @@ For example, the above *babel.toml* was generated with:
 
 .. code:: bash
 
-  $ babelize generate > babel.toml
+  babelize generate > babel.toml
 
 Library section
 ^^^^^^^^^^^^^^^
@@ -402,7 +402,7 @@ the above *babel.toml* can be generated with the following,
 
 .. code:: bash
 
-    babelize sample-config
+  babelize sample-config
 
 Use
 ---
@@ -412,7 +412,7 @@ sending output to the current directory
 
 .. code:: bash
 
-    babelize init babel.toml
+  babelize init babel.toml
 
 Update an existing repository
 
