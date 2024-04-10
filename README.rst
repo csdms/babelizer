@@ -32,6 +32,9 @@ Supported languages include:
 *  Fortran
 *  Python
 
+Full documentation for the *babelizer*, including examples,
+can be found at https://babelizer.readthedocs.io/.
+
 
 The Babelizer is part of the CSDMS Workbench
 --------------------------------------------
