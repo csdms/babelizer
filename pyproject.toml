@@ -50,7 +50,7 @@ dynamic = [
 text = "MIT"
 
 [project.urls]
-changelog = "https://github.com/csdms/babelizer/blob/master/CHANGES.rst"
+changelog = "https://github.com/csdms/babelizer/blob/develop/CHANGES.rst"
 documentation = "https://babelizer.readthedocs.io/"
 homepage = "https://babelizer.readthedocs.io/"
 repository = "https://github.com/csdms/babelizer"
