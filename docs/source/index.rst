@@ -40,7 +40,7 @@ User Guide
 
    readme
    cli
-   example
+   example-c
    example-fortran
    glossary
 
@@ -66,6 +66,7 @@ Additional Information
    authors
    changelog
    contributing
+   code-of-conduct
    license
 
 Help

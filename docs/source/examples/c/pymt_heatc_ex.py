@@ -1,9 +1,9 @@
-"""Run the heat model in pymt."""
+"""Run the C heat model in pymt."""
 
-from pymt.models import HeatModel
+from pymt.models import HeatC
 
 # Instantiate the component and get its name.
-m = HeatModel()
+m = HeatC()
 print(m.name)
 
 # Call setup, then initialize the model.
