@@ -39,6 +39,7 @@ User Guide
    why
    install
    cli
+   configuration
    example-c
    example-fortran
    glossary
