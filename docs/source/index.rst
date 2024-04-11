@@ -40,6 +40,7 @@ User Guide
    install
    cli
    configuration
+   use
    example-c
    example-fortran
    glossary

@@ -63,27 +63,6 @@ For more detailed information,
 including how to install the *babelizer* from source,
 see the `installation instructions`_ in the documentation.
 
-Use
----
-
-Generate a Python package for a library that implements a BMI,
-sending output to the current directory
-
-.. code:: bash
-
-  babelize init babel.toml
-
-Update an existing repository
-
-.. code:: bash
-
-  babelize update
-
-For complete examples of using the *babelizer*
-to wrap C and Fortran libraries exposing a BMI,
-see the User Guide of the `documentation`_.
-
-
 .. Links:
 
 .. _Basic Model Interface: https://bmi.readthedocs.io/
