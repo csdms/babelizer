@@ -1,3 +1,5 @@
+.. _example-c:
+
 Example: Wrapping a C model
 ===========================
 

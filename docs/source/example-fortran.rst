@@ -1,3 +1,5 @@
+.. _example-fortran:
+
 Example: Wrapping a Fortran model
 =================================
 
