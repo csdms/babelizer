@@ -30,6 +30,8 @@ The *babelizer* is an element of the `CSDMS Workbench`_,
 an integrated system of software tools, technologies, and standards
 for building and coupling models.
 
+.. _user-guide:
+
 User Guide
 ==========
 
