@@ -36,6 +36,7 @@ User Guide
 .. toctree::
    :maxdepth: 2
 
+   why
    install
    cli
    example-c
