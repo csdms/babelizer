@@ -93,59 +93,18 @@ There are lots of other good reasons to create a BMI for
 your model--not just so you can bring it into Python with the *babelizer*!
 Read all about them in the `Basic Model Interface`_ documentation.
 
-
-Requirements
-------------
-
-The *babelizer* requires Python >=3.10.
-
-
-Apart from Python, the *babelizer* has a number of other requirements, all of which
-can be obtained through either *pip* or *conda*, that will be automatically
-installed when you install the *babelizer*.
-
-To see a full listing of the requirements, have a look at the project's
-*requirements.txt* file.
-
-If you are a developer of the *babelizer* you will also want to install
-additional dependencies for running the *babelizer*'s tests to make sure
-that things are working as they should. These dependencies are listed
-in *requirements-testing.txt*.
-
-
 Installation
 ------------
 
-To install the *babelizer*, first create a new environment.
-Although this isn't strictly necessary, it
-isolates the installation to avoid conflicts with your
-base Python installation. This can be done with *conda*:
+The quickest way to install the *babelizer* is with *conda*:
 
 .. code:: bash
 
-  conda create -n babelizer python=3
-  conda activate babelizer
+  conda install -c conda-forge babelizer
 
-Stable Release
-^^^^^^^^^^^^^^
-
-The *babelizer* and its dependencies are best installed with *conda*:
-
-.. code:: bash
-
-  conda install babelizer -c conda-forge
-
-From Source
-^^^^^^^^^^^
-
-After downloading the the *babelizer* source code, run the following from
-*babelizer*'s top-level directory (the one that contains *setup.py*) to
-install *babelizer* into the current environment:
-
-.. code:: bash
-
-  pip install -e .
-
+For more detailed information,
+including how to install the *babelizer* from source,
+see the `installation instructions`_ in the documentation.
 
 Configuration file
 ------------------
@@ -429,3 +388,4 @@ see the User Guide of the `documentation`_.
 .. _BMI example C++: https://github.com/csdms/bmi-example-cxx/
 .. _BMI example Fortran: https://github.com/csdms/bmi-example-fortran/
 .. _BMI example Python: https://github.com/csdms/bmi-example-python/
+.. _installation instructions: https://babelizer.readthedocs.io/en/latest/install.html

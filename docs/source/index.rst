@@ -6,7 +6,6 @@
 
 .. title:: babelizer
 
-
 The *babelizer* is an open source Python utility,
 developed by the `Community Surface Dynamics Modeling System`_ (CSDMS),
 for wrapping models that expose a `Basic Model Interface`_ (BMI)
@@ -31,14 +30,13 @@ The *babelizer* is an element of the `CSDMS Workbench`_,
 an integrated system of software tools, technologies, and standards
 for building and coupling models.
 
-
 User Guide
 ==========
 
 .. toctree::
    :maxdepth: 2
 
-   readme
+   install
    cli
    example-c
    example-fortran
