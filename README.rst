@@ -1,19 +1,4 @@
-.. image:: https://joss.theoj.org/papers/10.21105/joss.03344/status.svg
-    :target: https://doi.org/10.21105/joss.03344
-
-.. image:: https://github.com/csdms/babelizer/workflows/Build/Test%20CI/badge.svg
-    :target: https://github.com/csdms/babelizer/actions?query=workflow%3A%22Build%2FTest+CI%22
-
-.. image:: https://anaconda.org/conda-forge/babelizer/badges/version.svg
-    :target: https://anaconda.org/conda-forge/babelizer
-
-.. image:: https://readthedocs.org/projects/babelizer/badge/?version=latest
-        :target: https://babelizer.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
-
-.. image:: https://coveralls.io/repos/github/csdms/babelizer/badge.svg?branch=develop
-    :target: https://coveralls.io/github/csdms/babelizer?branch=develop
-
+|JOSS paper| |Build Status| |Conda Version| |Documentation Status| |Coverage Status|
 
 The Babelizer: Wrap BMI libraries with Python bindings
 ======================================================
@@ -66,6 +51,21 @@ by the U.S. National Science Foundation.
 
 .. Links:
 
+.. |JOSS paper| image:: https://joss.theoj.org/papers/10.21105/joss.03344/status.svg
+    :target: https://doi.org/10.21105/joss.03344
+    :alt: JOSS paper
+.. |Build Status| image:: https://github.com/csdms/babelizer/workflows/Build/Test%20CI/badge.svg
+    :target: https://github.com/csdms/babelizer/actions?query=workflow%3A%22Build%2FTest+CI%22
+    :alt: Build status
+.. |Conda Version| image:: https://anaconda.org/conda-forge/babelizer/badges/version.svg
+    :target: https://anaconda.org/conda-forge/babelizer
+    :alt: Conda version
+.. |Documentation Status| image:: https://readthedocs.org/projects/babelizer/badge/?version=latest
+    :target: https://babelizer.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation status
+.. |Coverage Status| image:: https://coveralls.io/repos/github/csdms/babelizer/badge.svg?branch=develop
+    :target: https://coveralls.io/github/csdms/babelizer?branch=develop
+    :alt: Coverage status
 .. _Community Surface Dynamics Modeling System: https://csdms.colorado.edu
 .. _Basic Model Interface: https://bmi.readthedocs.io/
 .. _CSDMS Workbench: https://csdms.colorado.edu/wiki/Workbench
