@@ -332,8 +332,7 @@ library = "bmimonorail"
 header = "monorail.h"
 entry_point = "register_monorail"
 
-# Describe compiler options need to build the library being
-# wrapped.
+# Describe compiler options to build the library being wrapped.
 [build]
 undef_macros = []
 define_macros = []
@@ -347,6 +346,7 @@ extra_compile_args = []
 name = "springfield_monorail"
 requirements = ["three_million_dollars"]
 
+# Provide author and package information.
 [info]
 github_username = "lyle-lanley"
 package_author = "Lyle Lanley"
@@ -358,6 +358,7 @@ bona fide, electrified, six-car monorail. What'd I say?
 Monorail! What's it called? Monorail! That's right! Monorail!
 '''
 
+# Set continuous integration options.
 [ci]
 python_version = [
     "3.10",
