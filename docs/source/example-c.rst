@@ -352,7 +352,7 @@ Using the *babelizer*, we wrapped the *heat* model, which is written in C.
 It can now be called as a *pymt* component in Python.
 
 The steps for wrapping a model with the *babelizer* outlined in this example
-can also be applied to models written in C++ and `Fortran`_.
+can also be applied to models written in `C++`_ and `Fortran`_.
 
 
 ..
@@ -365,4 +365,5 @@ can also be applied to models written in C++ and `Fortran`_.
 .. _Python Modeling Tool: https://pymt.readthedocs.io
 .. _CSDMS Model Metadata: https://github.com/csdms/model_metadata
 .. _Descriptions: https://github.com/csdms/model_metadata/blob/develop/README.rst
+.. _C++: example-cxx.html
 .. _Fortran: example-fortran.html

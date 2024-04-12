@@ -383,7 +383,7 @@ It can now be called as a *pymt* component in Python.
 
 The steps for wrapping a model with the *babelizer* outlined in this example
 can also be applied to models written in C (:doc:`see the example <example-c>`)
-and C++.
+and in C++ (:doc:`see the example <example-cxx>`).
 
 
 ..
