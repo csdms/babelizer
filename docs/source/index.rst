@@ -99,9 +99,9 @@ Indices and tables
    Links
 
 .. _Community Surface Dynamics Modeling System: https://csdms.colorado.edu
-.. _Basic Model Interface: https://github.com/csdms/bmi
-.. _bmi-tester: https://github.com/csdms/bmi-tester
+.. _Basic Model Interface: https://bmi.readthedocs.io/
+.. _bmi-tester: https://bmi-tester.readthedocs.io/
 .. _pymt: https://pymt.readthedocs.io/
-.. _Landlab: https://landlab.github.io/
+.. _Landlab: https://landlab.readthedocs.io/
 .. _CSDMS Workbench: https://csdms.colorado.edu/wiki/Workbench
-.. _CSDMS Help Desk: https://github.com/csdms/help-desk
+.. _CSDMS Help Desk: https://csdms.github.io/help-desk
