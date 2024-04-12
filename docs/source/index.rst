@@ -42,6 +42,7 @@ User Guide
    cli
    example-c
    example-fortran
+   example-cxx
    glossary
 
 
