@@ -1,7 +1,6 @@
 import os
 import pathlib
 import shutil
-import sys
 from itertools import chain
 
 import nox
@@ -9,7 +8,7 @@ import nox
 PROJECT = "babelizer"
 ROOT = pathlib.Path(__file__).parent
 ALL_LANGS = {"c", "cxx", "fortran", "python"}
-PYTHON_VERSIONS = ["3.10", "3.11", "3.12"]
+PYTHON_VERSIONS = ["3.11", "3.12", "3.13"]
 
 
 @nox.session(python=PYTHON_VERSIONS)
@@ -65,10 +64,7 @@ def test_langs(session: nox.session, lang) -> None:
 
 
 def _get_package_metadata(datadir):
-    if sys.version_info >= (3, 11):
-        import tomllib
-    else:
-        import tomli as tomllib
+    import tomllib
 
     with open(datadir / "babel.toml", "rb") as fp:
         config = tomllib.load(fp)

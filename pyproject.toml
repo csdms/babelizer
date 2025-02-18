@@ -1,6 +1,6 @@
 [project]
 name = "babelizer"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 description = "Wrap BMI libraries with Python bindings"
 keywords = [
     "bmi",
@@ -26,9 +26,9 @@ classifiers = [
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Code Generators",
 ]
 dependencies = [
@@ -39,7 +39,6 @@ dependencies = [
     "logoizer@ git+https://github.com/mcflugen/logoizer",
     "pyyaml",
     "tomli-w",
-    "tomli; python_version < '3.11'",
 ]
 dynamic = [
     "readme",
@@ -74,6 +73,7 @@ docs = [
     "sphinx-inline-tabs",
     "sphinx>=4",
     "sphinxcontrib.towncrier",
+    "towncrier<24.7",
 ]
 testing = [
     "bmi-tester>=0.5.9",
