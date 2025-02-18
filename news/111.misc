@@ -1,0 +1,2 @@
+Removed the *lint* and *docs* workflows from the *babelizer* continuous integration
+on gha. These tests are now run on *pre-commit.ci* and *readthedocs*.
