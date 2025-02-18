@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.11", "3.12", "3.13"]
         language: ["c", "cxx", "python", "fortran"]
 
     steps:
@@ -47,5 +47,5 @@ jobs:
         run: nox -s "test-langs-${{ matrix.python-version }}(lang='${{ matrix.language }}')" --python ${{ matrix.python-version }} --verbose
 
       - name: Coveralls
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.13'
         uses: AndreMiras/coveralls-python-action@v20201129
