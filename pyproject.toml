@@ -73,6 +73,7 @@ docs = [
     "sphinx-inline-tabs",
     "sphinx>=4",
     "sphinxcontrib.towncrier",
+    "towncrier<24.7",
 ]
 testing = [
     "bmi-tester>=0.5.9",

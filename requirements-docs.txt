@@ -8,3 +8,4 @@ sphinx-inline-tabs
 sphinx-inline-tabs
 sphinx>=4
 sphinxcontrib.towncrier
+towncrier<24.7
