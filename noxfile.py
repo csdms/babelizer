@@ -8,7 +8,7 @@ import nox
 PROJECT = "babelizer"
 ROOT = pathlib.Path(__file__).parent
 ALL_LANGS = {"c", "cxx", "fortran", "python"}
-PYTHON_VERSIONS = ["3.10", "3.11", "3.12"]
+PYTHON_VERSIONS = ["3.11", "3.12", "3.13"]
 
 
 @nox.session(python=PYTHON_VERSIONS)
