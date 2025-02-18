@@ -39,7 +39,6 @@ dependencies = [
     "logoizer@ git+https://github.com/mcflugen/logoizer",
     "pyyaml",
     "tomli-w",
-    "tomli; python_version < '3.11'",
 ]
 dynamic = [
     "readme",

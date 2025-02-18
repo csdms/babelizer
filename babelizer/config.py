@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import io
 import pathlib
-import sys
+import tomllib
 import warnings
 from collections import defaultdict
 from collections.abc import Callable
@@ -15,11 +15,6 @@ from typing import Any
 
 import tomli_w
 import yaml
-
-if sys.version_info >= (3, 11):  # pragma: no cover (PY11+)
-    import tomllib
-else:  # pragma: no cover (<PY311)
-    import tomli as tomllib
 
 from babelizer._utils import parse_entry_point
 from babelizer._utils import validate_dict_keys
