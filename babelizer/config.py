@@ -79,7 +79,7 @@ class BabelConfig(Mapping[str, Any]):
     def __getitem__(self, key: str) -> dict[str, Any]:
         return self._meta[key]
 
-    def __iter__(self) -> Generator[str, None, None]:
+    def __iter__(self) -> Generator[str]:
         yield from self._meta
 
     def __len__(self) -> int:

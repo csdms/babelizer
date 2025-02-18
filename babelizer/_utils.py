@@ -72,7 +72,7 @@ def get_setup_py_version() -> str | None:
 
 
 @contextmanager
-def save_files(files: Iterable[str]) -> Generator[dict[str, str], None, None]:
+def save_files(files: Iterable[str]) -> Generator[dict[str, str]]:
     """Generate repository files through a context.
 
     Parameters
@@ -96,7 +96,7 @@ def save_files(files: Iterable[str]) -> Generator[dict[str, str], None, None]:
 
 
 @contextmanager
-def as_cwd(path: str) -> Generator[None, None, None]:
+def as_cwd(path: str) -> Generator[None]:
     """Change directory context.
 
     Parameters
