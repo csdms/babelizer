@@ -1,0 +1,55 @@
+name: TestPyPI
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+[ab][0-9]+'
+
+jobs:
+
+  build-sdist:
+    name: Build source distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build sdist
+        run: pipx run build --sdist
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pypi-artifacts
+          path: dist/*.tar.gz
+
+  show-artifacts:
+    needs: ["build-sdist"]
+    name: "Show artifacts"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: pypi-artifacts
+        path: ${{ github.workspace }}/dist
+
+    - shell: bash
+      run: |
+        ls -l ${{ github.workspace }}/dist
+
+  publish-to-test-pypi:
+    needs: ["build-sdist"]
+    name: "Publish to TestPyPI"
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: pypi-artifacts
+          path: ${{ github.workspace }}/dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository_url: 'https://test.pypi.org/legacy/'
+          skip_existing: true
+          print_hash: true
+          verify_metadata: false
