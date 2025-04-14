@@ -1,3 +1,5 @@
+.. _example-fortran:
+
 Example: Wrapping a Fortran model
 =================================
 
@@ -183,7 +185,7 @@ The configuration file looks like this:
    :literal:
 
 For more information on the entries and sections of the *babelizer* configuration file,
-see `Input file <./readme.html#input-file>`_.
+see `Configuration file <./configuration.html>`_.
 
 
 Wrap the model with the *babelizer*
