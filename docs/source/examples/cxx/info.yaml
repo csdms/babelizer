@@ -1,0 +1,8 @@
+summary: |
+  This model solves the two-dimensional heat equation on a uniform
+  rectilinear grid.
+url: https://github.com/csdms/bmi-example-cxx
+author: CSDMS
+email: csdms@colorado.edu
+version: 0.1
+license: MIT

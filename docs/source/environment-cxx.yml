@@ -1,0 +1,14 @@
+# A conda environment file for the babelizer C++ example
+name: wrap-cxx
+channels:
+  - conda-forge
+dependencies:
+  - python=3
+  - make
+  - cmake
+  - pkg-config
+  - cxx-compiler
+  - bmi-cxx
+  - babelizer
+  - bmi-tester
+  - pymt>=1.3

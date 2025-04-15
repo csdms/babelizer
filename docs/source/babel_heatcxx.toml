@@ -1,0 +1,41 @@
+# See https://babelizer.readthedocs.io/ for more information
+
+# Describe the library being wrapped.
+[library.HeatCxx]
+language = "c++"
+library = "bmiheatcxx"
+header = "bmi_heat.hxx"
+entry_point = "BmiHeat"
+
+# Describe compiler options need to build the library being wrapped.
+[build]
+undef_macros = []
+define_macros = []
+libraries = []
+library_dirs = []
+include_dirs = []
+extra_compile_args = []
+
+# Describe the newly wrapped package.
+[package]
+name = "pymt_heatcxx"
+requirements = []
+
+[info]
+github_username = "pymt-lab"
+package_author = "csdms"
+package_author_email = "csdms@colorado.edu"
+package_license = "MIT License"
+summary = "PyMT component for the C++ heat model"
+
+[ci]
+python_version = [
+    "3.10",
+    "3.11",
+    "3.12",
+]
+os = [
+    "linux",
+    "mac",
+    "windows",
+]
