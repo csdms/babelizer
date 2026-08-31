@@ -70,16 +70,14 @@ def _render_install_block(install: Iterable[str]) -> str:
     files_to_install = []
     for subdir, files in sorted(install_sources.items()):
         lines = [f"        {os.path.join(subdir, f)!r}," for f in files]
-        files_to_install.append(
-            f"""\
+        files_to_install.append(f"""\
 py.install_sources(
     [
 {os.linesep.join(sorted(lines))}
     ],
     subdir: {subdir!r},
 )\
-"""
-        )
+""")
     return os.linesep.join(files_to_install)
 
 
