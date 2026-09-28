@@ -85,9 +85,7 @@ name: {package_name}
 language: {language}
 package: {package_name}
 class: {plugin_class}
-""".format(
-        **kwds
-    )
+""".format(**kwds)
     with open(api_yaml, "w") as fp:
         fp.write(contents)
 

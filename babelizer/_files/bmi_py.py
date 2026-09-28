@@ -59,15 +59,10 @@ else:  # pragma: no cover (<PY312)
         for cls, component in context["library"].items()
     ]
 
-    rename = [
-        f"""\
+    rename = [f"""\
 {cls}.__name__ = {cls!r}
 {cls}.METADATA = str(importlib_resources.files(__name__) / "data/{cls}")
-""".replace(
-            "'", '"'
-        )
-        for cls in context["library"]
-    ]
+""".replace("'", '"') for cls in context["library"]]
 
     names = [f"    {cls!r},".replace("'", '"') for cls in context["library"]]
 
